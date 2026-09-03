@@ -3,10 +3,10 @@
   "name": "card_sub_1",
   "position": {
     "x": 286,
-    "y": 198,
+    "y": 194,
     "z": 41,
     "width": 208,
-    "height": 16,
+    "height": 22,
     "tabOrder": 41
   },
   "visual": {

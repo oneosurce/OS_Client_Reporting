@@ -78,9 +78,9 @@ table _Measures
 			RETURN
 				SWITCH (
 					TRUE (),
-					Delta > 0, "▲ " & Delta & " vs last week",
-					Delta < 0, "▼ " & ABS ( Delta ) & " vs last week",
-					"— flat vs last week"
+					Delta > 0, "▲ " & Delta & " vs last wk",
+					Delta < 0, "▼ " & ABS ( Delta ) & " vs last wk",
+					"— flat vs last wk"
 				)
 		displayFolder: Backlog
 		lineageTag: a4638d47-e13b-4ecf-bb16-282a167cc544
@@ -163,9 +163,9 @@ table _Measures
 				SWITCH (
 					TRUE (),
 					ISBLANK ( Pct ), "no prior period",
-					Pct > 0, "▲ " & FORMAT ( Pct, "0%" ) & " vs prior 30 days",
-					Pct < 0, "▼ " & FORMAT ( ABS ( Pct ), "0%" ) & " vs prior 30 days",
-					"— flat vs prior 30 days"
+					Pct > 0, "▲ " & FORMAT ( Pct, "0%" ) & " vs prior 30d",
+					Pct < 0, "▼ " & FORMAT ( ABS ( Pct ), "0%" ) & " vs prior 30d",
+					"— flat vs prior 30d"
 				)
 		displayFolder: Rolling 30 Days
 		lineageTag: b56e7ae5-05be-4d98-9bd9-6c1857f8a4b9
@@ -186,9 +186,9 @@ table _Measures
 			RETURN
 				SWITCH (
 					TRUE (),
-					Net > 0, "▲ net backlog down " & Net,
-					Net < 0, "▼ net backlog up " & ABS ( Net ),
-					"— backlog unchanged"
+					Net > 0, "▼ " & Net & " net backlog",
+					Net < 0, "▲ " & ABS ( Net ) & " net backlog",
+					"— backlog flat"
 				)
 		displayFolder: Rolling 30 Days
 		lineageTag: dbd713e6-73df-4d95-a93a-e6cb2e30f539
@@ -259,9 +259,9 @@ table _Measures
 				SWITCH (
 					TRUE (),
 					ISBLANK ( [Avg Resolution Days (Prior 30D)] ), "no prior period",
-					Delta > 0.05, "▲ " & FORMAT ( Delta, "0.0" ) & " days vs prior 30 days",
-					Delta < -0.05, "▼ " & FORMAT ( ABS ( Delta ), "0.0" ) & " days vs prior 30 days",
-					"— flat vs prior 30 days"
+					Delta > 0.05, "▲ " & FORMAT ( Delta, "0.0" ) & "d vs prior 30d",
+					Delta < -0.05, "▼ " & FORMAT ( ABS ( Delta ), "0.0" ) & "d vs prior 30d",
+					"— flat vs prior 30d"
 				)
 		displayFolder: Resolution Time
 		lineageTag: c4e1a2b3-1f4d-4e5a-9b6c-2d3e4f5a6b73
