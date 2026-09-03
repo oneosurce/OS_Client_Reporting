@@ -1,0 +1,39 @@
+/// Disconnected helper: preset options for the date-range picker.
+table 'Date Range'
+	lineageTag: b2c3d4e5-0000-4002-8002-000000000001
+
+	column Range
+		dataType: string
+		lineageTag: b2c3d4e5-0000-4002-8002-000000000002
+		summarizeBy: none
+		sortByColumn: Sort
+		sourceColumn: Range
+
+		annotation SummarizationSetBy = User
+
+	column Sort
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b2c3d4e5-0000-4002-8002-000000000003
+		summarizeBy: none
+		sourceColumn: Sort
+
+		annotation SummarizationSetBy = User
+
+	partition 'Date Range' = calculated
+		mode: import
+		source =
+				DATATABLE (
+					"Range", STRING,
+					"Sort", INTEGER,
+					{
+						{ "Last 7 days", 1 },
+						{ "Last 30 days", 2 },
+						{ "Last quarter", 3 },
+						{ "Year to date", 4 },
+						{ "Custom / All", 5 }
+					}
+				)
+
+	annotation PBI_ResultType = Table

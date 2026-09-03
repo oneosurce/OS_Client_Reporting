@@ -6,7 +6,7 @@ model Model
 		legacyRedirects
 		returnErrorValuesAsNull
 
-annotation PBI_QueryOrder = ["Tickets","Customers","Aging Bucket","_Measures"]
+annotation PBI_QueryOrder = ["Tickets","Customers","Aging Bucket","Date Range","_Measures"]
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
@@ -16,6 +16,7 @@ ref table Tickets
 ref table Customers
 ref table Date
 ref table 'Aging Bucket'
+ref table 'Date Range'
 ref table _Measures
 
 ref role 'FW Walton'
