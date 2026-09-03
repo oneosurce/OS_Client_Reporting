@@ -50,8 +50,6 @@ table _Measures
 		displayFolder: Volume
 		lineageTag: e1f2a3b4-0000-4001-8001-000000000002
 
-	// ---- KPI card measures: honour the date slicer; default to the last 90 days when it is untouched ----
-
 	/// Tickets created in the selected window (last 90 days if the date slicer is untouched)
 	measure 'Created (Card)' =
 			IF (
