@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "card_val_1",
   "position": {
-    "x": 272,
+    "x": 337,
     "y": 92,
     "z": 10,
-    "width": 232,
+    "width": 293,
     "height": 130,
     "tabOrder": 10
   },
@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Tickets Created (30D)"
+                  "Property": "Created (Card)"
                 }
               },
-              "queryRef": "_Measures.Tickets Created (30D)",
-              "nativeQueryRef": "Tickets Created (30D)"
+              "queryRef": "_Measures.Created (Card)",
+              "nativeQueryRef": "Created (Card)"
             }
           ]
         }
@@ -198,7 +198,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'CREATED (30D)'"
+                  "Value": "'CREATED'"
                 }
               }
             },

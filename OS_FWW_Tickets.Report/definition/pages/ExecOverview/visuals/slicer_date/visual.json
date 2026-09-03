@@ -120,7 +120,7 @@
             "mode": {
               "expr": {
                 "Literal": {
-                  "Value": "'Relative'"
+                  "Value": "'Between'"
                 }
               }
             }

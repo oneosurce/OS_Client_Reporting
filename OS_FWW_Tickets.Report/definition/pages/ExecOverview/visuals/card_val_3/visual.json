@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "card_val_3",
   "position": {
-    "x": 768,
+    "x": 963,
     "y": 92,
     "z": 12,
-    "width": 232,
+    "width": 293,
     "height": 130,
     "tabOrder": 12
   },
@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Avg Resolution Days (30D)"
+                  "Property": "Avg Resolution Days (Card)"
                 }
               },
-              "queryRef": "_Measures.Avg Resolution Days (30D)",
-              "nativeQueryRef": "Avg Resolution Days (30D)"
+              "queryRef": "_Measures.Avg Resolution Days (Card)",
+              "nativeQueryRef": "Avg Resolution Days (Card)"
             }
           ]
         }

@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "card_sub_1",
   "position": {
-    "x": 284,
+    "x": 349,
     "y": 190,
     "z": 41,
-    "width": 208,
+    "width": 269,
     "height": 26,
     "tabOrder": 41
   },
@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Tickets Created (30D) Change Label"
+                  "Property": "Created Change Label"
                 }
               },
-              "queryRef": "_Measures.Tickets Created (30D) Change Label",
-              "nativeQueryRef": "Tickets Created (30D) Change Label"
+              "queryRef": "_Measures.Created Change Label",
+              "nativeQueryRef": "Created Change Label"
             }
           ]
         }

@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "chart_priority",
   "position": {
-    "x": 800,
-    "y": 240,
+    "x": 24,
+    "y": 452,
     "z": 31,
-    "width": 456,
-    "height": 214,
+    "width": 604,
+    "height": 244,
     "tabOrder": 31
   },
   "visual": {

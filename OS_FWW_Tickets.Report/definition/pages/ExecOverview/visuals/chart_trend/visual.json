@@ -5,12 +5,12 @@
     "x": 24,
     "y": 240,
     "z": 30,
-    "width": 760,
-    "height": 214,
+    "width": 1232,
+    "height": 196,
     "tabOrder": 30
   },
   "visual": {
-    "visualType": "lineChart",
+    "visualType": "columnChart",
     "query": {
       "queryState": {
         "Category": {
@@ -41,11 +41,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Tickets Created"
+                  "Property": "Created"
                 }
               },
-              "queryRef": "_Measures.Tickets Created",
-              "nativeQueryRef": "Tickets Created"
+              "queryRef": "_Measures.Created",
+              "nativeQueryRef": "Created"
             },
             {
               "field": {
@@ -55,11 +55,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Tickets Resolved"
+                  "Property": "Resolved"
                 }
               },
-              "queryRef": "_Measures.Tickets Resolved",
-              "nativeQueryRef": "Tickets Resolved"
+              "queryRef": "_Measures.Resolved",
+              "nativeQueryRef": "Resolved"
             }
           ]
         }
@@ -153,7 +153,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Tickets Created"
+            "metadata": "_Measures.Created"
           }
         },
         {
@@ -171,7 +171,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Tickets Resolved"
+            "metadata": "_Measures.Resolved"
           }
         }
       ],

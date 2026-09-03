@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "chart_aging",
   "position": {
-    "x": 24,
-    "y": 466,
+    "x": 644,
+    "y": 452,
     "z": 35,
-    "width": 604,
-    "height": 214,
+    "width": 612,
+    "height": 244,
     "tabOrder": 35
   },
   "visual": {
