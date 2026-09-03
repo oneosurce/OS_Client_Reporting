@@ -3,10 +3,10 @@
   "name": "card_sub_4",
   "position": {
     "x": 1030,
-    "y": 206,
+    "y": 182,
     "z": 26,
     "width": 204,
-    "height": 24,
+    "height": 38,
     "tabOrder": 26
   },
   "visual": {
@@ -101,7 +101,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             }

@@ -3,10 +3,10 @@
   "name": "title",
   "position": {
     "x": 32,
-    "y": 36,
+    "y": 40,
     "z": 3,
     "width": 760,
-    "height": 42,
+    "height": 40,
     "tabOrder": 3
   },
   "visual": {
