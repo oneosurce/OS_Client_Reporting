@@ -39,25 +39,14 @@ table _Measures
 		displayFolder: Volume
 		lineageTag: 93e0a4ea-bdd0-4152-a1fb-9d4f80a96639
 
-	/// Short legend label for the trend chart
-	measure Created = [Tickets Created]
-		formatString: #,0
-		displayFolder: Volume
-		lineageTag: e1f2a3b4-0000-4001-8001-000000000001
-
-	measure Resolved = [Tickets Resolved]
-		formatString: #,0
-		displayFolder: Volume
-		lineageTag: e1f2a3b4-0000-4001-8001-000000000002
-
-	/// Trend-chart series: created per week, clipped to the selected Range / date window
-	measure 'Created (Trend)' =
+	/// Created, clipped to the selected Range / custom date window (trend-chart series)
+	measure Created =
 			CALCULATE ( [Tickets Created], KEEPFILTERS ( DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) ) )
 		formatString: #,0
 		displayFolder: Volume
 		lineageTag: e1f2a3b4-0000-4001-8001-000000000012
 
-	measure 'Resolved (Trend)' =
+	measure Resolved =
 			CALCULATE ( [Tickets Resolved], KEEPFILTERS ( DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) ) )
 		formatString: #,0
 		displayFolder: Volume
