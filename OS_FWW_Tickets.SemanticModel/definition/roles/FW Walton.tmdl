@@ -2,5 +2,3 @@ role 'FW Walton'
 	modelPermission: read
 
 	tablePermission Customers = Customers[Customer ID] = 33810072
-
-	annotation PBI_Id = fww
