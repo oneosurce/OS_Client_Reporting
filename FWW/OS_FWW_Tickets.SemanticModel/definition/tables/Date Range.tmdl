@@ -1,4 +1,4 @@
-/// Disconnected helper: preset options for the date-range picker.
+/// Disconnected helper: preset options for the Range picker.
 table 'Date Range'
 	lineageTag: b2c3d4e5-0000-4002-8002-000000000001
 
@@ -28,11 +28,14 @@ table 'Date Range'
 					"Range", STRING,
 					"Sort", INTEGER,
 					{
-						{ "Last 7 days", 1 },
-						{ "Last 30 days", 2 },
-						{ "Last quarter", 3 },
-						{ "Year to date", 4 },
-						{ "Custom / All", 5 }
+						{ "Today", 1 },
+						{ "Last 7 days", 2 },
+						{ "Last 30 days", 3 },
+						{ "Last 90 days", 4 },
+						{ "Last quarter", 5 },
+						{ "Year to date", 6 },
+						{ "Last 12 months", 7 },
+						{ "All time", 8 }
 					}
 				)
 

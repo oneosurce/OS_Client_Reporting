@@ -1,104 +1,80 @@
 # OS_FWW_Tickets — Executive Overview
 
-A Power BI Project (PBIP) containing a **semantic model** and an **Executive Overview** report page for FW Walton (FWW) ticket performance, built on the Syncro PostgreSQL export.
+A Power BI Project (PBIP) containing a **semantic model** and a single-page **Executive Overview** report for **FW Walton, Inc.** service-desk ticket health, built on the Syncro RMM PostgreSQL export.
+
+> One client folder in the [`OS_Client_Reporting`](../README.md) monorepo (sibling: [`Sophia`](../Sophia/)). All client dashboards are identical apart from the `CustomerId` parameter and the client name in the header/footer.
 
 ---
 
 ## How to open it
 
-1. Make sure **Power BI Desktop** is set to emit/open PBIP:
-   *File → Options and settings → Options → Preview features →* enable **"Power BI Project (.pbip) save option"** and **"Store semantic model using TMDL format"**. Restart Desktop.
+1. In **Power BI Desktop**, enable *Options → Preview features →* **"Power BI Project (.pbip) save option"** and **"Store semantic model using TMDL format"**, then restart.
 2. Open **`OS_FWW_Tickets.pbip`**.
-3. Power BI will prompt for the **PostgreSQL** credentials for `os-syncro-db.postgres.database.azure.com` / `syncro_reporting`. Enter them and set privacy level to *Organizational*. (The Npgsql provider must be installed; Desktop will link you to it if missing.)
-4. Click **Refresh**. The model loads `tickets` and `customers`, builds the Date table, and the report renders.
+3. When prompted, enter the **PostgreSQL** credentials for `os-syncro-db.postgres.database.azure.com` / `syncro_reporting` and set privacy to *Organizational*.
+4. **Refresh**.
 
-> The `.pbip` is plain text (TMDL for the model, PBIR JSON for the report), so it diffs cleanly in git and can be edited outside Desktop.
+The `.pbip` is plain text (TMDL model, PBIR report) — it diffs cleanly and can be edited without Desktop.
+
+---
+
+## Client scoping
+
+`definition/expressions.tmdl` holds one parameter, **`CustomerId` = 33810072** (`FW Walton, Inc.`). The `Tickets` and `Customers` Power Query steps both filter to it, so the model only ever contains this client's data — the filter folds to Postgres.
+
+There is **no row-level-security role**. It protected nothing (the data is already scoped at source) and it blocked every non-admin viewer with "access denied" on share. Anyone with Viewer access to the workspace/app can open the report.
+
+> Always scope by `customer_id`, never a name match. Adding another client is a folder copy — see the monorepo README.
 
 ---
 
 ## What's in the model
 
-### Tables
-
 | Table | Role | Notes |
 |---|---|---|
-| **Tickets** | Fact | One row per ticket (~8,600). Trimmed to the columns the dashboard needs; adds cleaned/derived fields (below). |
-| **Customers** | Dimension | Filtered in Power Query to the single client row (`FW Walton, Inc.`, id 33810072). Joins to Tickets on `Customer ID`. |
-| **Date** | Dimension | Calculated date table (`CALENDAR`) from the first ticket year through the end of the current year. Marked as the model's date table. |
+| **Tickets** | Fact | One row per ticket. Trimmed to needed columns plus cleaned/derived fields (below). |
+| **Customers** | Dimension | Filtered to the single client row via `CustomerId`. Joins to Tickets on `Customer ID` (key cast to whole number — `customers.id` is text in Syncro, `tickets.customer_id` is numeric). |
+| **Date** | Dimension | Calculated `CALENDAR` table, first ticket year → end of current year. Marked as the date table. |
 | **Aging Bucket** | Disconnected helper | Static bands (`0–1 / 1–3 / 3–7 / 7+ days`) for backlog aging. |
-| **Measures** | Measure holder | Empty hidden table that stores all DAX measures in display folders. |
+| **Date Range** | Disconnected helper | Range-picker presets: Today / Last 7 days / Last 30 days / Last 90 days / Last quarter / Year to date / Last 12 months / All time. |
+| **_Measures** | Measure holder | Hidden table holding all DAX measures in display folders. |
 
-### Relationships
+**Relationships:** `Tickets[Created Date] → Date[Date]` is active; `Completed Date` and `Due Date` relationships are inactive and switched on inside measures via `USERELATIONSHIP`. Auto date/time is off.
 
-- `Tickets[Customer ID]` → `Customers[Customer ID]` (many-to-one). **The key types were mismatched** — `customers.id` came through as text while `tickets.customer_id` was numeric — so the Customers query casts the key to a whole number to make the join work.
-- `Tickets[Created Date]` → `Date[Date]` — **active**. All date-sliced volume is by creation date by default.
-- `Tickets[Completed Date]` → `Date[Date]` — inactive; activated inside the resolved/resolution-time measures via `USERELATIONSHIP`.
-- `Tickets[Due Date]` → `Date[Date]` — inactive; available for due-date analysis.
+### Cleaning in Power Query (Tickets)
 
-The eight auto-generated hidden date tables from the original file are **removed** (time-intelligence auto date/time is turned off), which shrinks and simplifies the model.
-
-### Cleaning done in Power Query (Tickets)
-
-- **Priority** — Syncro stores priority as `"0 Urgent"`, `"1 High"`, `"2 Normal"`, `"3 Low"`. A step strips the numeric prefix to give a clean `Priority` plus a `Priority Sort` column so it always orders Urgent → Low. **Unset priority (~42% of rows) is folded into `Normal`** per FWW.
-- **Is Open** — `false` only for the terminal statuses `Resolved` and `Ready for Invoice`; everything else (`New`, `In Progress`, `Scheduled`, `Customer Reply`, `Waiting on Customer`, `Waiting for Parts`, …) is open. `Closed`/`Invoiced` never appear in the data. Edit `TerminalStatuses` in the Tickets query if that changes.
-- **Completed At** — the work-completion timestamp. Syncro only writes `resolved_at` for the older "Resolved" workflow; tickets that close as `Ready for Invoice` carry no `resolved_at`, so `Completed At` falls back to `Updated At` for terminal-status tickets. Blank while a ticket is still open.
-- **Resolution Hours** — hours from `Created At` to `Completed At`.
-- **Resolved On Time** — `Completed At <= Due At`; blank when not yet completed or no due date. This is the basis of SLA compliance.
-- Date-only helper columns (`Created Date`, `Completed Date`, `Due Date`) feed the three date relationships (`Resolved Date` is also kept for reference).
+- **Priority** — Syncro stores `"0 Urgent" … "3 Low"`; a step strips the digit to a clean `Priority` + `Priority Sort`. Unset priority is folded into `Normal`.
+- **Is Open** — `false` only for terminal statuses `Resolved` and `Ready for Invoice`; everything else is open. `Closed`/`Invoiced` do not occur.
+- **Completed At** — work-completion timestamp. Syncro only writes `resolved_at` for the old "Resolved" workflow; `Ready for Invoice` tickets carry none, so `Completed At` falls back to `Updated At` for terminal-status tickets. Blank while open.
+- **Resolution Hours** — `Created At` → `Completed At`.
+- **Resolved On Time** — `Completed At <= Due At`; basis of the (currently unsurfaced) SLA measures.
 
 ---
 
 ## Measures (by folder)
 
-**Backlog** (point-in-time — these ignore the date slicer, respect Priority)
-`Open Tickets`, `Open Tickets 7 Days Ago`, `Open Tickets vs Last Week`, `Open Tickets Change Label`, `Overdue Open Tickets`, `Open Tickets by Age`, `Avg Open Ticket Age (Days)`.
+- **Backlog** (point-in-time, as of the window end, respect Priority): `Open Tickets`, `Open Tickets 7 Days Ago`, `Open Tickets Change Label`, `Overdue Open Tickets`, `Open Tickets by Age`, `Avg Open Ticket Age (Days)`.
+- **KPI** (drive the four cards; keyed off the Range picker, default last 90 days): `Created (Card)`, `Resolved (Card)`, `Avg Resolution Days (Card)`, their `… (Prior Window)` and `… Change Label` counterparts, the window bounds `_Window Min` / `_Window Max`, and `Window Start` / `Window End` (those two feed the header From/To fields).
+- **Volume** (trend series, clipped to the active window so the chart auto-zooms): `Created`, `Resolved`.
+- **Resolution Time**: `Avg Resolution Hours`, `Median Resolution Hours`.
+- **SLA** (kept in the model, not shown on the report — bring back once the number matures): `SLA Compliance %`, `SLA Met/Breached Tickets`, `SLA Target %` (90%), `Resolution Target Hours`.
 
-**Rolling 30 Days** (relative to today, for the KPI cards)
-`Tickets Created (30D)`, `Tickets Created (Prior 30D)`, `Tickets Created (30D) vs Prior %`, `Tickets Resolved (30D)`, plus their `... Change Label` / `... Label` text measures that render the "▲ 6 vs last week" style captions.
-
-**Volume** (respect the date slicer, for trends)
-`Tickets Created`, `Tickets Resolved`, `Net Backlog Change`.
-
-**Resolution Time**
-`Avg Resolution Hours`, `Median Resolution Hours`, `Avg Resolution Hours (30D)`, `Avg Resolution Target Label`.
-
-**SLA**
-`SLA Met Tickets`, `SLA Breached Tickets`, `SLA Compliance %`, `SLA Compliance % (30D)`, `SLA Target Label`, `SLA Target Line`.
-
-**Targets** (parameters — change these two to re-tune every target caption)
-`SLA Target %` = 90%, `Resolution Target Hours` = 12.
-
-### How SLA compliance is defined
-Share of tickets **that have a due date** whose work was completed **on or before** that due date. Open tickets that aren't yet due are excluded from the denominator; open tickets already past due count as breached (`SLA Breached Tickets`). The target is Syncro's own `due_date` per ticket.
-
-> **Note:** per-ticket `due_date` was only recently turned on in Syncro, so historical SLA % is not yet meaningful — early numbers run low (FWW ~40% all-time as of Sept 2026) and should climb as the practice beds in.
+> Per-ticket `due_date` was only recently enabled in Syncro, so historical SLA % is not yet meaningful. That's why the SLA card and by-priority chart are not on the page.
 
 ---
 
 ## The report page — Executive Overview
 
-Matches the mockup, wired to live measures:
-
-- **Header** with title and two **slicers**: Date range (between), Priority (dropdown). (No Site slicer — Syncro has no usable site/location field for FWW.)
-- **Five KPI cards**: Open Tickets, Created (30D), Resolved (30D), Avg Resolution, SLA Compliance — each with a dynamic caption measure underneath.
-- **Tickets Created vs. Resolved — Weekly Trend**: line chart over `Date[Week Label]`.
-- **Open Tickets by Priority**: donut, colored Urgent→Low.
+- **Header**: title + the **Range** preset dropdown, two read-only **From** / **To** fields showing the resolved window (a Between slicer can't be driven by a preset, so these are display-only and always follow the Range selection), and the **Priority** dropdown. No Site slicer (Syncro has no usable location field).
+- **Four KPI cards**: Open Tickets, Created, Resolved, Avg Resolution — each with a dynamic "vs prior window" caption.
+- **Tickets Created vs. Resolved — Weekly Trend**: clustered column chart over `Date[Week Label]`, series `Created` / `Resolved`, auto-zooms with the Range selection.
+- **Open Tickets by Priority**: donut.
 - **Backlog Aging**: bar chart over the Aging Bucket bands.
-- **SLA Compliance by Priority**: column chart with a dashed reference line at the 90% target.
 
-### Client scoping (no RLS)
-The model is scoped to FW Walton **at the source** — the `Tickets` and `Customers` Power Query both filter to `customer_id = 33810072` (`FW Walton, Inc.`), so the model only ever contains this client's data. There is **no row-level-security role**: it protected nothing (the data is already scoped) and it blocked every non-admin viewer with "access denied" when the report was shared. Anyone with Viewer access on the workspace/app can see the report.
+### Known gaps
 
-> The ID is pinned deliberately — a name match on "Walton" also catches `Martin Walton Attorneys at Law` (a different client). If this model is ever widened to hold multiple clients, drop the Power Query filter and add an RLS role back on `Customers[Customer ID]`, and remember to assign members to it.
-
----
-
-## Things you'll likely want to adjust
-
-- **Completion timestamp for `Ready for Invoice`** — currently proxied by `Updated At`. If Syncro starts writing a real resolved/closed timestamp for that status, point `Completed At` at it.
-- **Per-priority SLA targets** — the model uses Syncro's own `due_date`. If FWW later agrees hour targets per priority (e.g. Urgent 4h, High 8h…), add a priority-targets table and switch the SLA logic to it.
-- **Card deltas** — "vs last week" and "vs prior 30 days" are computed against `TODAY()`. On a scheduled refresh they stay meaningful; in a static file they reflect the last refresh date.
+- `multiRowCard` ignores `dataLabels.color`, so the caption text renders in the default link-blue (conditional green/amber `* Change Color` measures exist but aren't applied).
+- Card "vs prior" deltas are computed against `TODAY()` — meaningful on a scheduled refresh, frozen to last-refresh date in a static file.
 
 ---
 
-*Built from `OS_FWW_Tickets.pbix`. Model = TMDL, report = PBIR; open the `.pbip` in Power BI Desktop.*
+*Model = TMDL, report = PBIR. Open the `.pbip` in Power BI Desktop, or edit the text directly.*

@@ -52,35 +52,30 @@ table _Measures
 		displayFolder: Volume
 		lineageTag: e1f2a3b4-0000-4001-8001-000000000013
 
-	/// TRUE when the custom start/end date fields have been narrowed to less than the full table span
-	measure '_Date Narrowed' =
-			VAR SelSpan = MAX ( 'Date'[Date] ) - MIN ( 'Date'[Date] )
-			VAR FullSpan = CALCULATE ( MAX ( 'Date'[Date] ) - MIN ( 'Date'[Date] ), REMOVEFILTERS ( 'Date' ) )
-			RETURN SelSpan < FullSpan - 3
-		displayFolder: KPI
-		lineageTag: e1f2a3b4-0000-4001-8001-00000000000e
-
-	/// Start of the KPI window. Driven by the Range picker; falls back to the custom start/end
-	/// fields, and to the last 90 days when nothing is set.
+	/// Start of the active window. Driven entirely by the Range picker; last 90 days when nothing is picked.
 	measure '_Window Min' =
-			VAR P = SELECTEDVALUE ( 'Date Range'[Range], "Custom / All" )
+			VAR P = SELECTEDVALUE ( 'Date Range'[Range], "Last 90 days" )
 			VAR T = TODAY ()
 			VAR QAgo = EDATE ( T, -3 )
 			VAR QStart = DATE ( YEAR ( QAgo ), ( QUARTER ( QAgo ) - 1 ) * 3 + 1, 1 )
 			RETURN
 				SWITCH (
 					P,
+					"Today", T,
 					"Last 7 days", T - 6,
 					"Last 30 days", T - 29,
+					"Last 90 days", T - 89,
 					"Last quarter", QStart,
 					"Year to date", DATE ( YEAR ( T ), 1, 1 ),
-					IF ( [_Date Narrowed], MIN ( 'Date'[Date] ), T - 89 )
+					"Last 12 months", EDATE ( T, -12 ) + 1,
+					"All time", CALCULATE ( MIN ( 'Date'[Date] ), REMOVEFILTERS ( 'Date' ) ),
+					T - 89
 				)
 		displayFolder: KPI
 		lineageTag: e1f2a3b4-0000-4001-8001-000000000006
 
 	measure '_Window Max' =
-			VAR P = SELECTEDVALUE ( 'Date Range'[Range], "Custom / All" )
+			VAR P = SELECTEDVALUE ( 'Date Range'[Range], "Last 90 days" )
 			VAR T = TODAY ()
 			VAR QAgo = EDATE ( T, -3 )
 			VAR QStart = DATE ( YEAR ( QAgo ), ( QUARTER ( QAgo ) - 1 ) * 3 + 1, 1 )
@@ -88,11 +83,23 @@ table _Measures
 				SWITCH (
 					P,
 					"Last quarter", EOMONTH ( QStart, 2 ),
-					"Custom / All", IF ( [_Date Narrowed], MAX ( 'Date'[Date] ), T ),
+					"All time", CALCULATE ( MAX ( 'Date'[Date] ), REMOVEFILTERS ( 'Date' ) ),
 					T
 				)
 		displayFolder: KPI
 		lineageTag: e1f2a3b4-0000-4001-8001-000000000007
+
+	/// Active window start, formatted for the header From field
+	measure 'Window Start' =
+			FORMAT ( [_Window Min], "MM/dd/yyyy" )
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-00000000001a
+
+	/// Active window end, formatted for the header To field
+	measure 'Window End' =
+			FORMAT ( [_Window Max], "MM/dd/yyyy" )
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-00000000001b
 
 	/// Tickets created in the selected window
 	measure 'Created (Card)' =

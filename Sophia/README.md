@@ -2,7 +2,7 @@
 
 A Power BI Project (PBIP) containing a **semantic model** and a single-page **Executive Overview** report for **Sophia Oilfield Supply Services** service-desk ticket health, built on the Syncro RMM PostgreSQL export.
 
-> This is a per-client instance of the OneSource ticket-health report. Its sibling is `OS_FWW_Tickets` (FW Walton). The repos are identical apart from the `CustomerId` parameter and the client name in the report header/footer.
+> One client folder in the [`OS_Client_Reporting`](../README.md) monorepo (sibling: [`FWW`](../FWW/)). All client dashboards are identical apart from the `CustomerId` parameter and the client name in the header/footer.
 
 ---
 
@@ -23,7 +23,7 @@ The `.pbip` is plain text (TMDL model, PBIR report) — it diffs cleanly and can
 
 There is **no row-level-security role**. It protected nothing (the data is already scoped at source) and it blocked every non-admin viewer with "access denied" on share. Anyone with Viewer access to the workspace/app can open the report.
 
-> Always scope by `customer_id`, never a name match. To stand up this report for another client: copy the repo, change `CustomerId`, and update the client name in the `title` and `footer` visuals.
+> Always scope by `customer_id`, never a name match. Adding another client is a folder copy — see the monorepo README.
 
 ---
 
@@ -35,7 +35,7 @@ There is **no row-level-security role**. It protected nothing (the data is alrea
 | **Customers** | Dimension | Filtered to the single client row via `CustomerId`. Joins to Tickets on `Customer ID` (key cast to whole number — `customers.id` is text in Syncro, `tickets.customer_id` is numeric). |
 | **Date** | Dimension | Calculated `CALENDAR` table, first ticket year → end of current year. Marked as the date table. |
 | **Aging Bucket** | Disconnected helper | Static bands (`0–1 / 1–3 / 3–7 / 7+ days`) for backlog aging. |
-| **Date Range** | Disconnected helper | Preset picker values: Last 7 days / Last 30 days / Last quarter / Year to date / Custom-All. |
+| **Date Range** | Disconnected helper | Range-picker presets: Today / Last 7 days / Last 30 days / Last 90 days / Last quarter / Year to date / Last 12 months / All time. |
 | **_Measures** | Measure holder | Hidden table holding all DAX measures in display folders. |
 
 **Relationships:** `Tickets[Created Date] → Date[Date]` is active; `Completed Date` and `Due Date` relationships are inactive and switched on inside measures via `USERELATIONSHIP`. Auto date/time is off.
@@ -53,7 +53,7 @@ There is **no row-level-security role**. It protected nothing (the data is alrea
 ## Measures (by folder)
 
 - **Backlog** (point-in-time, as of the window end, respect Priority): `Open Tickets`, `Open Tickets 7 Days Ago`, `Open Tickets Change Label`, `Overdue Open Tickets`, `Open Tickets by Age`, `Avg Open Ticket Age (Days)`.
-- **KPI** (drive the four cards; honour the Range picker / custom dates, default last 90 days): `Created (Card)`, `Resolved (Card)`, `Avg Resolution Days (Card)`, their `… (Prior Window)` and `… Change Label` counterparts, and the window helpers `_Window Min`, `_Window Max`, `_Date Narrowed`.
+- **KPI** (drive the four cards; keyed off the Range picker, default last 90 days): `Created (Card)`, `Resolved (Card)`, `Avg Resolution Days (Card)`, their `… (Prior Window)` and `… Change Label` counterparts, the window bounds `_Window Min` / `_Window Max`, and `Window Start` / `Window End` (those two feed the header From/To fields).
 - **Volume** (trend series, clipped to the active window so the chart auto-zooms): `Created`, `Resolved`.
 - **Resolution Time**: `Avg Resolution Hours`, `Median Resolution Hours`.
 - **SLA** (kept in the model, not shown on the report — bring back once the number matures): `SLA Compliance %`, `SLA Met/Breached Tickets`, `SLA Target %` (90%), `Resolution Target Hours`.
@@ -64,9 +64,9 @@ There is **no row-level-security role**. It protected nothing (the data is alrea
 
 ## The report page — Executive Overview
 
-- **Header**: title + three slicers — **Range** preset (dropdown), **Date** (between, explicit start/end fields), **Priority** (dropdown). No Site slicer (Syncro has no usable location field).
+- **Header**: title + the **Range** preset dropdown, two read-only **From** / **To** fields showing the resolved window (a Between slicer can't be driven by a preset, so these are display-only and always follow the Range selection), and the **Priority** dropdown. No Site slicer (Syncro has no usable location field).
 - **Four KPI cards**: Open Tickets, Created, Resolved, Avg Resolution — each with a dynamic "vs prior window" caption.
-- **Tickets Created vs. Resolved — Weekly Trend**: clustered column chart over `Date[Week Label]`, series `Created` / `Resolved`, auto-zooms with the Range/date selection.
+- **Tickets Created vs. Resolved — Weekly Trend**: clustered column chart over `Date[Week Label]`, series `Created` / `Resolved`, auto-zooms with the Range selection.
 - **Open Tickets by Priority**: donut.
 - **Backlog Aging**: bar chart over the Aging Bucket bands.
 
