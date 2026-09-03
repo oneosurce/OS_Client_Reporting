@@ -50,10 +50,18 @@ table _Measures
 		displayFolder: Volume
 		lineageTag: e1f2a3b4-0000-4001-8001-000000000002
 
+	/// TRUE when the user has narrowed the date slicer to less than the full table span
+	measure '_Date Narrowed' =
+			VAR SelSpan = MAX ( 'Date'[Date] ) - MIN ( 'Date'[Date] )
+			VAR FullSpan = CALCULATE ( MAX ( 'Date'[Date] ) - MIN ( 'Date'[Date] ), REMOVEFILTERS ( 'Date' ) )
+			RETURN SelSpan < FullSpan - 3
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-00000000000e
+
 	/// Tickets created in the selected window (last 90 days if the date slicer is untouched)
 	measure 'Created (Card)' =
 			IF (
-				ISFILTERED ( 'Date'[Date] ),
+				[_Date Narrowed],
 				[Tickets Created],
 				CALCULATE ( [Tickets Created], 'Date'[Date] > TODAY () - 90, 'Date'[Date] <= TODAY () )
 			)
@@ -63,7 +71,7 @@ table _Measures
 
 	measure 'Resolved (Card)' =
 			IF (
-				ISFILTERED ( 'Date'[Date] ),
+				[_Date Narrowed],
 				[Tickets Resolved],
 				CALCULATE ( [Tickets Resolved], 'Date'[Date] > TODAY () - 90, 'Date'[Date] <= TODAY () )
 			)
@@ -74,7 +82,7 @@ table _Measures
 	measure 'Avg Resolution Days (Card)' =
 			VAR Hrs =
 				IF (
-					ISFILTERED ( 'Date'[Date] ),
+					[_Date Narrowed],
 					[Avg Resolution Hours],
 					CALCULATE ( [Avg Resolution Hours], 'Date'[Date] > TODAY () - 90, 'Date'[Date] <= TODAY () )
 				)
@@ -86,12 +94,12 @@ table _Measures
 
 	/// Window bounds used by the "vs prior" captions
 	measure '_Window Min' =
-			IF ( ISFILTERED ( 'Date'[Date] ), MIN ( 'Date'[Date] ), TODAY () - 89 )
+			IF ( [_Date Narrowed], MIN ( 'Date'[Date] ), TODAY () - 89 )
 		displayFolder: KPI
 		lineageTag: e1f2a3b4-0000-4001-8001-000000000006
 
 	measure '_Window Max' =
-			IF ( ISFILTERED ( 'Date'[Date] ), MAX ( 'Date'[Date] ), TODAY () )
+			IF ( [_Date Narrowed], MAX ( 'Date'[Date] ), TODAY () )
 		displayFolder: KPI
 		lineageTag: e1f2a3b4-0000-4001-8001-000000000007
 
@@ -172,7 +180,7 @@ table _Measures
 
 	/// Open tickets as of the end of the selected date range (or today when the date slicer is untouched). Respects Priority.
 	measure 'Open Tickets' =
-			VAR AsOf = IF ( ISFILTERED ( 'Date'[Date] ), MAX ( 'Date'[Date] ), TODAY () )
+			VAR AsOf = IF ( [_Date Narrowed], MAX ( 'Date'[Date] ), TODAY () )
 			RETURN
 				CALCULATE (
 					COUNTROWS (
@@ -189,7 +197,7 @@ table _Measures
 		lineageTag: 39c4423f-f4c8-4c62-875d-f46f9547cdde
 
 	measure 'Open Tickets 7 Days Ago' =
-			VAR AsOf = IF ( ISFILTERED ( 'Date'[Date] ), MAX ( 'Date'[Date] ), TODAY () ) - 7
+			VAR AsOf = IF ( [_Date Narrowed], MAX ( 'Date'[Date] ), TODAY () ) - 7
 			RETURN
 				CALCULATE (
 					COUNTROWS (
@@ -241,7 +249,7 @@ table _Measures
 
 	/// Open tickets bucketed by age, as of the end of the selected window. Use with 'Aging Bucket'[Bucket].
 	measure 'Open Tickets by Age' =
-			VAR AsOf = IF ( ISFILTERED ( 'Date'[Date] ), MAX ( 'Date'[Date] ), TODAY () ) + 1
+			VAR AsOf = IF ( [_Date Narrowed], MAX ( 'Date'[Date] ), TODAY () ) + 1
 			VAR MinD = MIN ( 'Aging Bucket'[Min Days] )
 			VAR MaxD = MAX ( 'Aging Bucket'[Max Days] )
 			RETURN
