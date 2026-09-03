@@ -3,10 +3,10 @@
   "name": "card_val_1",
   "position": {
     "x": 286,
-    "y": 106,
+    "y": 110,
     "z": 13,
     "width": 204,
-    "height": 74,
+    "height": 60,
     "tabOrder": 13
   },
   "visual": {

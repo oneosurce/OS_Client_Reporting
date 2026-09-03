@@ -3,10 +3,10 @@
   "name": "card_lbl_0",
   "position": {
     "x": 24,
-    "y": 92,
+    "y": 90,
     "z": 8,
     "width": 232,
-    "height": 140,
+    "height": 134,
     "tabOrder": 8
   },
   "visual": {
