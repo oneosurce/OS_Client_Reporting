@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "OS_FWW_Tickets"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "5ca21698-51a4-4ee7-802c-8ea6950f0a84"
+  }
+}

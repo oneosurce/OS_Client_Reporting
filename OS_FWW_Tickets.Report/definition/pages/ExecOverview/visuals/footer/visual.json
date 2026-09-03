@@ -1,0 +1,39 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "name": "footer",
+  "position": {
+    "x": 24,
+    "y": 694,
+    "z": 40,
+    "width": 1232,
+    "height": 20,
+    "tabOrder": 40
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "horizontalTextAlignment": "left",
+                "textRuns": [
+                  {
+                    "value": "Metrics scoped to FW Walton via row-level security; SLA % measured against agreed FWW targets (resolved on or before due date).",
+                    "textStyle": {
+                      "color": "#6B7280",
+                      "fontStyle": "italic",
+                      "fontSize": "8pt"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drawExtreme": true
+  }
+}

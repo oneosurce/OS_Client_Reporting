@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Power BI binary formats — this is a text-only PBIP repo
+*.pbix
+*.pbit
+
+# Power BI Desktop / PBIP local caches and per-user settings
+.pbi/
+**/.pbi/
+**/*.abf
+**/localSettings.json
+**/cache.abf
+
+# Editor / OS cruft
+Thumbs.db
+*.tmp

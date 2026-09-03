@@ -1,0 +1,208 @@
+table Tickets
+	lineageTag: 52b183fc-09ed-48e9-b878-af6fc603cbd6
+
+	column 'Ticket ID'
+		dataType: string
+		isHidden
+		lineageTag: 40eac0c7-d5b3-4cc4-88d2-5ec492311a5b
+		summarizeBy: none
+		sourceColumn: Ticket ID
+
+		annotation SummarizationSetBy = User
+	column 'Ticket Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: b1e45b5f-8f94-424a-b8e8-324d5e871d98
+		summarizeBy: none
+		sourceColumn: Ticket Number
+
+		annotation SummarizationSetBy = User
+	column Subject
+		dataType: string
+		lineageTag: 99b295b4-cda8-4e4b-8f2c-4b60ba22c08e
+		summarizeBy: none
+		sourceColumn: Subject
+
+		annotation SummarizationSetBy = User
+	column Status
+		dataType: string
+		lineageTag: 26488524-2996-4c61-8d37-9e4e84516213
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = User
+	column Priority
+		dataType: string
+		lineageTag: 932f2653-f031-41f2-8bd6-f934b66483ed
+		summarizeBy: none
+		sortByColumn: 'Priority Sort'
+		sourceColumn: Priority
+
+		annotation SummarizationSetBy = User
+	column 'Priority Sort'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c6def7e8-327e-4174-aaf0-bae6a4353694
+		summarizeBy: none
+		sourceColumn: Priority Sort
+
+		annotation SummarizationSetBy = User
+	column 'Problem Type'
+		dataType: string
+		lineageTag: 3a190214-f0a4-4826-8678-391f5047afad
+		summarizeBy: none
+		sourceColumn: Problem Type
+
+		annotation SummarizationSetBy = User
+	column Technician
+		dataType: string
+		lineageTag: da10f049-f74a-40a9-a26a-14a52dbba128
+		summarizeBy: none
+		sourceColumn: Technician
+
+		annotation SummarizationSetBy = User
+	column 'Technician ID'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 17239493-ce35-45fb-810b-ed5c234f9ea6
+		summarizeBy: none
+		sourceColumn: Technician ID
+
+		annotation SummarizationSetBy = User
+	column 'Customer ID'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b883c158-6341-42f9-b8c6-7e518dd1cdda
+		summarizeBy: none
+		sourceColumn: Customer ID
+
+		annotation SummarizationSetBy = User
+	column 'Customer Name'
+		dataType: string
+		lineageTag: 079acd8c-de03-4703-8694-b007b58d98c7
+		summarizeBy: none
+		sourceColumn: Customer Name
+
+		annotation SummarizationSetBy = User
+	column 'Created At'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 249a4c5a-ab8b-4b7f-b516-7db1c697a846
+		summarizeBy: none
+		sourceColumn: Created At
+
+		annotation SummarizationSetBy = User
+	column 'Due At'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: c3960fc0-f68b-4a48-bd54-642b24536aae
+		summarizeBy: none
+		sourceColumn: Due At
+
+		annotation SummarizationSetBy = User
+	column 'Resolved At'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 3a6f0223-8e36-452c-9502-7bcc38fea48c
+		summarizeBy: none
+		sourceColumn: Resolved At
+
+		annotation SummarizationSetBy = User
+	column 'Updated At'
+		dataType: dateTime
+		isHidden
+		formatString: General Date
+		lineageTag: f3c5f166-a739-4ae3-9309-cee5a4cc2ac3
+		summarizeBy: none
+		sourceColumn: Updated At
+
+		annotation SummarizationSetBy = User
+	column 'Created Date'
+		dataType: dateTime
+		isHidden
+		formatString: Short Date
+		lineageTag: 32ebbace-61ef-4936-80da-3f59905d42c6
+		summarizeBy: none
+		sourceColumn: Created Date
+
+		annotation SummarizationSetBy = User
+	column 'Resolved Date'
+		dataType: dateTime
+		isHidden
+		formatString: Short Date
+		lineageTag: ebe66e23-35cc-4bd5-bd98-7afd2d4dfc99
+		summarizeBy: none
+		sourceColumn: Resolved Date
+
+		annotation SummarizationSetBy = User
+	column 'Due Date'
+		dataType: dateTime
+		isHidden
+		formatString: Short Date
+		lineageTag: 5bd7079d-d641-4d16-8469-ad133c42168f
+		summarizeBy: none
+		sourceColumn: Due Date
+
+		annotation SummarizationSetBy = User
+	column 'Is Open'
+		dataType: boolean
+		lineageTag: 73deb74b-2374-45ed-99a3-c62c4c3c0506
+		summarizeBy: none
+		sourceColumn: Is Open
+
+		annotation SummarizationSetBy = User
+	column 'Resolution Hours'
+		dataType: double
+		formatString: 0.0
+		lineageTag: 5dc1f774-323f-4388-8f29-31ce7629449d
+		summarizeBy: none
+		sourceColumn: Resolution Hours
+
+		annotation SummarizationSetBy = User
+	column 'Resolved On Time'
+		dataType: boolean
+		lineageTag: 4ed526e3-ef69-4e56-b78a-f1932c702cce
+		summarizeBy: none
+		sourceColumn: Resolved On Time
+
+		annotation SummarizationSetBy = User
+	partition Tickets = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database("os-syncro-db.postgres.database.azure.com", "syncro_reporting"),
+					Navigation = Source{[Schema = "public", Item = "tickets"]}[Data],
+					KeepColumns = Table.SelectColumns(Navigation, {"id", "number", "subject", "status", "priority", "problem_type", "user", "user_id", "customer_id", "customer_business_then_name", "created_at", "due_date", "resolved_at", "updated_at"}),
+					Renamed = Table.RenameColumns(KeepColumns, {
+						{"id", "Ticket ID"}, {"number", "Ticket Number"}, {"subject", "Subject"}, {"status", "Status"},
+						{"priority", "Priority Raw"}, {"problem_type", "Problem Type"}, {"user", "Technician"}, {"user_id", "Technician ID"},
+						{"customer_id", "Customer ID"}, {"customer_business_then_name", "Customer Name"},
+						{"created_at", "Created At"}, {"due_date", "Due At"}, {"resolved_at", "Resolved At"}, {"updated_at", "Updated At"}}),
+					Typed = Table.TransformColumnTypes(Renamed, {
+						{"Ticket ID", type text}, {"Ticket Number", Int64.Type}, {"Customer ID", Int64.Type}, {"Technician ID", Int64.Type},
+						{"Created At", type datetime}, {"Due At", type datetime}, {"Resolved At", type datetime}, {"Updated At", type datetime}}),
+					// Syncro stores priority as "0 Urgent", "1 High", "2 Normal", "3 Low" - strip the leading digit
+					CleanPriority = Table.AddColumn(Typed, "Priority", each
+						let p = if [Priority Raw] = null then "" else Text.Trim([Priority Raw]),
+							noDigit = if Text.Length(p) > 1 and List.Contains({"0".."9"}, Text.Start(p, 1)) then Text.Trim(Text.Range(p, 1)) else p
+						in if noDigit = "" then "Unspecified" else noDigit, type text),
+					PrioritySort = Table.AddColumn(CleanPriority, "Priority Sort", each
+						if [Priority] = "Urgent" then 1 else if [Priority] = "High" then 2 else if [Priority] = "Normal" then 3 else if [Priority] = "Low" then 4 else 5, Int64.Type),
+					// Open = anything that is not Resolved / Closed / Invoiced
+					IsOpen = Table.AddColumn(PrioritySort, "Is Open", each not List.Contains({"Resolved", "Closed", "Invoiced"}, [Status]), type logical),
+					CreatedDate = Table.AddColumn(IsOpen, "Created Date", each Date.From([Created At]), type date),
+					ResolvedDate = Table.AddColumn(CreatedDate, "Resolved Date", each if [Resolved At] = null then null else Date.From([Resolved At]), type date),
+					DueDate = Table.AddColumn(ResolvedDate, "Due Date", each if [Due At] = null then null else Date.From([Due At]), type date),
+					ResolutionHours = Table.AddColumn(DueDate, "Resolution Hours", each
+						if [Resolved At] = null or [Created At] = null then null else Duration.TotalHours([Resolved At] - [Created At]), type number),
+					// SLA met = resolved on or before the Syncro due date. Null when unresolved or no due date.
+					ResolvedOnTime = Table.AddColumn(ResolutionHours, "Resolved On Time", each
+						if [Resolved At] = null or [Due At] = null then null else [Resolved At] <= [Due At], type logical),
+					Removed = Table.RemoveColumns(ResolvedOnTime, {"Priority Raw"})
+				in
+					Removed
+
+	annotation PBI_ResultType = Table
