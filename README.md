@@ -23,7 +23,7 @@ A Power BI Project (PBIP) containing a **semantic model** and an **Executive Ove
 | Table | Role | Notes |
 |---|---|---|
 | **Tickets** | Fact | One row per ticket (~8,600). Trimmed to the columns the dashboard needs; adds cleaned/derived fields (below). |
-| **Customers** | Dimension | One row per customer (342). `Customer ID` is the RLS key and the join to Tickets. |
+| **Customers** | Dimension | Filtered in Power Query to the single client row (`FW Walton, Inc.`, id 33810072). Joins to Tickets on `Customer ID`. |
 | **Date** | Dimension | Calculated date table (`CALENDAR`) from the first ticket year through the end of the current year. Marked as the model's date table. |
 | **Aging Bucket** | Disconnected helper | Static bands (`0–1 / 1–3 / 3–7 / 7+ days`) for backlog aging. |
 | **Measures** | Measure holder | Empty hidden table that stores all DAX measures in display folders. |
@@ -86,8 +86,10 @@ Matches the mockup, wired to live measures:
 - **Backlog Aging**: bar chart over the Aging Bucket bands.
 - **SLA Compliance by Priority**: column chart with a dashed reference line at the 90% target.
 
-### Row-level security
-A role named **`FW Walton`** filters `Customers` to the single client record — `Customers[Customer ID] = 33810072` (`FW Walton, Inc.`) — and that flows to Tickets through the relationship. This is pinned to the ID on purpose: a name match on "Walton" also catches `Martin Walton Attorneys at Law` (a different client, 527 tickets), which would be a data leak. Assign members to this role in the Power BI Service (or test it with *Modeling → View as*).
+### Client scoping (no RLS)
+The model is scoped to FW Walton **at the source** — the `Tickets` and `Customers` Power Query both filter to `customer_id = 33810072` (`FW Walton, Inc.`), so the model only ever contains this client's data. There is **no row-level-security role**: it protected nothing (the data is already scoped) and it blocked every non-admin viewer with "access denied" when the report was shared. Anyone with Viewer access on the workspace/app can see the report.
+
+> The ID is pinned deliberately — a name match on "Walton" also catches `Martin Walton Attorneys at Law` (a different client). If this model is ever widened to hold multiple clients, drop the Power Query filter and add an RLS role back on `Customers[Customer ID]`, and remember to assign members to it.
 
 ---
 

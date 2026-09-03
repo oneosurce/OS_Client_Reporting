@@ -20,7 +20,7 @@
                 "horizontalTextAlignment": "left",
                 "textRuns": [
                   {
-                    "value": "Metrics scoped to FW Walton via row-level security. SLA measured against each ticket's Syncro due date.",
+                    "value": "All metrics are FW Walton, Inc. only. Resolution counts \"Ready for Invoice\" as completed work.",
                     "textStyle": {
                       "color": "#6B7280",
                       "fontSize": "8pt"
