@@ -249,7 +249,7 @@ table _Measures
 
 	/// Open tickets bucketed by age, as of the end of the selected window. Use with 'Aging Bucket'[Bucket].
 	measure 'Open Tickets by Age' =
-			VAR AsOf = IF ( [_Date Narrowed], MAX ( 'Date'[Date] ), TODAY () ) + 1
+			VAR AsOf = IF ( [_Date Narrowed], MAX ( 'Date'[Date] ), TODAY () )
 			VAR MinD = MIN ( 'Aging Bucket'[Min Days] )
 			VAR MaxD = MAX ( 'Aging Bucket'[Max Days] )
 			RETURN
@@ -258,8 +258,8 @@ table _Measures
 						FILTER (
 							Tickets,
 							VAR OpenThen =
-								Tickets[Created At] < AsOf
-									&& ( ISBLANK ( Tickets[Completed At] ) || Tickets[Completed At] >= AsOf )
+								Tickets[Created At] < AsOf + 1
+									&& ( ISBLANK ( Tickets[Completed At] ) || Tickets[Completed At] >= AsOf + 1 )
 							VAR AgeDays = INT ( AsOf - Tickets[Created At] )
 							RETURN OpenThen && AgeDays >= MinD && AgeDays < MaxD
 						)

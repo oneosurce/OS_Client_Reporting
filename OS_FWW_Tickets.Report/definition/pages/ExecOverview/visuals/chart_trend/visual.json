@@ -23,11 +23,11 @@
                       "Entity": "Date"
                     }
                   },
-                  "Property": "Week Label"
+                  "Property": "Year Month"
                 }
               },
-              "queryRef": "Date.Week Label",
-              "nativeQueryRef": "Week Label"
+              "queryRef": "Date.Year Month",
+              "nativeQueryRef": "Year Month"
             }
           ]
         },
@@ -74,7 +74,7 @@
                     "Entity": "Date"
                   }
                 },
-                "Property": "Week Start"
+                "Property": "Year Month"
               }
             },
             "direction": "Ascending"
@@ -305,7 +305,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Tickets Created vs. Resolved \u2014 Weekly Trend'"
+                  "Value": "'Tickets Created vs. Resolved \u2014 Monthly'"
                 }
               }
             },
