@@ -19,7 +19,5 @@ ref table 'Aging Bucket'
 ref table 'Date Range'
 ref table _Measures
 
-ref role 'FW Walton'
-
 ref cultureInfo en-US
 
