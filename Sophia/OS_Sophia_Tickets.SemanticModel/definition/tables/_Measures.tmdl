@@ -83,7 +83,6 @@ table _Measures
 				SWITCH (
 					P,
 					"Last quarter", EOMONTH ( QStart, 2 ),
-					"All time", CALCULATE ( MAX ( 'Date'[Date] ), REMOVEFILTERS ( 'Date' ) ),
 					T
 				)
 		displayFolder: KPI
