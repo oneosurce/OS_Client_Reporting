@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "slicer_date",
   "position": {
-    "x": 900,
-    "y": 20,
+    "x": 776,
+    "y": 12,
     "z": 5,
-    "width": 190,
-    "height": 58,
+    "width": 306,
+    "height": 72,
     "tabOrder": 5
   },
   "visual": {
@@ -121,6 +121,19 @@
               "expr": {
                 "Literal": {
                   "Value": "'Between'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "slider": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
