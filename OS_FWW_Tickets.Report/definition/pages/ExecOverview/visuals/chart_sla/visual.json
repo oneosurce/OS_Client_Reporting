@@ -173,61 +173,6 @@
             }
           }
         }
-      ],
-      "y1AxisReferenceLine": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "0.9"
-                }
-              }
-            },
-            "lineColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#C0392B'"
-                    }
-                  }
-                }
-              }
-            },
-            "style": {
-              "expr": {
-                "Literal": {
-                  "Value": "'dashed'"
-                }
-              }
-            },
-            "transparency": {
-              "expr": {
-                "Literal": {
-                  "Value": "20"
-                }
-              }
-            },
-            "dataLabelShow": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            }
-          },
-          "selector": {
-            "id": "target"
-          }
-        }
       ]
     },
     "visualContainerObjects": {
