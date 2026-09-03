@@ -50,6 +50,19 @@ table _Measures
 		displayFolder: Volume
 		lineageTag: e1f2a3b4-0000-4001-8001-000000000002
 
+	/// Trend-chart series: created per week, clipped to the selected Range / date window
+	measure 'Created (Trend)' =
+			CALCULATE ( [Tickets Created], KEEPFILTERS ( DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) ) )
+		formatString: #,0
+		displayFolder: Volume
+		lineageTag: e1f2a3b4-0000-4001-8001-000000000012
+
+	measure 'Resolved (Trend)' =
+			CALCULATE ( [Tickets Resolved], KEEPFILTERS ( DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) ) )
+		formatString: #,0
+		displayFolder: Volume
+		lineageTag: e1f2a3b4-0000-4001-8001-000000000013
+
 	/// TRUE when the custom start/end date fields have been narrowed to less than the full table span
 	measure '_Date Narrowed' =
 			VAR SelSpan = MAX ( 'Date'[Date] ) - MIN ( 'Date'[Date] )

@@ -23,11 +23,11 @@
                       "Entity": "Date"
                     }
                   },
-                  "Property": "Year Month"
+                  "Property": "Week Label"
                 }
               },
-              "queryRef": "Date.Year Month",
-              "nativeQueryRef": "Year Month"
+              "queryRef": "Date.Week Label",
+              "nativeQueryRef": "Week Label"
             }
           ]
         },
@@ -41,11 +41,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Created"
+                  "Property": "Created (Trend)"
                 }
               },
-              "queryRef": "_Measures.Created",
-              "nativeQueryRef": "Created"
+              "queryRef": "_Measures.Created (Trend)",
+              "nativeQueryRef": "Created (Trend)"
             },
             {
               "field": {
@@ -55,11 +55,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Resolved"
+                  "Property": "Resolved (Trend)"
                 }
               },
-              "queryRef": "_Measures.Resolved",
-              "nativeQueryRef": "Resolved"
+              "queryRef": "_Measures.Resolved (Trend)",
+              "nativeQueryRef": "Resolved (Trend)"
             }
           ]
         }
@@ -74,7 +74,7 @@
                     "Entity": "Date"
                   }
                 },
-                "Property": "Year Month"
+                "Property": "Week Start"
               }
             },
             "direction": "Ascending"
@@ -153,7 +153,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Created"
+            "metadata": "_Measures.Created (Trend)"
           }
         },
         {
@@ -171,7 +171,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Resolved"
+            "metadata": "_Measures.Resolved (Trend)"
           }
         }
       ],
@@ -305,7 +305,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Tickets Created vs. Resolved \u2014 Monthly'"
+                  "Value": "'Tickets Created vs. Resolved \u2014 Weekly Trend'"
                 }
               }
             },
