@@ -1,24 +1,28 @@
 table Measures
 	lineageTag: 76c797b0-8602-442c-b6a0-83d126c7c96c
 
+	/// Agreed FWW SLA compliance target
 	measure 'SLA Target %' =
 			0.9
 		formatString: 0%
-		description: Agreed FWW SLA compliance target
 		displayFolder: Targets
 		lineageTag: fa6cd75f-370b-48e9-ad86-64c58cdfe9b7
+
+	/// Agreed FWW average resolution target (hours)
 	measure 'Resolution Target Hours' =
 			12
 		formatString: 0
-		description: Agreed FWW average resolution target (hours)
 		displayFolder: Targets
 		lineageTag: b7c76dae-f320-48ac-9e0c-b56a0ec00a2a
+
+	/// Tickets created in the current date context (Created Date relationship)
 	measure 'Tickets Created' =
 			COUNTROWS ( Tickets )
 		formatString: #,0
-		description: Tickets created in the current date context (Created Date relationship)
 		displayFolder: Volume
 		lineageTag: c1249d98-aeaa-4815-8bc2-f4814ae61bb7
+
+	/// Tickets whose work was completed (Resolved or Ready for Invoice) in the current date context
 	measure 'Tickets Resolved' =
 			CALCULATE (
 				COUNTROWS ( Tickets ),
@@ -26,14 +30,16 @@ table Measures
 				NOT ISBLANK ( Tickets[Completed At] )
 			)
 		formatString: #,0
-		description: Tickets whose work was completed (Resolved or Ready for Invoice) in the current date context
 		displayFolder: Volume
 		lineageTag: abb46376-6f88-4ab3-a04f-6d03fa6afe58
+
 	measure 'Net Backlog Change' =
 			[Tickets Created] - [Tickets Resolved]
 		formatString: +#,0;-#,0;0
 		displayFolder: Volume
 		lineageTag: 93e0a4ea-bdd0-4152-a1fb-9d4f80a96639
+
+	/// Currently open tickets. Ignores the date slicer; respects Priority.
 	measure 'Open Tickets' =
 			CALCULATE (
 				COUNTROWS ( Tickets ),
@@ -41,9 +47,9 @@ table Measures
 				REMOVEFILTERS ( 'Date' )
 			)
 		formatString: #,0
-		description: Currently open tickets. Ignores the date slicer; respects Site and Priority.
 		displayFolder: Backlog
 		lineageTag: 39c4423f-f4c8-4c62-875d-f46f9547cdde
+
 	measure 'Open Tickets 7 Days Ago' =
 			VAR RefDate = TODAY () - 7
 			RETURN
@@ -60,11 +66,13 @@ table Measures
 		formatString: #,0
 		displayFolder: Backlog
 		lineageTag: 54e2d532-ed1d-44f6-8e08-d1545b63075f
+
 	measure 'Open Tickets vs Last Week' =
 			[Open Tickets] - [Open Tickets 7 Days Ago]
 		formatString: +#,0;-#,0;0
 		displayFolder: Backlog
 		lineageTag: a481ad4c-888d-436f-be62-1c64742989da
+
 	measure 'Open Tickets Change Label' =
 			VAR Delta = [Open Tickets vs Last Week]
 			RETURN
@@ -76,6 +84,7 @@ table Measures
 				)
 		displayFolder: Backlog
 		lineageTag: a4638d47-e13b-4ecf-bb16-282a167cc544
+
 	measure 'Overdue Open Tickets' =
 			CALCULATE (
 				COUNTROWS (
@@ -91,6 +100,8 @@ table Measures
 		formatString: #,0
 		displayFolder: Backlog
 		lineageTag: 740ecc59-d0f3-4f6c-a597-85889c887620
+
+	/// Open tickets bucketed by age. Use with 'Aging Bucket'[Bucket].
 	measure 'Open Tickets by Age' =
 			VAR MinD = MIN ( 'Aging Bucket'[Min Days] )
 			VAR MaxD = MAX ( 'Aging Bucket'[Max Days] )
@@ -106,9 +117,9 @@ table Measures
 					REMOVEFILTERS ( 'Date' )
 				)
 		formatString: #,0
-		description: Open tickets bucketed by age. Use with 'Aging Bucket'[Bucket].
 		displayFolder: Backlog
 		lineageTag: 2db9be6b-e884-41fb-ae31-1177874ac05c
+
 	measure 'Avg Open Ticket Age (Days)' =
 			CALCULATE (
 				AVERAGEX ( FILTER ( Tickets, Tickets[Is Open] ), DATEDIFF ( Tickets[Created At], NOW (), HOUR ) / 24.0 ),
@@ -117,6 +128,7 @@ table Measures
 		formatString: 0.0
 		displayFolder: Backlog
 		lineageTag: 672d194b-0bb3-4908-accb-b7a0360fd7d0
+
 	measure 'Tickets Created (30D)' =
 			CALCULATE (
 				COUNTROWS ( Tickets ),
@@ -127,6 +139,7 @@ table Measures
 		formatString: #,0
 		displayFolder: Rolling 30 Days
 		lineageTag: 99d80bc0-27fb-46cf-8314-3893f488ad7d
+
 	measure 'Tickets Created (Prior 30D)' =
 			CALCULATE (
 				COUNTROWS ( Tickets ),
@@ -137,11 +150,13 @@ table Measures
 		formatString: #,0
 		displayFolder: Rolling 30 Days
 		lineageTag: f69db933-b54b-4d7b-91f8-862dbbaeb164
+
 	measure 'Tickets Created (30D) vs Prior %' =
 			DIVIDE ( [Tickets Created (30D)] - [Tickets Created (Prior 30D)], [Tickets Created (Prior 30D)] )
 		formatString: +0%;-0%;0%
 		displayFolder: Rolling 30 Days
 		lineageTag: 8c55f833-ba7a-4d6c-8d19-ba86b210ea7e
+
 	measure 'Tickets Created (30D) Change Label' =
 			VAR Pct = [Tickets Created (30D) vs Prior %]
 			RETURN
@@ -154,6 +169,7 @@ table Measures
 				)
 		displayFolder: Rolling 30 Days
 		lineageTag: b56e7ae5-05be-4d98-9bd9-6c1857f8a4b9
+
 	measure 'Tickets Resolved (30D)' =
 			CALCULATE (
 				COUNTROWS ( Tickets ),
@@ -164,6 +180,7 @@ table Measures
 		formatString: #,0
 		displayFolder: Rolling 30 Days
 		lineageTag: 68d114a7-8b5b-4b77-bbbe-78c7a1110021
+
 	measure 'Tickets Resolved (30D) Label' =
 			VAR Net = [Tickets Resolved (30D)] - [Tickets Created (30D)]
 			RETURN
@@ -175,15 +192,17 @@ table Measures
 				)
 		displayFolder: Rolling 30 Days
 		lineageTag: dbd713e6-73df-4d95-a93a-e6cb2e30f539
+
+	/// Average hours from created to work-completed, for tickets completed in the date context
 	measure 'Avg Resolution Hours' =
 			CALCULATE (
 				AVERAGE ( Tickets[Resolution Hours] ),
 				USERELATIONSHIP ( Tickets[Completed Date], 'Date'[Date] )
 			)
 		formatString: 0.0"h"
-		description: Average hours from created to work-completed, for tickets completed in the date context
 		displayFolder: Resolution Time
 		lineageTag: f8cabd62-050f-4840-b20a-b042cc7e425e
+
 	measure 'Median Resolution Hours' =
 			CALCULATE (
 				MEDIAN ( Tickets[Resolution Hours] ),
@@ -192,6 +211,7 @@ table Measures
 		formatString: 0.0"h"
 		displayFolder: Resolution Time
 		lineageTag: dd48e3ca-b3cb-467e-8380-0b545eae53ca
+
 	measure 'Avg Resolution Hours (30D)' =
 			CALCULATE (
 				AVERAGE ( Tickets[Resolution Hours] ),
@@ -202,6 +222,7 @@ table Measures
 		formatString: 0.0"h"
 		displayFolder: Resolution Time
 		lineageTag: a3081d47-817f-4ca3-a354-7a92de5e4569
+
 	measure 'Avg Resolution Target Label' =
 			VAR Avg = [Avg Resolution Hours (30D)]
 			VAR Target = [Resolution Target Hours]
@@ -209,11 +230,14 @@ table Measures
 				IF ( Avg <= Target, "✓ Target ≤ " & Target & "h", "▲ Above " & Target & "h target" )
 		displayFolder: Resolution Time
 		lineageTag: daf452d2-c97c-440a-958f-71074cfe3b09
+
 	measure 'SLA Met Tickets' =
 			CALCULATE ( COUNTROWS ( Tickets ), Tickets[Resolved On Time] = TRUE () )
 		formatString: #,0
 		displayFolder: SLA
 		lineageTag: 8fdb00b1-525c-4673-9f68-a95b9089720c
+
+	/// Resolved after due date, plus open tickets already past due
 	measure 'SLA Breached Tickets' =
 			VAR ResolvedLate = CALCULATE ( COUNTROWS ( Tickets ), Tickets[Resolved On Time] = FALSE () )
 			VAR OpenOverdue =
@@ -228,18 +252,19 @@ table Measures
 			RETURN
 				ResolvedLate + OpenOverdue
 		formatString: #,0
-		description: Resolved after due date, plus open tickets already past due
 		displayFolder: SLA
 		lineageTag: ee59b862-22f5-420b-83f9-dfbdf1b99875
+
+	/// Share of tickets (created in the date context, with a due date) resolved on or before due date. Open, not-yet-due tickets are excluded.
 	measure 'SLA Compliance %' =
 			VAR Met = [SLA Met Tickets]
 			VAR Breached = [SLA Breached Tickets]
 			RETURN
 				DIVIDE ( Met, Met + Breached )
 		formatString: 0%
-		description: Share of tickets (created in the date context, with a due date) resolved on or before due date. Open, not-yet-due tickets are excluded.
 		displayFolder: SLA
 		lineageTag: cdfdc2ea-2e76-41df-9fb5-6c5f55d0f279
+
 	measure 'SLA Compliance % (30D)' =
 			CALCULATE (
 				[SLA Compliance %],
@@ -250,6 +275,7 @@ table Measures
 		formatString: 0%
 		displayFolder: SLA
 		lineageTag: 9c9cacac-1122-4b1b-90cd-34a2442aefb5
+
 	measure 'SLA Target Label' =
 			VAR Pct = [SLA Compliance % (30D)]
 			VAR Target = [SLA Target %]
@@ -257,12 +283,14 @@ table Measures
 				IF ( Pct >= Target, "✓ Target ≥ " & FORMAT ( Target, "0%" ), "▼ Below " & FORMAT ( Target, "0%" ) & " target" )
 		displayFolder: SLA
 		lineageTag: 501ab040-32b0-4cf4-9afb-651dfc5c2a07
+
+	/// Constant for reference lines on charts
 	measure 'SLA Target Line' =
 			[SLA Target %]
 		formatString: 0%
-		description: Constant for reference lines on charts
 		displayFolder: SLA
 		lineageTag: ba6b8666-96c6-4a96-84af-e750a6ed8f23
+
 	column Column
 		dataType: string
 		isHidden
