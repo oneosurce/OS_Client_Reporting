@@ -224,10 +224,10 @@ table _Measures
 		lineageTag: a3081d47-817f-4ca3-a354-7a92de5e4569
 
 	measure 'Avg Resolution Target Label' =
-			VAR Avg = [Avg Resolution Hours (30D)]
-			VAR Target = [Resolution Target Hours]
+			VAR AvgHrs = [Avg Resolution Hours (30D)]
+			VAR TargetHrs = [Resolution Target Hours]
 			RETURN
-				IF ( Avg <= Target, "✓ Target ≤ " & Target & "h", "▲ Above " & Target & "h target" )
+				IF ( AvgHrs <= TargetHrs, "✓ Target ≤ " & TargetHrs & "h", "▲ Above " & TargetHrs & "h target" )
 		displayFolder: Resolution Time
 		lineageTag: daf452d2-c97c-440a-958f-71074cfe3b09
 

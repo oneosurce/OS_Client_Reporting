@@ -3,10 +3,10 @@
   "name": "card_sub_2",
   "position": {
     "x": 535,
-    "y": 186,
+    "y": 192,
     "z": 18,
     "width": 202,
-    "height": 30,
+    "height": 28,
     "tabOrder": 18
   },
   "visual": {
@@ -58,20 +58,31 @@
           }
         }
       ],
-      "categoryLabels": [
+      "calloutValue": [
         {
           "properties": {
-            "show": {
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#2E8B57'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "9"
                 }
               }
             }
           }
         }
       ],
-      "background": [
+      "categoryLabels": [
         {
           "properties": {
             "show": {
@@ -91,6 +102,19 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

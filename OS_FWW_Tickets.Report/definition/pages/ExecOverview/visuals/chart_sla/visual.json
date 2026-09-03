@@ -187,7 +187,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "'0.9'"
+                  "Value": "0.9"
                 }
               }
             },
@@ -213,6 +213,13 @@
               "expr": {
                 "Literal": {
                   "Value": "20"
+                }
+              }
+            },
+            "dataLabelShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             }
