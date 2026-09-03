@@ -178,6 +178,23 @@ table _Measures
 		displayFolder: KPI
 		lineageTag: e1f2a3b4-0000-4001-8001-00000000000d
 
+	/// Hex colour for the OPEN caption (fewer open = good)
+	measure 'Open Tickets Change Color' =
+			IF ( [Open Tickets vs Last Week] <= 0, "#2E8B57", "#E39B2D" )
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-00000000000f
+
+	measure 'Resolved Change Color' =
+			VAR Pct = DIVIDE ( [Resolved (Card)] - [Resolved (Prior Window)], [Resolved (Prior Window)] )
+			RETURN IF ( Pct >= -0.005, "#2E8B57", "#E39B2D" )
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-000000000010
+
+	measure 'Avg Resolution Days Change Color' =
+			IF ( [Avg Resolution Days (Card)] - [Avg Resolution Days (Prior Window)] <= 0.05, "#2E8B57", "#E39B2D" )
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-000000000011
+
 	/// Open tickets as of the end of the selected date range (or today when the date slicer is untouched). Respects Priority.
 	measure 'Open Tickets' =
 			VAR AsOf = IF ( [_Date Narrowed], MAX ( 'Date'[Date] ), TODAY () )
