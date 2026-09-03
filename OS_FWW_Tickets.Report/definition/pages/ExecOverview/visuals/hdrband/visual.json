@@ -17,11 +17,7 @@
           "properties": {
             "paragraphs": [
               {
-                "textRuns": [
-                  {
-                    "value": " "
-                  }
-                ]
+                "textRuns": []
               }
             ]
           }
@@ -61,6 +57,19 @@
         }
       ],
       "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeader": [
         {
           "properties": {
             "show": {
