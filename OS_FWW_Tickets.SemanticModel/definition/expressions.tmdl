@@ -1,0 +1,7 @@
+/// Syncro customer_id this report is scoped to. This is the only value that changes
+/// when the model is repointed at a different client (see README - "Client scoping").
+expression CustomerId = 33810072 meta [IsParameterQuery=true, List={}, DefaultValue=33810072, Type="Number", IsParameterQueryRequired=true]
+	lineageTag: dba45c04-aef7-42bd-bf93-7c6aed091c06
+
+	annotation PBI_ResultType = Number
+

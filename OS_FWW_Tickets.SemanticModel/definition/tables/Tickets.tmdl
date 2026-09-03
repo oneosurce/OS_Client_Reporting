@@ -193,10 +193,10 @@ table Tickets
 				let
 					Source = PostgreSQL.Database("os-syncro-db.postgres.database.azure.com", "syncro_reporting"),
 					Navigation = Source{[Schema = "public", Item = "tickets"]}[Data],
-					// This is a single-client report: keep only FW Walton, Inc. (Syncro customer_id 33810072).
-					// RLS on the model is a second layer; filtering here keeps the model small and makes the
-					// owner/admin view correct too. Fold-friendly so the filter runs in Postgres.
-					Client = Table.SelectRows(Navigation, each [customer_id] = 33810072),
+					// This is a single-client report: keep only the client named by the CustomerId
+					// parameter. Filtering here keeps the model small and makes the owner/admin view
+					// correct too. Fold-friendly so the filter runs in Postgres.
+					Client = Table.SelectRows(Navigation, each [customer_id] = CustomerId),
 					KeepColumns = Table.SelectColumns(Client, {"id", "number", "subject", "status", "priority", "problem_type", "user", "user_id", "customer_id", "customer_business_then_name", "created_at", "due_date", "resolved_at", "updated_at"}),
 					Renamed = Table.RenameColumns(KeepColumns, {
 						{"id", "Ticket ID"}, {"number", "Ticket Number"}, {"subject", "Subject"}, {"status", "Status"},
