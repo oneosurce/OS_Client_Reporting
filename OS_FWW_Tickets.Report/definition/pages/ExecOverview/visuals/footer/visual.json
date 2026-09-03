@@ -3,11 +3,11 @@
   "name": "footer",
   "position": {
     "x": 24,
-    "y": 694,
-    "z": 40,
+    "y": 700,
+    "z": 60,
     "width": 1232,
-    "height": 20,
-    "tabOrder": 40
+    "height": 16,
+    "tabOrder": 60
   },
   "visual": {
     "visualType": "textbox",
@@ -20,10 +20,9 @@
                 "horizontalTextAlignment": "left",
                 "textRuns": [
                   {
-                    "value": "Metrics scoped to FW Walton via row-level security; SLA % measured against agreed FWW targets (resolved on or before due date).",
+                    "value": "Metrics scoped to FW Walton via row-level security. SLA measured against each ticket's Syncro due date.",
                     "textStyle": {
                       "color": "#6B7280",
-                      "fontStyle": "italic",
                       "fontSize": "8pt"
                     }
                   }

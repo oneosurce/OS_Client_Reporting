@@ -3,11 +3,11 @@
   "name": "slicer_priority",
   "position": {
     "x": 1096,
-    "y": 22,
-    "z": 7,
+    "y": 24,
+    "z": 6,
     "width": 160,
     "height": 44,
-    "tabOrder": 7
+    "tabOrder": 6
   },
   "visual": {
     "visualType": "slicer",

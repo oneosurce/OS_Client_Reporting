@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "title",
   "position": {
-    "x": 24,
-    "y": 30,
+    "x": 32,
+    "y": 34,
     "z": 3,
-    "width": 700,
-    "height": 44,
+    "width": 760,
+    "height": 42,
     "tabOrder": 3
   },
   "visual": {
@@ -23,8 +23,8 @@
                     "value": "Executive Overview",
                     "textStyle": {
                       "color": "#FFFFFF",
-                      "fontWeight": "bold",
-                      "fontSize": "22pt"
+                      "fontSize": "20pt",
+                      "fontWeight": "bold"
                     }
                   }
                 ]

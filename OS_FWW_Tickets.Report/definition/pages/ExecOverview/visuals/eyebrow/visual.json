@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "eyebrow",
   "position": {
-    "x": 24,
-    "y": 10,
+    "x": 32,
+    "y": 14,
     "z": 2,
     "width": 700,
-    "height": 22,
+    "height": 16,
     "tabOrder": 2
   },
   "visual": {
@@ -23,8 +23,8 @@
                     "value": "PAGE 1  \u00b7  FOR LEADERSHIP",
                     "textStyle": {
                       "color": "#AEBBDD",
-                      "fontWeight": "bold",
-                      "fontSize": "9pt"
+                      "fontSize": "9pt",
+                      "fontWeight": "bold"
                     }
                   }
                 ]

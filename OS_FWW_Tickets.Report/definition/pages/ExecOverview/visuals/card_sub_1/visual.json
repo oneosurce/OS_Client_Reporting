@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "card_sub_1",
   "position": {
-    "x": 274,
-    "y": 208,
-    "z": 15,
-    "width": 218,
+    "x": 286,
+    "y": 188,
+    "z": 14,
+    "width": 204,
     "height": 24,
-    "tabOrder": 15
+    "tabOrder": 14
   },
   "visual": {
     "visualType": "card",
@@ -42,7 +42,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#C9821E'"
+                      "Value": "'#2E8B57'"
                     }
                   }
                 }
@@ -52,13 +52,6 @@
               "expr": {
                 "Literal": {
                   "Value": "9"
-                }
-              }
-            },
-            "labelDisplayUnits": {
-              "expr": {
-                "Literal": {
-                  "Value": "0"
                 }
               }
             }
@@ -98,6 +91,47 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
