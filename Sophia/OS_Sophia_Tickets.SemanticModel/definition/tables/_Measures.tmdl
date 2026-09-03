@@ -1,0 +1,491 @@
+table _Measures
+	lineageTag: 76c797b0-8602-442c-b6a0-83d126c7c96c
+
+	/// Agreed SLA compliance target
+	measure 'SLA Target %' =
+			0.9
+		formatString: 0%
+		displayFolder: Targets
+		lineageTag: fa6cd75f-370b-48e9-ad86-64c58cdfe9b7
+
+	/// Agreed average resolution target (hours)
+	measure 'Resolution Target Hours' =
+			12
+		formatString: 0
+		displayFolder: Targets
+		lineageTag: b7c76dae-f320-48ac-9e0c-b56a0ec00a2a
+
+	/// Tickets created in the current date context (Created Date relationship)
+	measure 'Tickets Created' =
+			COUNTROWS ( Tickets )
+		formatString: #,0
+		displayFolder: Volume
+		lineageTag: c1249d98-aeaa-4815-8bc2-f4814ae61bb7
+
+	/// Tickets whose work was completed (Resolved or Ready for Invoice) in the current date context
+	measure 'Tickets Resolved' =
+			CALCULATE (
+				COUNTROWS ( Tickets ),
+				USERELATIONSHIP ( Tickets[Completed Date], 'Date'[Date] ),
+				NOT ISBLANK ( Tickets[Completed At] )
+			)
+		formatString: #,0
+		displayFolder: Volume
+		lineageTag: abb46376-6f88-4ab3-a04f-6d03fa6afe58
+
+	measure 'Net Backlog Change' =
+			[Tickets Created] - [Tickets Resolved]
+		formatString: +#,0;-#,0;0
+		displayFolder: Volume
+		lineageTag: 93e0a4ea-bdd0-4152-a1fb-9d4f80a96639
+
+	/// Created, clipped to the selected Range / custom date window (trend-chart series)
+	measure Created =
+			CALCULATE ( [Tickets Created], KEEPFILTERS ( DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) ) )
+		formatString: #,0
+		displayFolder: Volume
+		lineageTag: e1f2a3b4-0000-4001-8001-000000000012
+
+	measure Resolved =
+			CALCULATE ( [Tickets Resolved], KEEPFILTERS ( DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) ) )
+		formatString: #,0
+		displayFolder: Volume
+		lineageTag: e1f2a3b4-0000-4001-8001-000000000013
+
+	/// TRUE when the custom start/end date fields have been narrowed to less than the full table span
+	measure '_Date Narrowed' =
+			VAR SelSpan = MAX ( 'Date'[Date] ) - MIN ( 'Date'[Date] )
+			VAR FullSpan = CALCULATE ( MAX ( 'Date'[Date] ) - MIN ( 'Date'[Date] ), REMOVEFILTERS ( 'Date' ) )
+			RETURN SelSpan < FullSpan - 3
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-00000000000e
+
+	/// Start of the KPI window. Driven by the Range picker; falls back to the custom start/end
+	/// fields, and to the last 90 days when nothing is set.
+	measure '_Window Min' =
+			VAR P = SELECTEDVALUE ( 'Date Range'[Range], "Custom / All" )
+			VAR T = TODAY ()
+			VAR QAgo = EDATE ( T, -3 )
+			VAR QStart = DATE ( YEAR ( QAgo ), ( QUARTER ( QAgo ) - 1 ) * 3 + 1, 1 )
+			RETURN
+				SWITCH (
+					P,
+					"Last 7 days", T - 6,
+					"Last 30 days", T - 29,
+					"Last quarter", QStart,
+					"Year to date", DATE ( YEAR ( T ), 1, 1 ),
+					IF ( [_Date Narrowed], MIN ( 'Date'[Date] ), T - 89 )
+				)
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-000000000006
+
+	measure '_Window Max' =
+			VAR P = SELECTEDVALUE ( 'Date Range'[Range], "Custom / All" )
+			VAR T = TODAY ()
+			VAR QAgo = EDATE ( T, -3 )
+			VAR QStart = DATE ( YEAR ( QAgo ), ( QUARTER ( QAgo ) - 1 ) * 3 + 1, 1 )
+			RETURN
+				SWITCH (
+					P,
+					"Last quarter", EOMONTH ( QStart, 2 ),
+					"Custom / All", IF ( [_Date Narrowed], MAX ( 'Date'[Date] ), T ),
+					T
+				)
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-000000000007
+
+	/// Tickets created in the selected window
+	measure 'Created (Card)' =
+			CALCULATE ( [Tickets Created], REMOVEFILTERS ( 'Date' ), DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) )
+		formatString: #,0
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-000000000003
+
+	measure 'Resolved (Card)' =
+			CALCULATE ( [Tickets Resolved], REMOVEFILTERS ( 'Date' ), DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) )
+		formatString: #,0
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-000000000004
+
+	measure 'Avg Resolution Days (Card)' =
+			VAR Hrs =
+				CALCULATE ( [Avg Resolution Hours], REMOVEFILTERS ( 'Date' ), DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) )
+			RETURN
+				DIVIDE ( Hrs, 24 )
+		formatString: 0.0" days"
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-000000000005
+
+	measure 'Created (Prior Window)' =
+			VAR MinD = [_Window Min]
+			VAR Len = [_Window Max] - MinD + 1
+			RETURN
+				CALCULATE ( [Tickets Created], REMOVEFILTERS ( 'Date' ), DATESINPERIOD ( 'Date'[Date], MinD - 1, - Len, DAY ) )
+		formatString: #,0
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-000000000008
+
+	measure 'Resolved (Prior Window)' =
+			VAR MinD = [_Window Min]
+			VAR Len = [_Window Max] - MinD + 1
+			RETURN
+				CALCULATE ( [Tickets Resolved], REMOVEFILTERS ( 'Date' ), DATESINPERIOD ( 'Date'[Date], MinD - 1, - Len, DAY ) )
+		formatString: #,0
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-000000000009
+
+	measure 'Avg Resolution Days (Prior Window)' =
+			VAR MinD = [_Window Min]
+			VAR Len = [_Window Max] - MinD + 1
+			VAR Hrs =
+				CALCULATE ( [Avg Resolution Hours], REMOVEFILTERS ( 'Date' ), DATESINPERIOD ( 'Date'[Date], MinD - 1, - Len, DAY ) )
+			RETURN
+				DIVIDE ( Hrs, 24 )
+		formatString: 0.0" days"
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-00000000000a
+
+	/// Caption: created this window vs the equal window before it
+	measure 'Created Change Label' =
+			VAR Cur = [Created (Card)]
+			VAR Prior = [Created (Prior Window)]
+			VAR Pct = DIVIDE ( Cur - Prior, Prior )
+			RETURN
+				SWITCH (
+					TRUE (),
+					ISBLANK ( Prior ) || Prior = 0, "",
+					Pct > 0.005, "▲ " & FORMAT ( Pct, "0%" ) & " vs prior",
+					Pct < -0.005, "▼ " & FORMAT ( ABS ( Pct ), "0%" ) & " vs prior",
+					"— flat vs prior"
+				)
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-00000000000b
+
+	measure 'Resolved Change Label' =
+			VAR Cur = [Resolved (Card)]
+			VAR Prior = [Resolved (Prior Window)]
+			VAR Pct = DIVIDE ( Cur - Prior, Prior )
+			RETURN
+				SWITCH (
+					TRUE (),
+					ISBLANK ( Prior ) || Prior = 0, "",
+					Pct > 0.005, "▲ " & FORMAT ( Pct, "0%" ) & " vs prior",
+					Pct < -0.005, "▼ " & FORMAT ( ABS ( Pct ), "0%" ) & " vs prior",
+					"— flat vs prior"
+				)
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-00000000000c
+
+	measure 'Avg Resolution Days Change Label' =
+			VAR Cur = [Avg Resolution Days (Card)]
+			VAR Prior = [Avg Resolution Days (Prior Window)]
+			VAR Delta = Cur - Prior
+			RETURN
+				SWITCH (
+					TRUE (),
+					ISBLANK ( Prior ), "",
+					Delta > 0.05, "▲ " & FORMAT ( Delta, "0.0" ) & "d vs prior",
+					Delta < -0.05, "▼ " & FORMAT ( ABS ( Delta ), "0.0" ) & "d vs prior",
+					"— flat vs prior"
+				)
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-00000000000d
+
+	/// Hex colour for the OPEN caption (fewer open = good)
+	measure 'Open Tickets Change Color' =
+			IF ( [Open Tickets vs Last Week] <= 0, "#2E8B57", "#E39B2D" )
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-00000000000f
+
+	measure 'Resolved Change Color' =
+			VAR Pct = DIVIDE ( [Resolved (Card)] - [Resolved (Prior Window)], [Resolved (Prior Window)] )
+			RETURN IF ( Pct >= -0.005, "#2E8B57", "#E39B2D" )
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-000000000010
+
+	measure 'Avg Resolution Days Change Color' =
+			IF ( [Avg Resolution Days (Card)] - [Avg Resolution Days (Prior Window)] <= 0.05, "#2E8B57", "#E39B2D" )
+		displayFolder: KPI
+		lineageTag: e1f2a3b4-0000-4001-8001-000000000011
+
+	/// Open tickets as of the end of the selected date range (or today when the date slicer is untouched). Respects Priority.
+	measure 'Open Tickets' =
+			VAR AsOf = [_Window Max]
+			RETURN
+				CALCULATE (
+					COUNTROWS (
+						FILTER (
+							Tickets,
+							Tickets[Created At] < AsOf + 1
+								&& ( ISBLANK ( Tickets[Completed At] ) || Tickets[Completed At] >= AsOf + 1 )
+						)
+					),
+					REMOVEFILTERS ( 'Date' )
+				)
+		formatString: #,0
+		displayFolder: Backlog
+		lineageTag: 39c4423f-f4c8-4c62-875d-f46f9547cdde
+
+	measure 'Open Tickets 7 Days Ago' =
+			VAR AsOf = [_Window Max] - 7
+			RETURN
+				CALCULATE (
+					COUNTROWS (
+						FILTER (
+							Tickets,
+							Tickets[Created At] < AsOf + 1
+								&& ( ISBLANK ( Tickets[Completed At] ) || Tickets[Completed At] >= AsOf + 1 )
+						)
+					),
+					REMOVEFILTERS ( 'Date' )
+				)
+		formatString: #,0
+		displayFolder: Backlog
+		lineageTag: 54e2d532-ed1d-44f6-8e08-d1545b63075f
+
+	measure 'Open Tickets vs Last Week' =
+			[Open Tickets] - [Open Tickets 7 Days Ago]
+		formatString: +#,0;-#,0;0
+		displayFolder: Backlog
+		lineageTag: a481ad4c-888d-436f-be62-1c64742989da
+
+	measure 'Open Tickets Change Label' =
+			VAR Delta = [Open Tickets vs Last Week]
+			RETURN
+				SWITCH (
+					TRUE (),
+					Delta > 0, "▲ " & Delta & " vs last wk",
+					Delta < 0, "▼ " & ABS ( Delta ) & " vs last wk",
+					"— flat vs last wk"
+				)
+		displayFolder: Backlog
+		lineageTag: a4638d47-e13b-4ecf-bb16-282a167cc544
+
+	measure 'Overdue Open Tickets' =
+			CALCULATE (
+				COUNTROWS (
+					FILTER (
+						Tickets,
+						Tickets[Is Open]
+							&& NOT ISBLANK ( Tickets[Due At] )
+							&& Tickets[Due At] < NOW ()
+					)
+				),
+				REMOVEFILTERS ( 'Date' )
+			)
+		formatString: #,0
+		displayFolder: Backlog
+		lineageTag: 740ecc59-d0f3-4f6c-a597-85889c887620
+
+	/// Open tickets bucketed by age, as of the end of the selected window. Use with 'Aging Bucket'[Bucket].
+	measure 'Open Tickets by Age' =
+			VAR AsOf = [_Window Max]
+			VAR MinD = MIN ( 'Aging Bucket'[Min Days] )
+			VAR MaxD = MAX ( 'Aging Bucket'[Max Days] )
+			RETURN
+				CALCULATE (
+					COUNTROWS (
+						FILTER (
+							Tickets,
+							VAR OpenThen =
+								Tickets[Created At] < AsOf + 1
+									&& ( ISBLANK ( Tickets[Completed At] ) || Tickets[Completed At] >= AsOf + 1 )
+							VAR AgeDays = INT ( AsOf - Tickets[Created At] )
+							RETURN OpenThen && AgeDays >= MinD && AgeDays < MaxD
+						)
+					),
+					REMOVEFILTERS ( 'Date' )
+				)
+		formatString: #,0
+		displayFolder: Backlog
+		lineageTag: 2db9be6b-e884-41fb-ae31-1177874ac05c
+
+	measure 'Avg Open Ticket Age (Days)' =
+			CALCULATE (
+				AVERAGEX ( FILTER ( Tickets, Tickets[Is Open] ), DATEDIFF ( Tickets[Created At], NOW (), HOUR ) / 24.0 ),
+				REMOVEFILTERS ( 'Date' )
+			)
+		formatString: 0.0
+		displayFolder: Backlog
+		lineageTag: 672d194b-0bb3-4908-accb-b7a0360fd7d0
+
+	measure 'Tickets Created (30D)' =
+			CALCULATE (
+				COUNTROWS ( Tickets ),
+				REMOVEFILTERS ( 'Date' ),
+				Tickets[Created Date] > TODAY () - 30,
+				Tickets[Created Date] <= TODAY ()
+			)
+		formatString: #,0
+		displayFolder: Rolling 30 Days
+		lineageTag: 99d80bc0-27fb-46cf-8314-3893f488ad7d
+
+	measure 'Tickets Created (Prior 30D)' =
+			CALCULATE (
+				COUNTROWS ( Tickets ),
+				REMOVEFILTERS ( 'Date' ),
+				Tickets[Created Date] > TODAY () - 60,
+				Tickets[Created Date] <= TODAY () - 30
+			)
+		formatString: #,0
+		displayFolder: Rolling 30 Days
+		lineageTag: f69db933-b54b-4d7b-91f8-862dbbaeb164
+
+	measure 'Tickets Created (30D) vs Prior %' =
+			DIVIDE ( [Tickets Created (30D)] - [Tickets Created (Prior 30D)], [Tickets Created (Prior 30D)] )
+		formatString: +0%;-0%;0%
+		displayFolder: Rolling 30 Days
+		lineageTag: 8c55f833-ba7a-4d6c-8d19-ba86b210ea7e
+
+	measure 'Tickets Created (30D) Change Label' =
+			VAR Pct = [Tickets Created (30D) vs Prior %]
+			RETURN
+				SWITCH (
+					TRUE (),
+					ISBLANK ( Pct ), "no prior period",
+					Pct > 0, "▲ " & FORMAT ( Pct, "0%" ) & " vs prior",
+					Pct < 0, "▼ " & FORMAT ( ABS ( Pct ), "0%" ) & " vs prior",
+					"— flat vs prior"
+				)
+		displayFolder: Rolling 30 Days
+		lineageTag: b56e7ae5-05be-4d98-9bd9-6c1857f8a4b9
+
+	measure 'Tickets Resolved (30D)' =
+			CALCULATE (
+				COUNTROWS ( Tickets ),
+				REMOVEFILTERS ( 'Date' ),
+				Tickets[Completed Date] > TODAY () - 30,
+				Tickets[Completed Date] <= TODAY ()
+			)
+		formatString: #,0
+		displayFolder: Rolling 30 Days
+		lineageTag: 68d114a7-8b5b-4b77-bbbe-78c7a1110021
+
+	measure 'Tickets Resolved (30D) Label' =
+			VAR Net = [Tickets Resolved (30D)] - [Tickets Created (30D)]
+			RETURN
+				SWITCH (
+					TRUE (),
+					Net > 0, "▼ " & Net & " net backlog",
+					Net < 0, "▲ " & ABS ( Net ) & " net backlog",
+					"— backlog flat"
+				)
+		displayFolder: Rolling 30 Days
+		lineageTag: dbd713e6-73df-4d95-a93a-e6cb2e30f539
+
+	/// Average hours from created to work-completed, for tickets completed in the date context
+	measure 'Avg Resolution Hours' =
+			CALCULATE (
+				AVERAGE ( Tickets[Resolution Hours] ),
+				USERELATIONSHIP ( Tickets[Completed Date], 'Date'[Date] )
+			)
+		formatString: 0.0"h"
+		displayFolder: Resolution Time
+		lineageTag: f8cabd62-050f-4840-b20a-b042cc7e425e
+
+	measure 'Median Resolution Hours' =
+			CALCULATE (
+				MEDIAN ( Tickets[Resolution Hours] ),
+				USERELATIONSHIP ( Tickets[Completed Date], 'Date'[Date] )
+			)
+		formatString: 0.0"h"
+		displayFolder: Resolution Time
+		lineageTag: dd48e3ca-b3cb-467e-8380-0b545eae53ca
+
+	measure 'Avg Resolution Hours (30D)' =
+			CALCULATE (
+				AVERAGE ( Tickets[Resolution Hours] ),
+				REMOVEFILTERS ( 'Date' ),
+				Tickets[Completed Date] > TODAY () - 30,
+				Tickets[Completed Date] <= TODAY ()
+			)
+		formatString: 0.0"h"
+		displayFolder: Resolution Time
+		lineageTag: a3081d47-817f-4ca3-a354-7a92de5e4569
+
+	measure 'Avg Resolution Target Label' =
+			VAR AvgHrs = [Avg Resolution Hours (30D)]
+			VAR TargetHrs = [Resolution Target Hours]
+			RETURN
+				IF ( AvgHrs <= TargetHrs, "✓ Target ≤ " & TargetHrs & "h", "▲ Above " & TargetHrs & "h target" )
+		displayFolder: Resolution Time
+		lineageTag: daf452d2-c97c-440a-958f-71074cfe3b09
+
+	measure 'SLA Met Tickets' =
+			CALCULATE ( COUNTROWS ( Tickets ), Tickets[Resolved On Time] = TRUE () )
+		formatString: #,0
+		displayFolder: SLA
+		lineageTag: 8fdb00b1-525c-4673-9f68-a95b9089720c
+
+	/// Resolved after due date, plus open tickets already past due
+	measure 'SLA Breached Tickets' =
+			VAR ResolvedLate = CALCULATE ( COUNTROWS ( Tickets ), Tickets[Resolved On Time] = FALSE () )
+			VAR OpenOverdue =
+				COUNTROWS (
+					FILTER (
+						Tickets,
+						Tickets[Is Open]
+							&& NOT ISBLANK ( Tickets[Due At] )
+							&& Tickets[Due At] < NOW ()
+					)
+				)
+			RETURN
+				ResolvedLate + OpenOverdue
+		formatString: #,0
+		displayFolder: SLA
+		lineageTag: ee59b862-22f5-420b-83f9-dfbdf1b99875
+
+	/// Share of tickets (created in the date context, with a due date) resolved on or before due date. Open, not-yet-due tickets are excluded.
+	measure 'SLA Compliance %' =
+			VAR Met = [SLA Met Tickets]
+			VAR Breached = [SLA Breached Tickets]
+			RETURN
+				DIVIDE ( Met, Met + Breached )
+		formatString: 0%
+		displayFolder: SLA
+		lineageTag: cdfdc2ea-2e76-41df-9fb5-6c5f55d0f279
+
+	measure 'SLA Compliance % (30D)' =
+			CALCULATE (
+				[SLA Compliance %],
+				REMOVEFILTERS ( 'Date' ),
+				Tickets[Created Date] > TODAY () - 30,
+				Tickets[Created Date] <= TODAY ()
+			)
+		formatString: 0%
+		displayFolder: SLA
+		lineageTag: 9c9cacac-1122-4b1b-90cd-34a2442aefb5
+
+	measure 'SLA Target Label' =
+			VAR Pct = [SLA Compliance % (30D)]
+			VAR Target = [SLA Target %]
+			RETURN
+				IF ( Pct >= Target, "✓ " & FORMAT ( Target, "0%" ) & " met", "▼ below " & FORMAT ( Target, "0%" ) )
+		displayFolder: SLA
+		lineageTag: 501ab040-32b0-4cf4-9afb-651dfc5c2a07
+
+	/// Constant for reference lines on charts
+	measure 'SLA Target Line' =
+			[SLA Target %]
+		formatString: 0%
+		displayFolder: SLA
+		lineageTag: ba6b8666-96c6-4a96-84af-e750a6ed8f23
+
+	column Column
+		dataType: string
+		isHidden
+		lineageTag: f459266e-0b33-4558-abf6-8739dab7597e
+		summarizeBy: none
+		sourceColumn: Column
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Measures = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [Column = text], {})
+				in
+					Source
+
+	annotation PBI_ResultType = Table

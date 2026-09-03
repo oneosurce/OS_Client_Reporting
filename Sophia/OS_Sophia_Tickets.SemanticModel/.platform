@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "OS_Sophia_Tickets"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "7b182543-44f6-46e0-b315-ab690b064c80"
+  }
+}

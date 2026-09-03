@@ -15,3 +15,6 @@
 # Editor / OS cruft
 Thumbs.db
 *.tmp
+
+# deploy previews
+scripts/out/
