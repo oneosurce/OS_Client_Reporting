@@ -122,7 +122,9 @@ table Customers
 				let
 					Source = PostgreSQL.Database("os-syncro-db.postgres.database.azure.com", "syncro_reporting"),
 					Navigation = Source{[Schema = "public", Item = "customers"]}[Data],
-					KeepColumns = Table.SelectColumns(Navigation, {"id", "business_name", "business_then_name", "fullname", "firstname", "lastname", "email", "phone", "city", "state", "zip", "latitude", "longitude", "created_at", "disabled"}),
+					// Single-client report: keep only FW Walton, Inc. (customers.id is text in Syncro).
+					Client = Table.SelectRows(Navigation, each [id] = "33810072"),
+					KeepColumns = Table.SelectColumns(Client, {"id", "business_name", "business_then_name", "fullname", "firstname", "lastname", "email", "phone", "city", "state", "zip", "latitude", "longitude", "created_at", "disabled"}),
 					Renamed = Table.RenameColumns(KeepColumns, {
 						{"id", "Customer ID"}, {"business_name", "Business Name"}, {"business_then_name", "Customer Name"}, {"fullname", "Contact Name"},
 						{"firstname", "First Name"}, {"lastname", "Last Name"}, {"email", "Email"}, {"phone", "Phone"}, {"city", "City"}, {"state", "State"},
