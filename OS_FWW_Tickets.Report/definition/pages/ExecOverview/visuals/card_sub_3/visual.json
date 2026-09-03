@@ -48,13 +48,8 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Measure": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "_Measures"
-                        }
-                      },
-                      "Property": "Avg Resolution Days Change Color"
+                    "Literal": {
+                      "Value": "'#6B7280'"
                     }
                   }
                 }

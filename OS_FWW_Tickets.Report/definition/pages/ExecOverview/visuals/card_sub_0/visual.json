@@ -48,13 +48,8 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Measure": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "_Measures"
-                        }
-                      },
-                      "Property": "Open Tickets Change Color"
+                    "Literal": {
+                      "Value": "'#6B7280'"
                     }
                   }
                 }

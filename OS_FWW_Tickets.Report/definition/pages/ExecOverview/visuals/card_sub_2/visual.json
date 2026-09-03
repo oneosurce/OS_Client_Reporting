@@ -48,13 +48,8 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Measure": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "_Measures"
-                        }
-                      },
-                      "Property": "Resolved Change Color"
+                    "Literal": {
+                      "Value": "'#6B7280'"
                     }
                   }
                 }
