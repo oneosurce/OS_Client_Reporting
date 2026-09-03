@@ -38,13 +38,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "_Measures"
                     }
                   },
                   "Property": "Tickets Created"
                 }
               },
-              "queryRef": "Measures.Tickets Created",
+              "queryRef": "_Measures.Tickets Created",
               "nativeQueryRef": "Tickets Created"
             },
             {
@@ -52,13 +52,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "_Measures"
                     }
                   },
                   "Property": "Tickets Resolved"
                 }
               },
-              "queryRef": "Measures.Tickets Resolved",
+              "queryRef": "_Measures.Tickets Resolved",
               "nativeQueryRef": "Tickets Resolved"
             }
           ]
@@ -141,7 +141,7 @@
             }
           },
           "selector": {
-            "metadata": "Measures.Tickets Created"
+            "metadata": "_Measures.Tickets Created"
           }
         },
         {
@@ -159,7 +159,7 @@
             }
           },
           "selector": {
-            "metadata": "Measures.Tickets Resolved"
+            "metadata": "_Measures.Tickets Resolved"
           }
         }
       ]

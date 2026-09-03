@@ -20,13 +20,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "_Measures"
                     }
                   },
                   "Property": "Avg Resolution Target Label"
                 }
               },
-              "queryRef": "Measures.Avg Resolution Target Label",
+              "queryRef": "_Measures.Avg Resolution Target Label",
               "nativeQueryRef": "Avg Resolution Target Label"
             }
           ]

@@ -20,13 +20,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "_Measures"
                     }
                   },
                   "Property": "SLA Target Label"
                 }
               },
-              "queryRef": "Measures.SLA Target Label",
+              "queryRef": "_Measures.SLA Target Label",
               "nativeQueryRef": "SLA Target Label"
             }
           ]

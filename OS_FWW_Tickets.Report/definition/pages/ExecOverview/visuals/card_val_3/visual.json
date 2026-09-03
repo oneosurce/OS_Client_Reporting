@@ -20,13 +20,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "_Measures"
                     }
                   },
                   "Property": "Avg Resolution Hours (30D)"
                 }
               },
-              "queryRef": "Measures.Avg Resolution Hours (30D)",
+              "queryRef": "_Measures.Avg Resolution Hours (30D)",
               "nativeQueryRef": "Avg Resolution Hours (30D)"
             }
           ]

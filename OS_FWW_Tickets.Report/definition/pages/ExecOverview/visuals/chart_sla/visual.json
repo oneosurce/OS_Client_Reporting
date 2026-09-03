@@ -38,13 +38,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "_Measures"
                     }
                   },
                   "Property": "SLA Compliance %"
                 }
               },
-              "queryRef": "Measures.SLA Compliance %",
+              "queryRef": "_Measures.SLA Compliance %",
               "nativeQueryRef": "SLA Compliance %"
             }
           ]

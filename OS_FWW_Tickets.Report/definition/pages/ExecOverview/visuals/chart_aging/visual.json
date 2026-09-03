@@ -38,13 +38,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "_Measures"
                     }
                   },
                   "Property": "Open Tickets by Age"
                 }
               },
-              "queryRef": "Measures.Open Tickets by Age",
+              "queryRef": "_Measures.Open Tickets by Age",
               "nativeQueryRef": "Open Tickets by Age"
             }
           ]
