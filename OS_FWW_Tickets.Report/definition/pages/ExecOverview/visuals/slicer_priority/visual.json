@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "slicer_priority",
   "position": {
-    "x": 1096,
-    "y": 24,
+    "x": 1100,
+    "y": 20,
     "z": 6,
-    "width": 160,
-    "height": 44,
+    "width": 156,
+    "height": 58,
     "tabOrder": 6
   },
   "visual": {
@@ -121,6 +121,21 @@
               "expr": {
                 "Literal": {
                   "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

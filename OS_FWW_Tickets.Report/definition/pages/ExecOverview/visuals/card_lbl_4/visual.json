@@ -3,10 +3,10 @@
   "name": "card_lbl_4",
   "position": {
     "x": 1016,
-    "y": 104,
+    "y": 100,
     "z": 24,
     "width": 232,
-    "height": 116,
+    "height": 124,
     "tabOrder": 24
   },
   "visual": {
@@ -97,19 +97,6 @@
           }
         }
       ],
-      "dropShadow": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
       "title": [
         {
           "properties": {
@@ -136,7 +123,7 @@
             "right": {
               "expr": {
                 "Literal": {
-                  "Value": "16"
+                  "Value": "14"
                 }
               }
             },

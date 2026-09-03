@@ -109,6 +109,13 @@
                   "Value": "9"
                 }
               }
+            },
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
             }
           }
         }
@@ -127,6 +134,13 @@
               "expr": {
                 "Literal": {
                   "Value": "1"
+                }
+              }
+            },
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             },
