@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "slicer_range",
   "position": {
-    "x": 386,
-    "y": 12,
+    "x": 380,
+    "y": 10,
     "z": 7,
-    "width": 372,
-    "height": 64,
+    "width": 384,
+    "height": 68,
     "tabOrder": 7
   },
   "visual": {
@@ -58,14 +58,7 @@
             "orientation": {
               "expr": {
                 "Literal": {
-                  "Value": "'Horizontal'"
-                }
-              }
-            },
-            "responsive": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
+                  "Value": "2"
                 }
               }
             }
@@ -106,7 +99,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#1F2A5A'"
+                      "Value": "'#FFFFFF'"
                     }
                   }
                 }
@@ -117,7 +110,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#FFFFFF'"
+                      "Value": "'#1F2A5A'"
                     }
                   }
                 }
@@ -126,7 +119,25 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8"
+                  "Value": "9"
+                }
+              }
+            },
+            "outlineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#5566A0'"
+                    }
+                  }
+                }
+              }
+            },
+            "outlineWeight": {
+              "expr": {
+                "Literal": {
+                  "Value": "1"
                 }
               }
             }
