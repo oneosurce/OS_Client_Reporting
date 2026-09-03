@@ -2,15 +2,15 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "card_sub_1",
   "position": {
-    "x": 276,
-    "y": 192,
+    "x": 284,
+    "y": 190,
     "z": 41,
-    "width": 224,
-    "height": 24,
+    "width": 208,
+    "height": 26,
     "tabOrder": 41
   },
   "visual": {
-    "visualType": "card",
+    "visualType": "multiRowCard",
     "query": {
       "queryState": {
         "Values": {
@@ -34,9 +34,16 @@
       }
     },
     "objects": {
-      "labels": [
+      "dataLabels": [
         {
           "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9"
+                }
+              }
+            },
             "color": {
               "solid": {
                 "color": {
@@ -45,37 +52,6 @@
                       "Value": "'#2E8B57'"
                     }
                   }
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "calloutValue": [
-        {
-          "properties": {
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#2E8B57'"
-                    }
-                  }
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9"
                 }
               }
             }
@@ -95,7 +71,7 @@
           }
         }
       ],
-      "wordWrap": [
+      "cardTitle": [
         {
           "properties": {
             "show": {
@@ -108,13 +84,27 @@
           }
         }
       ],
-      "background": [
+      "card": [
         {
           "properties": {
-            "show": {
+            "outlineWeight": {
+              "expr": {
+                "Literal": {
+                  "Value": "0"
+                }
+              }
+            },
+            "barShow": {
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            },
+            "cardPadding": {
+              "expr": {
+                "Literal": {
+                  "Value": "0"
                 }
               }
             }
@@ -169,6 +159,40 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0"
+                }
+              }
+            },
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "0"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0"
                 }
               }
             }
