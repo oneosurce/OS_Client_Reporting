@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
-  "name": "card_val_0",
+  "name": "card_sub_3",
   "position": {
-    "x": 24,
-    "y": 92,
-    "z": 9,
-    "width": 232,
-    "height": 124,
-    "tabOrder": 9
+    "x": 782,
+    "y": 198,
+    "z": 43,
+    "width": 208,
+    "height": 16,
+    "tabOrder": 43
   },
   "visual": {
     "visualType": "card",
@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Open Tickets"
+                  "Property": "Avg Resolution Days Change Label"
                 }
               },
-              "queryRef": "_Measures.Open Tickets",
-              "nativeQueryRef": "Open Tickets"
+              "queryRef": "_Measures.Avg Resolution Days Change Label",
+              "nativeQueryRef": "Avg Resolution Days Change Label"
             }
           ]
         }
@@ -42,16 +42,16 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#1F2A5A'"
+                      "Value": "'#6B7280'"
                     }
                   }
                 }
               }
             },
-            "bold": {
+            "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "9"
                 }
               }
             }
@@ -66,16 +66,16 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#1F2A5A'"
+                      "Value": "'#6B7280'"
                     }
                   }
                 }
               }
             },
-            "bold": {
+            "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "9"
                 }
               }
             }
@@ -129,25 +129,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#FFFFFF'"
-                    }
-                  }
-                }
-              }
-            },
-            "transparency": {
-              "expr": {
-                "Literal": {
-                  "Value": "0"
+                  "Value": "false"
                 }
               }
             }
@@ -160,25 +142,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#E3E8F0'"
-                    }
-                  }
-                }
-              }
-            },
-            "radius": {
-              "expr": {
-                "Literal": {
-                  "Value": "8"
+                  "Value": "false"
                 }
               }
             }
@@ -191,80 +155,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'OPEN TICKETS'"
-                }
-              }
-            },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#6B7280'"
-                    }
-                  }
-                }
-              }
-            },
-            "bold": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9"
-                }
-              }
-            },
-            "alignment": {
-              "expr": {
-                "Literal": {
-                  "Value": "'left'"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "padding": [
-        {
-          "properties": {
-            "left": {
-              "expr": {
-                "Literal": {
-                  "Value": "6"
-                }
-              }
-            },
-            "right": {
-              "expr": {
-                "Literal": {
-                  "Value": "6"
-                }
-              }
-            },
-            "top": {
-              "expr": {
-                "Literal": {
-                  "Value": "2"
-                }
-              }
-            },
-            "bottom": {
-              "expr": {
-                "Literal": {
-                  "Value": "6"
+                  "Value": "false"
                 }
               }
             }

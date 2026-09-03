@@ -231,6 +231,41 @@ table _Measures
 		displayFolder: Resolution Time
 		lineageTag: daf452d2-c97c-440a-958f-71074cfe3b09
 
+	/// Average days from created to work-completed, last 30 days (relative to today)
+	measure 'Avg Resolution Days (30D)' =
+			DIVIDE ( [Avg Resolution Hours (30D)], 24 )
+		formatString: 0.0" days"
+		displayFolder: Resolution Time
+		lineageTag: c4e1a2b3-1f4d-4e5a-9b6c-2d3e4f5a6b71
+
+	measure 'Avg Resolution Days (Prior 30D)' =
+			VAR Hrs =
+				CALCULATE (
+					AVERAGE ( Tickets[Resolution Hours] ),
+					REMOVEFILTERS ( 'Date' ),
+					Tickets[Completed Date] > TODAY () - 60,
+					Tickets[Completed Date] <= TODAY () - 30
+				)
+			RETURN
+				DIVIDE ( Hrs, 24 )
+		formatString: 0.0" days"
+		displayFolder: Resolution Time
+		lineageTag: c4e1a2b3-1f4d-4e5a-9b6c-2d3e4f5a6b72
+
+	/// Caption for the Avg Resolution card: change vs the prior 30-day period
+	measure 'Avg Resolution Days Change Label' =
+			VAR Delta = [Avg Resolution Days (30D)] - [Avg Resolution Days (Prior 30D)]
+			RETURN
+				SWITCH (
+					TRUE (),
+					ISBLANK ( [Avg Resolution Days (Prior 30D)] ), "no prior period",
+					Delta > 0.05, "▲ " & FORMAT ( Delta, "0.0" ) & " days vs prior 30 days",
+					Delta < -0.05, "▼ " & FORMAT ( ABS ( Delta ), "0.0" ) & " days vs prior 30 days",
+					"— flat vs prior 30 days"
+				)
+		displayFolder: Resolution Time
+		lineageTag: c4e1a2b3-1f4d-4e5a-9b6c-2d3e4f5a6b73
+
 	measure 'SLA Met Tickets' =
 			CALCULATE ( COUNTROWS ( Tickets ), Tickets[Resolved On Time] = TRUE () )
 		formatString: #,0
