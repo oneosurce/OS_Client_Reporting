@@ -8,7 +8,7 @@ relationship d8ff2b9e-0497-4617-82f9-d57e255c1269
 
 relationship b8d1bcd0-1709-4655-bc65-326bc09cd2ff
 	isActive: false
-	fromColumn: Tickets.'Resolved Date'
+	fromColumn: Tickets.'Completed Date'
 	toColumn: Date.Date
 
 relationship 58cf4df3-5426-4c1b-82a1-eb38cc6025df

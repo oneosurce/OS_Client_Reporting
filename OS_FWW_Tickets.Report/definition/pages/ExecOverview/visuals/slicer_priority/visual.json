@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "slicer_priority",
   "position": {
-    "x": 1086,
+    "x": 1096,
     "y": 22,
     "z": 7,
-    "width": 170,
+    "width": 160,
     "height": 44,
     "tabOrder": 7
   },

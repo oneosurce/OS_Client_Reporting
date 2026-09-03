@@ -22,11 +22,11 @@ table Measures
 	measure 'Tickets Resolved' =
 			CALCULATE (
 				COUNTROWS ( Tickets ),
-				USERELATIONSHIP ( Tickets[Resolved Date], 'Date'[Date] ),
-				NOT ISBLANK ( Tickets[Resolved At] )
+				USERELATIONSHIP ( Tickets[Completed Date], 'Date'[Date] ),
+				NOT ISBLANK ( Tickets[Completed At] )
 			)
 		formatString: #,0
-		description: Tickets resolved in the current date context (Resolved Date relationship)
+		description: Tickets whose work was completed (Resolved or Ready for Invoice) in the current date context
 		displayFolder: Volume
 		lineageTag: abb46376-6f88-4ab3-a04f-6d03fa6afe58
 	measure 'Net Backlog Change' =
@@ -52,7 +52,7 @@ table Measures
 						FILTER (
 							Tickets,
 							Tickets[Created At] <= RefDate
-								&& ( ISBLANK ( Tickets[Resolved At] ) || Tickets[Resolved At] > RefDate )
+								&& ( ISBLANK ( Tickets[Completed At] ) || Tickets[Completed At] > RefDate )
 						)
 					),
 					REMOVEFILTERS ( 'Date' )
@@ -158,8 +158,8 @@ table Measures
 			CALCULATE (
 				COUNTROWS ( Tickets ),
 				REMOVEFILTERS ( 'Date' ),
-				Tickets[Resolved Date] > TODAY () - 30,
-				Tickets[Resolved Date] <= TODAY ()
+				Tickets[Completed Date] > TODAY () - 30,
+				Tickets[Completed Date] <= TODAY ()
 			)
 		formatString: #,0
 		displayFolder: Rolling 30 Days
@@ -178,16 +178,16 @@ table Measures
 	measure 'Avg Resolution Hours' =
 			CALCULATE (
 				AVERAGE ( Tickets[Resolution Hours] ),
-				USERELATIONSHIP ( Tickets[Resolved Date], 'Date'[Date] )
+				USERELATIONSHIP ( Tickets[Completed Date], 'Date'[Date] )
 			)
 		formatString: 0.0"h"
-		description: Average hours from created to resolved, for tickets resolved in the date context
+		description: Average hours from created to work-completed, for tickets completed in the date context
 		displayFolder: Resolution Time
 		lineageTag: f8cabd62-050f-4840-b20a-b042cc7e425e
 	measure 'Median Resolution Hours' =
 			CALCULATE (
 				MEDIAN ( Tickets[Resolution Hours] ),
-				USERELATIONSHIP ( Tickets[Resolved Date], 'Date'[Date] )
+				USERELATIONSHIP ( Tickets[Completed Date], 'Date'[Date] )
 			)
 		formatString: 0.0"h"
 		displayFolder: Resolution Time
@@ -196,8 +196,8 @@ table Measures
 			CALCULATE (
 				AVERAGE ( Tickets[Resolution Hours] ),
 				REMOVEFILTERS ( 'Date' ),
-				Tickets[Resolved Date] > TODAY () - 30,
-				Tickets[Resolved Date] <= TODAY ()
+				Tickets[Completed Date] > TODAY () - 30,
+				Tickets[Completed Date] <= TODAY ()
 			)
 		formatString: 0.0"h"
 		displayFolder: Resolution Time

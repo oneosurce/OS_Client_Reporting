@@ -10,13 +10,6 @@ table Customers
 		sourceColumn: Customer ID
 
 		annotation SummarizationSetBy = User
-	column Site
-		dataType: string
-		lineageTag: fb7f5ddc-f5dc-4cc4-b3ae-7d00d9cd91cc
-		summarizeBy: none
-		sourceColumn: Site
-
-		annotation SummarizationSetBy = User
 	column 'Business Name'
 		dataType: string
 		lineageTag: fac1d30c-e2e7-4f8d-b892-5f1a2f94e234
@@ -136,10 +129,8 @@ table Customers
 						{"zip", "Zip"}, {"latitude", "Latitude"}, {"longitude", "Longitude"}, {"created_at", "Customer Since"}, {"disabled", "Is Disabled"}}),
 					// customers.id arrives as text while tickets.customer_id is numeric - align the key type
 					Typed = Table.TransformColumnTypes(Renamed, {
-						{"Customer ID", Int64.Type}, {"Latitude", type number}, {"Longitude", type number}, {"Customer Since", type datetime}, {"Is Disabled", type logical}}),
-					// Site slicer uses Business Name; fall back to the contact name for residential customers
-					SiteName = Table.AddColumn(Typed, "Site", each if [Business Name] = null or Text.Trim([Business Name]) = "" then [Customer Name] else [Business Name], type text)
+						{"Customer ID", Int64.Type}, {"Latitude", type number}, {"Longitude", type number}, {"Customer Since", type datetime}, {"Is Disabled", type logical}})
 				in
-					SiteName
+					Typed
 
 	annotation PBI_ResultType = Table

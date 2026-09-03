@@ -1,6 +1,6 @@
 role 'FW Walton'
 	modelPermission: read
 
-	tablePermission Customers = SEARCH ( "Walton", Customers[Site], 1, 0 ) > 0
+	tablePermission Customers = Customers[Customer ID] = 33810072
 
 	annotation PBI_Id = fww
