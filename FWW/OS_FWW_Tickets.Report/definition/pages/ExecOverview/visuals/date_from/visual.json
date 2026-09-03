@@ -10,7 +10,7 @@
     "tabOrder": 786
   },
   "visual": {
-    "visualType": "card",
+    "visualType": "multiRowCard",
     "query": {
       "queryState": {
         "Values": {
@@ -34,9 +34,16 @@
       }
     },
     "objects": {
-      "calloutValue": [
+      "dataLabels": [
         {
           "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13"
+                }
+              }
+            },
             "color": {
               "solid": {
                 "color": {
@@ -45,20 +52,6 @@
                       "Value": "'#1F2A5A'"
                     }
                   }
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "13"
-                }
-              }
-            },
-            "bold": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
                 }
               }
             }
@@ -78,7 +71,7 @@
           }
         }
       ],
-      "wordWrap": [
+      "cardTitle": [
         {
           "properties": {
             "show": {
@@ -91,13 +84,27 @@
           }
         }
       ],
-      "background": [
+      "card": [
         {
           "properties": {
-            "show": {
+            "outlineWeight": {
+              "expr": {
+                "Literal": {
+                  "Value": "0"
+                }
+              }
+            },
+            "barShow": {
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            },
+            "cardPadding": {
+              "expr": {
+                "Literal": {
+                  "Value": "2"
                 }
               }
             }
