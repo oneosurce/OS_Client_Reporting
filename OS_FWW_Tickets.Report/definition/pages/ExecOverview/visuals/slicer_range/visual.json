@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "slicer_range",
   "position": {
-    "x": 32,
-    "y": 8,
+    "x": 386,
+    "y": 12,
     "z": 7,
-    "width": 600,
-    "height": 24,
+    "width": 372,
+    "height": 64,
     "tabOrder": 7
   },
   "visual": {
@@ -58,7 +58,14 @@
             "orientation": {
               "expr": {
                 "Literal": {
-                  "Value": "'horizontal'"
+                  "Value": "'Horizontal'"
+                }
+              }
+            },
+            "responsive": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
@@ -120,24 +127,6 @@
               "expr": {
                 "Literal": {
                   "Value": "8"
-                }
-              }
-            },
-            "outlineColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#AEBBDD'"
-                    }
-                  }
-                }
-              }
-            },
-            "outlineWeight": {
-              "expr": {
-                "Literal": {
-                  "Value": "1"
                 }
               }
             }
