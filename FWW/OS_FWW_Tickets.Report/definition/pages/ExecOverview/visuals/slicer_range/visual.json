@@ -48,7 +48,7 @@
             "direction": "Ascending"
           }
         ],
-        "isDefaultSort": true
+        "isDefaultSort": false
       }
     },
     "objects": {
@@ -72,81 +72,50 @@
                   "Value": "1"
                 }
               }
-            },
+            }
+          }
+        },
+        {
+          "properties": {
             "filter": {
               "filter": {
-                "filter": {
-                  "Version": 2,
-                  "From": [
-                    {
-                      "Name": "d",
-                      "Entity": "Date Range",
-                      "Type": 0
-                    }
-                  ],
-                  "Where": [
-                    {
-                      "Condition": {
-                        "In": {
-                          "Expressions": [
+                "Version": 2,
+                "From": [
+                  {
+                    "Name": "d",
+                    "Entity": "Date Range",
+                    "Type": 0
+                  }
+                ],
+                "Where": [
+                  {
+                    "Condition": {
+                      "In": {
+                        "Expressions": [
+                          {
+                            "Column": {
+                              "Expression": {
+                                "SourceRef": {
+                                  "Source": "d"
+                                }
+                              },
+                              "Property": "Range"
+                            }
+                          }
+                        ],
+                        "Values": [
+                          [
                             {
-                              "Column": {
-                                "Expression": {
-                                  "SourceRef": {
-                                    "Source": "d"
-                                  }
-                                },
-                                "Property": "Range"
+                              "Literal": {
+                                "Value": "'Last 90 days'"
                               }
                             }
-                          ],
-                          "Values": [
-                            [
-                              {
-                                "Literal": {
-                                  "Value": "'Last 90 days'"
-                                }
-                              }
-                            ]
                           ]
-                        }
-                      },
-                      "Annotations": {
-                        "filterExpressionMetadata": {
-                          "decomposedIdentities": {
-                            "values": [
-                              [
-                                {
-                                  "0": [
-                                    {
-                                      "Literal": {
-                                        "Value": "'Last 90 days'"
-                                      }
-                                    }
-                                  ]
-                                }
-                              ]
-                            ],
-                            "columns": [
-                              {
-                                "value": {
-                                  "Column": {
-                                    "Expression": {
-                                      "SourceRef": {
-                                        "Source": "d"
-                                      }
-                                    },
-                                    "Property": "Range"
-                                  }
-                                }
-                              }
-                            ]
-                          }
-                        }
+                        ]
                       }
                     }
-                  ]
-                }
+                  }
+                ]
               }
             }
           }

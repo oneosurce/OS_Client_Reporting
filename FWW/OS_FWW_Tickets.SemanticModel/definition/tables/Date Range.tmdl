@@ -29,13 +29,14 @@ table 'Date Range'
 					"Sort", INTEGER,
 					{
 						{ "Today", 1 },
-						{ "Last 7 days", 2 },
-						{ "Last 30 days", 3 },
-						{ "Last 90 days", 4 },
-						{ "Last quarter", 5 },
-						{ "Year to date", 6 },
-						{ "Last 12 months", 7 },
-						{ "All time", 8 }
+						{ "Yesterday", 2 },
+						{ "Last 7 days", 3 },
+						{ "Last 30 days", 4 },
+						{ "Last 90 days", 5 },
+						{ "Last quarter", 6 },
+						{ "Year to date", 7 },
+						{ "Last 12 months", 8 },
+						{ "All time", 9 }
 					}
 				)
 
