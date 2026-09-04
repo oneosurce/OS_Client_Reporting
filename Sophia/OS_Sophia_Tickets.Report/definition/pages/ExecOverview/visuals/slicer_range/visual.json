@@ -110,6 +110,39 @@
                             ]
                           ]
                         }
+                      },
+                      "Annotations": {
+                        "filterExpressionMetadata": {
+                          "decomposedIdentities": {
+                            "values": [
+                              [
+                                {
+                                  "0": [
+                                    {
+                                      "Literal": {
+                                        "Value": "'Last 90 days'"
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            ],
+                            "columns": [
+                              {
+                                "value": {
+                                  "Column": {
+                                    "Expression": {
+                                      "SourceRef": {
+                                        "Source": "d"
+                                      }
+                                    },
+                                    "Property": "Range"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
                       }
                     }
                   ]
