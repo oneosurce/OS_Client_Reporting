@@ -156,18 +156,21 @@ table _Measures
 	/// Card display for MEDIAN RESOLUTION — em dash when nothing was resolved in the window
 	measure 'Resolution (Card Display)' =
 			VAR d = [Resolution Days (Card)]
+			VAR Span = [_Window Max] - [_Window Min]
 			RETURN
-				IF ( ISBLANK ( d ), "—", FORMAT ( d, "0.0" ) & " days" )
+				IF ( Span < 6 || ISBLANK ( d ), "—", FORMAT ( d, "0.0" ) & " days" )
 		displayFolder: KPI
 		lineageTag: e1f2a3b4-0000-4001-8001-00000000001f
 
 	measure 'Resolution Days Change Label' =
 			VAR Cur = [Resolution Days (Card)]
 			VAR Prior = [Resolution Days (Prior Window)]
+			VAR Span = [_Window Max] - [_Window Min]
 			VAR Delta = Cur - Prior
 			RETURN
 				SWITCH (
 					TRUE (),
+					Span < 6, "",
 					ISBLANK ( Cur ) || ISBLANK ( Prior ), "",
 					Delta > 0.05, "▲ " & FORMAT ( Delta, "0.0" ) & "d vs prior",
 					Delta < -0.05, "▼ " & FORMAT ( ABS ( Delta ), "0.0" ) & "d vs prior",
