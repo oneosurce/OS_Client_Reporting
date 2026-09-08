@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Avg Resolution Days (Card)"
+                  "Property": "Avg Resolution (Card Display)"
                 }
               },
-              "queryRef": "_Measures.Avg Resolution Days (Card)",
-              "nativeQueryRef": "Avg Resolution Days (Card)"
+              "queryRef": "_Measures.Avg Resolution (Card Display)",
+              "nativeQueryRef": "Avg Resolution (Card Display)"
             }
           ]
         }
