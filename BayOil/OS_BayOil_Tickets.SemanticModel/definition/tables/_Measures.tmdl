@@ -229,7 +229,7 @@ table _Measures
 						)
 					),
 					REMOVEFILTERS ( 'Date' )
-				)
+				) + 0
 		formatString: #,0
 		displayFolder: Backlog
 		lineageTag: 39c4423f-f4c8-4c62-875d-f46f9547cdde
