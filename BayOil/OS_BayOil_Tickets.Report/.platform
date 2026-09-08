@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "OS_BayOil_Tickets"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "be7a093a-9ee7-4a0d-9f86-bf8abe765c03"
+  }
+}

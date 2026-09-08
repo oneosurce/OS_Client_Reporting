@@ -1,0 +1,52 @@
+table 'Aging Bucket'
+	lineageTag: bcab3548-7a8d-4f81-b7ff-428a669926e6
+
+	column Bucket
+		dataType: string
+		lineageTag: 1990efd2-ad23-49a0-8284-c443fd829728
+		summarizeBy: none
+		sortByColumn: Sort
+		sourceColumn: Bucket
+
+		annotation SummarizationSetBy = User
+	column 'Min Days'
+		dataType: double
+		isHidden
+		lineageTag: 54ce6516-e50e-4e7e-be51-371a6d1717aa
+		summarizeBy: none
+		sourceColumn: Min Days
+
+		annotation SummarizationSetBy = User
+	column 'Max Days'
+		dataType: double
+		isHidden
+		lineageTag: 99fa0be1-1cea-4718-be1f-86b02e4f8e1b
+		summarizeBy: none
+		sourceColumn: Max Days
+
+		annotation SummarizationSetBy = User
+	column Sort
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c72e4ea2-4735-4e2b-bfcd-c616a2a2b556
+		summarizeBy: none
+		sourceColumn: Sort
+
+		annotation SummarizationSetBy = User
+	partition 'Aging Bucket' = m
+		mode: import
+		source =
+				let
+					Source = #table(
+						type table [Bucket = text, #"Min Days" = number, #"Max Days" = number, Sort = Int64.Type],
+						{
+							{"0–1 day", 0, 1, 1},
+							{"1–3 days", 1, 3, 2},
+							{"3–7 days", 3, 7, 3},
+							{"7+ days", 7, 100000, 4}
+						})
+				in
+					Source
+
+	annotation PBI_ResultType = Table

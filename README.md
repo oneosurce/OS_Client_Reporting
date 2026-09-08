@@ -8,6 +8,9 @@ One folder per client. All of them share the same design; they differ only by th
 |---|---|---|
 | [`FWW/`](FWW/) | FW Walton, Inc. | 33810072 |
 | [`Sophia/`](Sophia/) | Sophia Oilfield Supply Services | 29076492 |
+| [`BayOil/`](BayOil/) | Bay Oil Co. | 12432163 |
+| [`Vanderford/`](Vanderford/) | Vanderford Air and Plumbing | 34611186 |
+| [`Millforest/`](Millforest/) | Millforest Dental Group | 12315250 |
 
 Each folder has its own `README.md` with the model/report detail.
 

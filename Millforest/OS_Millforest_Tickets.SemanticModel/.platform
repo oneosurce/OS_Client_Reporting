@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "OS_Millforest_Tickets"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "bc18aaa2-68ab-4c42-b882-53fc9e4d06e7"
+  }
+}

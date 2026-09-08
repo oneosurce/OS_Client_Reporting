@@ -1,0 +1,139 @@
+table Customers
+	lineageTag: 9a683d75-08c2-4ae2-b1ca-a55ee6e81b65
+
+	column 'Customer ID'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 491e576a-4ab8-489a-8252-46eb8be806de
+		summarizeBy: none
+		sourceColumn: Customer ID
+
+		annotation SummarizationSetBy = User
+	column 'Business Name'
+		dataType: string
+		lineageTag: fac1d30c-e2e7-4f8d-b892-5f1a2f94e234
+		summarizeBy: none
+		sourceColumn: Business Name
+
+		annotation SummarizationSetBy = User
+	column 'Customer Name'
+		dataType: string
+		lineageTag: 5245e931-0417-481e-9dde-cd4e6b5f8222
+		summarizeBy: none
+		sourceColumn: Customer Name
+
+		annotation SummarizationSetBy = User
+	column 'Contact Name'
+		dataType: string
+		lineageTag: b8cf544d-59e0-4fba-9032-57329ac5a9d2
+		summarizeBy: none
+		sourceColumn: Contact Name
+
+		annotation SummarizationSetBy = User
+	column 'First Name'
+		dataType: string
+		isHidden
+		lineageTag: d19c8bb9-f0ad-4625-aa68-4adc85525f63
+		summarizeBy: none
+		sourceColumn: First Name
+
+		annotation SummarizationSetBy = User
+	column 'Last Name'
+		dataType: string
+		isHidden
+		lineageTag: 4aa1b8b3-90c6-4989-b606-b0096d9a94c9
+		summarizeBy: none
+		sourceColumn: Last Name
+
+		annotation SummarizationSetBy = User
+	column Email
+		dataType: string
+		lineageTag: e5f52b53-18de-4e8e-aaa6-3af72b034102
+		summarizeBy: none
+		sourceColumn: Email
+
+		annotation SummarizationSetBy = User
+	column Phone
+		dataType: string
+		lineageTag: 1b925e27-f963-4c2d-a2fb-4a39f14d63cd
+		summarizeBy: none
+		sourceColumn: Phone
+
+		annotation SummarizationSetBy = User
+	column City
+		dataType: string
+		dataCategory: City
+		lineageTag: 2ef71604-57a1-45cd-95d7-349502c1f428
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = User
+	column State
+		dataType: string
+		dataCategory: StateOrProvince
+		lineageTag: c7faf05d-42cb-44c5-8d2d-55b1d0306f00
+		summarizeBy: none
+		sourceColumn: State
+
+		annotation SummarizationSetBy = User
+	column Zip
+		dataType: string
+		dataCategory: PostalCode
+		lineageTag: 69d798c1-458b-4f62-83d7-b922e45dd787
+		summarizeBy: none
+		sourceColumn: Zip
+
+		annotation SummarizationSetBy = User
+	column Latitude
+		dataType: double
+		dataCategory: Latitude
+		lineageTag: dab0ce70-457e-4910-9cbf-3daabe856cbd
+		summarizeBy: none
+		sourceColumn: Latitude
+
+		annotation SummarizationSetBy = User
+	column Longitude
+		dataType: double
+		dataCategory: Longitude
+		lineageTag: 21226e1e-9a0d-48ca-83e8-b382f3d066e7
+		summarizeBy: none
+		sourceColumn: Longitude
+
+		annotation SummarizationSetBy = User
+	column 'Customer Since'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: dfca77c1-762d-487c-bfdb-233f30caea21
+		summarizeBy: none
+		sourceColumn: Customer Since
+
+		annotation SummarizationSetBy = User
+	column 'Is Disabled'
+		dataType: boolean
+		lineageTag: d547fb4f-0944-483d-998b-008531677287
+		summarizeBy: none
+		sourceColumn: Is Disabled
+
+		annotation SummarizationSetBy = User
+	partition Customers = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database("os-syncro-db.postgres.database.azure.com", "syncro_reporting"),
+					Navigation = Source{[Schema = "public", Item = "customers"]}[Data],
+					// Single-client report: keep only the client named by the CustomerId parameter
+					// (customers.id is text in Syncro, so compare against the parameter as text).
+					Client = Table.SelectRows(Navigation, each [id] = Text.From(CustomerId)),
+					KeepColumns = Table.SelectColumns(Client, {"id", "business_name", "business_then_name", "fullname", "firstname", "lastname", "email", "phone", "city", "state", "zip", "latitude", "longitude", "created_at", "disabled"}),
+					Renamed = Table.RenameColumns(KeepColumns, {
+						{"id", "Customer ID"}, {"business_name", "Business Name"}, {"business_then_name", "Customer Name"}, {"fullname", "Contact Name"},
+						{"firstname", "First Name"}, {"lastname", "Last Name"}, {"email", "Email"}, {"phone", "Phone"}, {"city", "City"}, {"state", "State"},
+						{"zip", "Zip"}, {"latitude", "Latitude"}, {"longitude", "Longitude"}, {"created_at", "Customer Since"}, {"disabled", "Is Disabled"}}),
+					// customers.id arrives as text while tickets.customer_id is numeric - align the key type
+					Typed = Table.TransformColumnTypes(Renamed, {
+						{"Customer ID", Int64.Type}, {"Latitude", type number}, {"Longitude", type number}, {"Customer Since", type datetime}, {"Is Disabled", type logical}})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table

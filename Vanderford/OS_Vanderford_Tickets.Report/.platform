@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "OS_Vanderford_Tickets"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "3411c1ca-a41a-4fbb-9c7b-16aea9532570"
+  }
+}
