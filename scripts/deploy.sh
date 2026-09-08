@@ -25,8 +25,12 @@ echo "### git sync"
 st=$(curl -s -H "Authorization: Bearer $FT" "$FB/workspaces/$WS/git/status")
 RC=$(echo "$st" | python3 -c "import sys,json;print(json.load(sys.stdin)['remoteCommitHash'])")
 WH=$(echo "$st" | python3 -c "import sys,json;print(json.load(sys.stdin).get('workspaceHead') or '')")
-echo "remote=$RC head=$WH"
-if [ "$RC" != "$WH" ]; then
+DRIFT=$(echo "$st" | python3 -c "import sys,json;print(len(json.load(sys.stdin).get('changes') or []))")
+echo "remote=$RC head=$WH drift_items=$DRIFT"
+# Always pull from Git. RC==WH only means the commit pointer matches; in-service
+# edits (e.g. a slicer selection saved by the web UI) leave the pointer alone but
+# show up in `changes` — PreferRemote + allowOverrideItems discards them.
+if [ "$RC" != "$WH" ] || [ "$DRIFT" != "0" ]; then
   body=$(python3 -c "import json;print(json.dumps({'remoteCommitHash':'$RC','workspaceHead':('$WH' or None),'conflictResolution':{'conflictResolutionType':'Workspace','conflictResolutionPolicy':'PreferRemote'},'options':{'allowOverrideItems':True}}))")
   op=$(curl -s -D - -o /dev/null -X POST -H "Authorization: Bearer $FT" -H "Content-Type: application/json" -d "$body" "$FB/workspaces/$WS/git/updateFromGit" | awk 'tolower($1)=="x-ms-operation-id:"{print $2}' | tr -d '\r')
   for i in $(seq 1 40); do sleep 6
