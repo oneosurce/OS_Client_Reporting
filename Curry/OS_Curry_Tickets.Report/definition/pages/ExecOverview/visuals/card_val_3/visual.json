@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Avg Resolution (Card Display)"
+                  "Property": "Resolution (Card Display)"
                 }
               },
-              "queryRef": "_Measures.Avg Resolution (Card Display)",
-              "nativeQueryRef": "Avg Resolution (Card Display)"
+              "queryRef": "_Measures.Resolution (Card Display)",
+              "nativeQueryRef": "Resolution (Card Display)"
             }
           ]
         }
@@ -198,7 +198,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'AVG RESOLUTION'"
+                  "Value": "'MEDIAN RESOLUTION'"
                 }
               }
             },

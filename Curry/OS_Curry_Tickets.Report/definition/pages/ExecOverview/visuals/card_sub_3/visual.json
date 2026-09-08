@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Avg Resolution Days Change Label"
+                  "Property": "Resolution Days Change Label"
                 }
               },
-              "queryRef": "_Measures.Avg Resolution Days Change Label",
-              "nativeQueryRef": "Avg Resolution Days Change Label"
+              "queryRef": "_Measures.Resolution Days Change Label",
+              "nativeQueryRef": "Resolution Days Change Label"
             }
           ]
         }
