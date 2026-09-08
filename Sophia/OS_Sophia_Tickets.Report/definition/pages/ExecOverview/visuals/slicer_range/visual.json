@@ -42,13 +42,13 @@
                     "Entity": "Date Range"
                   }
                 },
-                "Property": "Sort"
+                "Property": "Range"
               }
             },
             "direction": "Ascending"
           }
         ],
-        "isDefaultSort": false
+        "isDefaultSort": true
       }
     },
     "objects": {
