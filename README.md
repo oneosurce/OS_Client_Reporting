@@ -11,6 +11,10 @@ One folder per client. All of them share the same design; they differ only by th
 | [`BayOil/`](BayOil/) | Bay Oil Co. | 12432163 |
 | [`Vanderford/`](Vanderford/) | Vanderford Air and Plumbing | 34611186 |
 | [`Millforest/`](Millforest/) | Millforest Dental Group | 12315250 |
+| [`MartinWalton/`](MartinWalton/) | Martin Walton Attorneys at Law | 12309358 |
+| [`Cobalt/`](Cobalt/) | Cobalt Engineering | 16527837 |
+| [`Curry/`](Curry/) | Curry Excavation & Site Work Inc. | 12701269 |
+| [`TDEC/`](TDEC/) | TDEC, Inc | 14623202 |
 
 Each folder has its own `README.md` with the model/report detail.
 

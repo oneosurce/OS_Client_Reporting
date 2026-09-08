@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "OS_Curry_Tickets"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "5bab78cb-e253-485d-b7c2-573ae9c3247a"
+  }
+}

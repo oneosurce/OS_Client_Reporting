@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "OS_TDEC_Tickets"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "f787e623-5360-4994-9953-cc3b190b364b"
+  }
+}

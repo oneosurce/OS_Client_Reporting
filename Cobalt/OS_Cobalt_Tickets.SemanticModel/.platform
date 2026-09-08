@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "OS_Cobalt_Tickets"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "d264743e-4f76-4d91-b8de-3531905c59f2"
+  }
+}
