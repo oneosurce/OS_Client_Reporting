@@ -1,25 +1,22 @@
-/// Disconnected helper: preset options for the Range picker.
+/// Disconnected helper: preset options for the Range picker. Slicer item order = Sort.
 table 'Date Range'
 	lineageTag: b2c3d4e5-0000-4002-8002-000000000001
 
 	column Range
+		isNameInferred
 		dataType: string
-		lineageTag: b2c3d4e5-0000-4002-8002-000000000002
 		summarizeBy: none
 		sortByColumn: Sort
-		sourceColumn: Range
-
-		annotation SummarizationSetBy = User
+		sourceColumn: [Range]
+		lineageTag: b2c3d4e5-0000-4002-8002-000000000002
 
 	column Sort
+		isNameInferred
 		dataType: int64
 		isHidden
-		formatString: 0
-		lineageTag: b2c3d4e5-0000-4002-8002-000000000003
 		summarizeBy: none
-		sourceColumn: Sort
-
-		annotation SummarizationSetBy = User
+		sourceColumn: [Sort]
+		lineageTag: b2c3d4e5-0000-4002-8002-000000000003
 
 	partition 'Date Range' = calculated
 		mode: import
