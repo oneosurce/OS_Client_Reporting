@@ -104,13 +104,13 @@ table _Measures
 
 	/// Tickets created in the selected window
 	measure 'Created (Card)' =
-			CALCULATE ( [Tickets Created], REMOVEFILTERS ( 'Date' ), DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) )
+			CALCULATE ( [Tickets Created], REMOVEFILTERS ( 'Date' ), DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) ) + 0
 		formatString: #,0
 		displayFolder: KPI
 		lineageTag: e1f2a3b4-0000-4001-8001-000000000003
 
 	measure 'Resolved (Card)' =
-			CALCULATE ( [Tickets Resolved], REMOVEFILTERS ( 'Date' ), DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) )
+			CALCULATE ( [Tickets Resolved], REMOVEFILTERS ( 'Date' ), DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) ) + 0
 		formatString: #,0
 		displayFolder: KPI
 		lineageTag: e1f2a3b4-0000-4001-8001-000000000004
