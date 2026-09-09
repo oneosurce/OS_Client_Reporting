@@ -226,8 +226,11 @@ table Tickets
 					// Closed tickets: keep only those completed in the last 35 days (enough for the
 					// "this week" / "closed 30d" momentum metrics); drop the long Resolved history.
 					Cutoff = Date.AddDays(Date.From(Now), -35),
+					// Minerva Ruiz (mr@) is Accounting, not a tech — she holds every "Ready for Invoice"
+					// ticket for billing. Her tickets are out of scope for the tech ops board entirely.
 					Scoped = Table.SelectRows(AddCompDate, each
-						not Text.EndsWith([Assigned Email], "@cobalt-engineering.com")
+						[Assigned Email] <> "mr@onesource.tech"
+						and not Text.EndsWith([Assigned Email], "@cobalt-engineering.com")
 						and (if [Client] = "Cobalt Engineering"
 							then List.Contains({"ae@onesource.tech", "ar@onesource.tech"}, [Assigned Email])
 							else true)
