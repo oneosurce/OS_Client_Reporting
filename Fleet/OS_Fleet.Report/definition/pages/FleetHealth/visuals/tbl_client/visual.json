@@ -56,20 +56,6 @@
               },
               "queryRef": "_Measures.Windows 10",
               "nativeQueryRef": "Windows 10"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Pending Reboots"
-                }
-              },
-              "queryRef": "_Measures.Pending Reboots",
-              "nativeQueryRef": "Pending Reboots"
             }
           ]
         }

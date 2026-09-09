@@ -93,20 +93,6 @@
                       "Entity": "Assets"
                     }
                   },
-                  "Property": "Uptime (Days)"
-                }
-              },
-              "queryRef": "Assets.Uptime (Days)",
-              "nativeQueryRef": "Uptime (Days)"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Assets"
-                    }
-                  },
                   "Property": "Fleet Risk Score"
                 }
               },
