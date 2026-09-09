@@ -3,10 +3,10 @@
   "name": "chart_pulse_last",
   "position": {
     "x": 780,
-    "y": 380,
+    "y": 414,
     "z": 25,
     "width": 476,
-    "height": 156,
+    "height": 140,
     "tabOrder": 25
   },
   "filterConfig": {

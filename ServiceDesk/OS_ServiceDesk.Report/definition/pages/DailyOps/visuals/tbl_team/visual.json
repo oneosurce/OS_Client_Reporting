@@ -6,7 +6,7 @@
     "y": 196,
     "z": 21,
     "width": 476,
-    "height": 172,
+    "height": 210,
     "tabOrder": 21
   },
   "visual": {
@@ -135,6 +135,26 @@
               "expr": {
                 "Literal": {
                   "Value": "8"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "grid": [
+        {
+          "properties": {
+            "rowPadding": {
+              "expr": {
+                "Literal": {
+                  "Value": "1"
+                }
+              }
+            },
+            "outlineWeight": {
+              "expr": {
+                "Literal": {
+                  "Value": "0"
                 }
               }
             }
