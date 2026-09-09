@@ -96,3 +96,13 @@ table _Measures
 			VAR py = IF ( cq = 1, cy - 1, cy )
 			RETURN "Ops Pulse  ·  Q" & pq & "-" & py & "  vs  Q" & cq & "-" & cy
 		lineageTag: f1000009-0000-4001-a009-000000000032
+
+	measure 'This Q Label' =
+			"Q" & QUARTER ( TODAY () ) & "-" & YEAR ( TODAY () ) & "  (current)"
+		lineageTag: f1000009-0000-4001-a009-000000000033
+
+	measure 'Last Q Label' =
+			VAR cq = QUARTER ( TODAY () )
+			VAR cy = YEAR ( TODAY () )
+			RETURN "Q" & IF ( cq = 1, 4, cq - 1 ) & "-" & IF ( cq = 1, cy - 1, cy )
+		lineageTag: f1000009-0000-4001-a009-000000000034

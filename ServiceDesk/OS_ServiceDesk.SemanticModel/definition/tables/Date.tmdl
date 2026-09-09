@@ -117,6 +117,14 @@ table Date
 
 		annotation SummarizationSetBy = User
 
+	column 'Is Last Quarter'
+		dataType: boolean
+		lineageTag: f1000005-0000-4001-a005-00000000000f
+		summarizeBy: none
+		sourceColumn: [Is Last Quarter]
+
+		annotation SummarizationSetBy = User
+
 	partition Date = calculated
 		mode: import
 		source =
@@ -141,7 +149,8 @@ table Date
 						"Week of Quarter", "W" & FORMAT ( INT ( ( [Date] - DATE ( YEAR ( [Date] ), ( QUARTER ( [Date] ) - 1 ) * 3 + 1, 1 ) ) / 7 ) + 1, "00" ),
 						"Is Recent Quarter",
 							VAR qs = YEAR ( [Date] ) * 4 + QUARTER ( [Date] )
-							RETURN ( qs = CurQS - 1 ) || ( qs = CurQS && [Date] <= TODAY () )
+							RETURN ( qs = CurQS - 1 ) || ( qs = CurQS && [Date] <= TODAY () ),
+						"Is Last Quarter", YEAR ( [Date] ) * 4 + QUARTER ( [Date] ) = CurQS - 1
 					)
 
 	annotation PBI_ResultType = Table

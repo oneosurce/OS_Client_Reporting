@@ -1,18 +1,18 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
-  "name": "chart_pulse",
+  "name": "chart_pulse_last",
   "position": {
     "x": 780,
     "y": 398,
     "z": 25,
-    "width": 476,
+    "width": 236,
     "height": 306,
     "tabOrder": 25
   },
   "filterConfig": {
     "filters": [
       {
-        "name": "3e79166d76ad41c9af1ff931c38eacb2",
+        "name": "c31ffe3c8fd447ed8538d5c9a9b4c6ee",
         "field": {
           "Column": {
             "Expression": {
@@ -20,7 +20,7 @@
                 "Entity": "Date"
               }
             },
-            "Property": "Is Recent Quarter"
+            "Property": "Is Last Quarter"
           }
         },
         "type": "Categorical",
@@ -45,7 +45,7 @@
                             "Source": "d"
                           }
                         },
-                        "Property": "Is Recent Quarter"
+                        "Property": "Is Last Quarter"
                       }
                     }
                   ],
@@ -119,24 +119,6 @@
               "nativeQueryRef": "Resolved"
             }
           ]
-        },
-        "SmallMultiples": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Date"
-                    }
-                  },
-                  "Property": "Quarter Label"
-                }
-              },
-              "queryRef": "Date.Quarter Label",
-              "nativeQueryRef": "Quarter Label"
-            }
-          ]
         }
       },
       "sortDefinition": {
@@ -149,7 +131,7 @@
                     "Entity": "Date"
                   }
                 },
-                "Property": "Quarter Sort"
+                "Property": "Week of Quarter"
               }
             },
             "direction": "Ascending"
@@ -178,7 +160,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },
@@ -286,42 +268,18 @@
                   "Value": "8"
                 }
               }
-            }
-          }
-        }
-      ],
-      "smallMultiplesLayout": [
-        {
-          "properties": {
-            "maxRowCount": {
+            },
+            "start": {
               "expr": {
                 "Literal": {
-                  "Value": "1"
+                  "Value": "0"
                 }
               }
             },
-            "maxColumnCount": {
+            "end": {
               "expr": {
                 "Literal": {
-                  "Value": "2"
-                }
-              }
-            },
-            "gridLineType": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Inner'"
-                }
-              }
-            },
-            "gridLineColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#E3E8F0'"
-                    }
-                  }
+                  "Value": "170"
                 }
               }
             }
@@ -348,13 +306,6 @@
                       "Value": "'#FFFFFF'"
                     }
                   }
-                }
-              }
-            },
-            "transparency": {
-              "expr": {
-                "Literal": {
-                  "Value": "0"
                 }
               }
             }
@@ -392,19 +343,6 @@
           }
         }
       ],
-      "dropShadow": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
       "title": [
         {
           "properties": {
@@ -423,7 +361,7 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Pulse Title"
+                  "Property": "Last Q Label"
                 }
               }
             },
@@ -448,7 +386,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "11"
+                  "Value": "10"
                 }
               }
             },
@@ -475,7 +413,7 @@
             "right": {
               "expr": {
                 "Literal": {
-                  "Value": "10"
+                  "Value": "8"
                 }
               }
             },
