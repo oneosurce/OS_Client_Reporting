@@ -5,7 +5,7 @@
     "x": 24,
     "y": 204,
     "z": 20,
-    "width": 744,
+    "width": 720,
     "height": 496,
     "tabOrder": 20
   },
@@ -107,11 +107,11 @@
                       "Entity": "Assets"
                     }
                   },
-                  "Property": "Days Since Seen"
+                  "Property": "Fleet Risk Score"
                 }
               },
-              "queryRef": "Assets.Days Since Seen",
-              "nativeQueryRef": "Days Since Seen"
+              "queryRef": "Assets.Fleet Risk Score",
+              "nativeQueryRef": "Fleet Risk Score"
             }
           ]
         }

@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "chart_os",
   "position": {
-    "x": 780,
+    "x": 756,
     "y": 204,
     "z": 24,
-    "width": 476,
+    "width": 500,
     "height": 224,
     "tabOrder": 24
   },
