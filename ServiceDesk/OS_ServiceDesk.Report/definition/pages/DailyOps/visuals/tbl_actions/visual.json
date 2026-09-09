@@ -169,20 +169,6 @@
               },
               "queryRef": "Tickets.Due At",
               "nativeQueryRef": "Due At"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Tickets"
-                    }
-                  },
-                  "Property": "Subject"
-                }
-              },
-              "queryRef": "Tickets.Subject",
-              "nativeQueryRef": "Subject"
             }
           ]
         }
