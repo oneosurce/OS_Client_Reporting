@@ -20,7 +20,8 @@ One folder per client. All of them share the same design; they differ only by th
 
 | Folder | Report | Source |
 |---|---|---|
-| [`Finance/`](Finance/) | Business Health — billed / collected / AR aging / revenue by client | `invoices`, `payments`, `tickets` (all clients) |
+| [`Finance/`](Finance/) | Business Health — billed / collected / AR aging / revenue by client / est. MRR | `invoices`, `payments`, `tickets` (all clients) |
+| [`ServiceDesk/`](ServiceDesk/) | Daily Ops — open-ticket action list + team board for technicians | `tickets` (all clients) |
 
 Each folder has its own `README.md` with the model/report detail.
 
