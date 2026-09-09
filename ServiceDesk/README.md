@@ -29,7 +29,7 @@ Filtering is by **email**, not name — there are two "Rafael Vera" in Syncro (t
 - **KPI row:** Open · Overdue · Idle 7d+ · Oldest (days) · Closed this week · Net backlog this week.
 - **Open tickets — most neglected first:** every open ticket, sorted by days idle. Ticket # · Client · Assigned To · Status · Age · Idle · Due. Work it top-down.
 - **By technician:** open / overdue / idle-7d+ / closed-30d per person (only staff with open tickets). Shows load balance and throughput concentration.
-- **Ops Pulse — ticket flow (YTD):** monthly created vs closed lines. Fed by a separate `Ticket Flow` table (all tickets, trailing 13 months, no 35-day cutoff) that **keeps Minerva/Accounting** — so it's the true intake-vs-resolution pulse, not the tech-queue-scoped view. Still excludes the Cobalt co-managed portion.
+- **Ops Pulse · Qx-20xx:** **weekly** Created vs Resolved for the **current calendar quarter** (resets automatically at each quarter boundary; the title is a dynamic measure). Fed by a separate `Ticket Flow` table (trailing 13 months, no 35-day cutoff) that **keeps Minerva/Accounting** — so it's the true intake-vs-resolution pulse, not the tech-queue-scoped view. Still excludes the Cobalt co-managed portion.
 
 ## What it surfaced (baseline, 2026-09-08)
 
