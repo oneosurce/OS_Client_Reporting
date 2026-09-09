@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
-  "name": "card_sub_0",
+  "name": "card_sub_4",
   "position": {
-    "x": 36,
+    "x": 1032,
     "y": 190,
-    "z": 40,
+    "z": 42,
     "width": 212,
     "height": 26,
-    "tabOrder": 40
+    "tabOrder": 52
   },
   "visual": {
     "visualType": "multiRowCard",
@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Billed Change Label"
+                  "Property": "Estimated MRR Label"
                 }
               },
-              "queryRef": "_Measures.Billed Change Label",
-              "nativeQueryRef": "Billed Change Label"
+              "queryRef": "_Measures.Estimated MRR Label",
+              "nativeQueryRef": "Estimated MRR Label"
             }
           ]
         }

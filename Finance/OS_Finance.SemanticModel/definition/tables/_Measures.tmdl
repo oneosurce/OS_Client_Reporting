@@ -213,3 +213,56 @@ table _Measures
 		formatString: #,0
 		displayFolder: Load
 		lineageTag: f0000009-0000-4001-9009-000000000060
+
+	/// Estimated monthly recurring revenue: for each client, its lowest monthly billable
+	/// total over the last 12 complete months (the "floor" = recurring fee, project spikes
+	/// excluded), summed across clients billed in at least 6 of those months.
+	/// Syncro has no live contracts feed, so this is derived from invoice history.
+	measure 'Estimated MRR' =
+			VAR T = TODAY ()
+			VAR FirstYM = YEAR ( EDATE ( T, -12 ) ) * 12 + MONTH ( EDATE ( T, -12 ) )
+			VAR LastYM = YEAR ( T ) * 12 + MONTH ( T ) - 1
+			VAR CustMonth =
+				CALCULATETABLE (
+					SUMMARIZE (
+						Invoices,
+						Invoices[Customer ID],
+						'Date'[Year Month Sort],
+						"Amt", CALCULATE ( SUM ( Invoices[Total] ) )
+					),
+					Invoices[Is Billable] = TRUE,
+					REMOVEFILTERS ( 'Date' ),
+					'Date'[Year Month Sort] >= FirstYM,
+					'Date'[Year Month Sort] <= LastYM
+				)
+			VAR CustFloor =
+				GROUPBY (
+					CustMonth,
+					Invoices[Customer ID],
+					"Floor", MINX ( CURRENTGROUP (), [Amt] ),
+					"Nmo", COUNTX ( CURRENTGROUP (), [Amt] )
+				)
+			RETURN
+				SUMX ( FILTER ( CustFloor, [Nmo] >= 6 ), [Floor] )
+		formatString: \$#,0
+		displayFolder: Revenue
+		lineageTag: f0000009-0000-4001-9009-000000000070
+
+	measure 'Estimated MRR Label' =
+			VAR T = TODAY ()
+			VAR FirstYM = YEAR ( EDATE ( T, -12 ) ) * 12 + MONTH ( EDATE ( T, -12 ) )
+			VAR LastYM = YEAR ( T ) * 12 + MONTH ( T ) - 1
+			VAR Monthly =
+				CALCULATETABLE (
+					ADDCOLUMNS ( VALUES ( 'Date'[Year Month Sort] ), "t", CALCULATE ( SUM ( Invoices[Total] ) ) ),
+					Invoices[Is Billable] = TRUE,
+					REMOVEFILTERS ( 'Date' ),
+					'Date'[Year Month Sort] >= FirstYM,
+					'Date'[Year Month Sort] <= LastYM
+				)
+			VAR Typical = MEDIANX ( Monthly, [t] )
+			RETURN
+				IF ( ISBLANK ( [Estimated MRR] ) || Typical = 0, "recurring floor · 12-mo",
+					FORMAT ( DIVIDE ( [Estimated MRR], Typical ), "0%" ) & " of ~$" & FORMAT ( DIVIDE ( Typical, 1000 ), "#,0" ) & "K typical/mo" )
+		displayFolder: Revenue
+		lineageTag: f0000009-0000-4001-9009-000000000071

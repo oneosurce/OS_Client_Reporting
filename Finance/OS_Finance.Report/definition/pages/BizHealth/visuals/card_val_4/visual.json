@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
-  "name": "card_val_2",
+  "name": "card_val_4",
   "position": {
-    "x": 522,
+    "x": 1020,
     "y": 92,
     "z": 11,
     "width": 236,
     "height": 130,
-    "tabOrder": 11
+    "tabOrder": 21
   },
   "visual": {
     "visualType": "card",
@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Outstanding"
+                  "Property": "Estimated MRR"
                 }
               },
-              "queryRef": "_Measures.Outstanding",
-              "nativeQueryRef": "Outstanding"
+              "queryRef": "_Measures.Estimated MRR",
+              "nativeQueryRef": "Estimated MRR"
             }
           ]
         }
@@ -212,7 +212,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'OUTSTANDING'"
+                  "Value": "'EST. MRR / MO'"
                 }
               }
             },

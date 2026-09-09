@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "card_val_1",
   "position": {
-    "x": 337,
+    "x": 273,
     "y": 92,
     "z": 10,
-    "width": 293,
+    "width": 236,
     "height": 130,
     "tabOrder": 10
   },
