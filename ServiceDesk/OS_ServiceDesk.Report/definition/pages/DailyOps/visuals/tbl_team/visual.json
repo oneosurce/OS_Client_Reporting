@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "tbl_team",
   "position": {
-    "x": 836,
+    "x": 816,
     "y": 196,
     "z": 21,
-    "width": 420,
+    "width": 440,
     "height": 508,
     "tabOrder": 21
   },
@@ -79,20 +79,6 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Closed 7d"
-                }
-              },
-              "queryRef": "_Measures.Closed 7d",
-              "nativeQueryRef": "Closed 7d"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
                   "Property": "Closed 30d"
                 }
               },
@@ -118,7 +104,7 @@
             "direction": "Descending"
           }
         ],
-        "isDefaultSort": true
+        "isDefaultSort": false
       }
     },
     "objects": {

@@ -5,7 +5,7 @@
     "x": 24,
     "y": 196,
     "z": 20,
-    "width": 800,
+    "width": 780,
     "height": 508,
     "tabOrder": 20
   },
@@ -94,20 +94,6 @@
                       "Entity": "Tickets"
                     }
                   },
-                  "Property": "Subject"
-                }
-              },
-              "queryRef": "Tickets.Subject",
-              "nativeQueryRef": "Subject"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Tickets"
-                    }
-                  },
                   "Property": "Client"
                 }
               },
@@ -183,6 +169,20 @@
               },
               "queryRef": "Tickets.Due At",
               "nativeQueryRef": "Due At"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Tickets"
+                    }
+                  },
+                  "Property": "Subject"
+                }
+              },
+              "queryRef": "Tickets.Subject",
+              "nativeQueryRef": "Subject"
             }
           ]
         }
@@ -197,13 +197,13 @@
                     "Entity": "Tickets"
                   }
                 },
-                "Property": "Attention Score"
+                "Property": "Idle (Days)"
               }
             },
             "direction": "Descending"
           }
         ],
-        "isDefaultSort": true
+        "isDefaultSort": false
       }
     },
     "objects": {
