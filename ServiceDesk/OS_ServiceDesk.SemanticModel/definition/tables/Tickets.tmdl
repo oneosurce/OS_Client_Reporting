@@ -191,20 +191,21 @@ table Tickets
 					AddOpen = Table.AddColumn(AddGrp, "Is Open", each not List.Contains(Terminal, [status]), type logical),
 					AddPrio = Table.AddColumn(AddOpen, "PriorityClean", each
 						let p = if [priority] = null then "" else Text.Trim([priority]),
-							nd = if Text.Length(p) > 1 and List.Contains({"0" .. "9"}, Text.Start(p, 1)) then Text.Trim(Text.Range(p, 1)) else p
+							nd = if Text.Length(p) > 1 and List.Contains({"0".."9"}, Text.Start(p, 1)) then Text.Trim(Text.Range(p, 1)) else p
 						in if nd = "" then "Normal" else nd, type text),
-					AddCompleted = Table.AddColumn(AddPrio, "Completed At", each
+					AddCompleted = Table.AddColumn(AddPrio, "CompletedAt", each
 						if not List.Contains(Terminal, [status]) then null
 						else if [resolved_at] <> null then [resolved_at]
 						else [updated_at], type datetime),
-					AddAge = Table.AddColumn(AddCompleted, "Age (Days)", each Number.RoundDown(Duration.TotalDays(Now - [created_at])), Int64.Type),
-					AddIdle = Table.AddColumn(AddAge, "Idle (Days)", each Number.RoundDown(Duration.TotalDays(Now - [updated_at])), Int64.Type),
-					AddOD = Table.AddColumn(AddIdle, "Overdue By (Days)", each if [due_date] = null then 0 else Number.RoundDown(Duration.TotalDays(Now - [due_date])), Int64.Type),
-					AddOverdue = Table.AddColumn(AddOD, "Overdue", each [Is Open] and [Overdue By (Days)] > 0, type logical),
-					AddScore = Table.AddColumn(AddOverdue, "Attention Score", each [Age (Days)] + [Idle (Days)] * 2 + (if [Overdue] then 30 else 0), Int64.Type),
+					AddAge = Table.AddColumn(AddCompleted, "AgeDays", each Number.RoundDown(Duration.TotalDays(Now - [created_at])), Int64.Type),
+					AddIdle = Table.AddColumn(AddAge, "IdleDays", each Number.RoundDown(Duration.TotalDays(Now - [updated_at])), Int64.Type),
+					AddOD = Table.AddColumn(AddIdle, "OverdueByDays", each if [due_date] = null then 0 else Number.RoundDown(Duration.TotalDays(Now - [due_date])), Int64.Type),
+					AddOverdue = Table.AddColumn(AddOD, "Overdue", each [Is Open] and [OverdueByDays] > 0, type logical),
+					AddScore = Table.AddColumn(AddOverdue, "Attention Score", each [AgeDays] + [IdleDays] * 2 + (if [Overdue] then 30 else 0), Int64.Type),
 					Renamed = Table.RenameColumns(AddScore, {
 						{"number", "Ticket #"}, {"subject", "Subject"}, {"status", "Status"}, {"problem_type", "Problem Type"},
-						{"customer_business_then_name", "Client"}, {"PriorityClean", "Priority"},
+						{"customer_business_then_name", "Client"}, {"PriorityClean", "Priority"}, {"CompletedAt", "Completed At"},
+						{"AgeDays", "Age (Days)"}, {"IdleDays", "Idle (Days)"}, {"OverdueByDays", "Overdue By (Days)"},
 						{"created_at", "Created At"}, {"updated_at", "Updated At"}, {"due_date", "Due At"}}),
 					AddCDate = Table.AddColumn(Renamed, "Created Date", each Date.From([Created At]), type date),
 					AddCompDate = Table.AddColumn(AddCDate, "Completed Date", each if [Completed At] = null then null else Date.From([Completed At]), type date),
