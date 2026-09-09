@@ -60,6 +60,15 @@ table Tickets
 
 		annotation SummarizationSetBy = User
 
+	column 'Assigned Email'
+		dataType: string
+		isHidden
+		lineageTag: f1000001-0000-4001-a001-000000000020
+		summarizeBy: none
+		sourceColumn: Assigned Email
+
+		annotation SummarizationSetBy = User
+
 	column 'Tech Group'
 		dataType: string
 		lineageTag: f1000001-0000-4001-a001-000000000009
@@ -187,7 +196,8 @@ table Tickets
 					Terminal = {"Resolved", "Ready for Invoice"},
 					GetField = (j, f) => let u = try Json.Document(j) otherwise null in if u = null then null else Record.FieldOrDefault(u, f, null),
 					AddTech = Table.AddColumn(Keep, "Assigned To", each let v = GetField([user], "full_name") in if v = null or v = "" then "(unassigned)" else Text.From(v), type text),
-					AddGrp = Table.AddColumn(AddTech, "Tech Group", each let v = GetField([user], "group") in if v = null then "" else Text.From(v), type text),
+					AddEmail = Table.AddColumn(AddTech, "Assigned Email", each let v = GetField([user], "email") in if v = null then "" else Text.Lower(Text.From(v)), type text),
+					AddGrp = Table.AddColumn(AddEmail, "Tech Group", each let v = GetField([user], "group") in if v = null then "" else Text.From(v), type text),
 					AddOpen = Table.AddColumn(AddGrp, "Is Open", each not List.Contains(Terminal, [status]), type logical),
 					AddPrio = Table.AddColumn(AddOpen, "PriorityClean", each
 						let p = if [priority] = null then "" else Text.Trim([priority]),
@@ -209,7 +219,16 @@ table Tickets
 						{"created_at", "Created At"}, {"updated_at", "Updated At"}, {"due_date", "Due At"}}),
 					AddCDate = Table.AddColumn(Renamed, "Created Date", each Date.From([Created At]), type date),
 					AddCompDate = Table.AddColumn(AddCDate, "Completed Date", each if [Completed At] = null then null else Date.From([Completed At]), type date),
-					Drop = Table.RemoveColumns(AddCompDate, {"user", "resolved_at", "priority"}),
+					// Co-managed scoping: Cobalt Engineering is co-managed with Cobalt's own IT (they hold
+					// @cobalt-engineering.com Syncro logins). OneSource only owns the Cobalt tickets assigned
+					// to Alexander (ae@) or Antonio (ar@); everything else for that client is Cobalt's to run.
+					// Also drop any @cobalt-engineering.com assignee anywhere as a safety net.
+					Scoped = Table.SelectRows(AddCompDate, each
+						not Text.EndsWith([Assigned Email], "@cobalt-engineering.com")
+						and (if [Client] = "Cobalt Engineering"
+							then List.Contains({"ae@onesource.tech", "ar@onesource.tech"}, [Assigned Email])
+							else true)),
+					Drop = Table.RemoveColumns(Scoped, {"user", "resolved_at", "priority"}),
 					Typed = Table.TransformColumnTypes(Drop, {
 						{"Ticket #", Int64.Type}, {"Subject", type text}, {"Client", type text}, {"Status", type text},
 						{"Created At", type datetime}, {"Updated At", type datetime}, {"Due At", type datetime}})
