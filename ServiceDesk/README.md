@@ -14,7 +14,7 @@ Single table **Tickets** (from `tickets`). Money-free — this is an operations 
 
 Filtering is by **email**, not name — there are two "Rafael Vera" in Syncro (the Cobalt one, and a former OneSource tech `rv@onesource.tech`); only the Cobalt one is excluded.
 
-**Closed tickets:** the model keeps only tickets completed in the **last 35 days** (plus all open tickets). The ~8,000-row Resolved history is dropped — it serves no ops purpose and the 35-day window still feeds CLOSED (WK), NET (WK), and the team board's Closed 30d column. Model is ~260 rows.
+**Closed tickets** are handled two ways: (1) the model keeps only tickets completed in the **last 35 days** (plus all open) — the ~8,000-row Resolved history is dropped, model ~260 rows; (2) a **page-level filter defaults to open tickets only**, so Resolved / Ready-for-Invoice are hidden by default on every visual. That filter shows in the Filters pane as *"Show closed tickets"* and can be expanded to include recent closures. `Closed This Week` / `Created This Week` / `Closed 7d` / `Closed 30d` carry `REMOVEFILTERS(Tickets[Is Open])` so they ignore the page filter and keep counting.
 
 - `Assigned To` / `Assigned Email` (hidden) / `Tech Group` parsed from the `user` JSON blob.
 - `Age (Days)` = since created, `Idle (Days)` = since last update, `Overdue By (Days)` = past the Syncro `due_date` — all computed at refresh time (`DateTime.LocalNow()`), so they're accurate to the last hourly refresh.
