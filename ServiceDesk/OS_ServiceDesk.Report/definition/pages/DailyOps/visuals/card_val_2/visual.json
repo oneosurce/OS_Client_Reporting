@@ -10,7 +10,7 @@
     "tabOrder": 11
   },
   "visual": {
-    "visualType": "card",
+    "visualType": "multiRowCard",
     "query": {
       "queryState": {
         "Values": {
@@ -34,9 +34,16 @@
       }
     },
     "objects": {
-      "labels": [
+      "dataLabels": [
         {
           "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "28"
+                }
+              }
+            },
             "color": {
               "solid": {
                 "color": {
@@ -45,37 +52,6 @@
                       "Value": "'#1F2A5A'"
                     }
                   }
-                }
-              }
-            },
-            "bold": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "calloutValue": [
-        {
-          "properties": {
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#1F2A5A'"
-                    }
-                  }
-                }
-              }
-            },
-            "bold": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
                 }
               }
             }
@@ -95,7 +71,7 @@
           }
         }
       ],
-      "wordWrap": [
+      "cardTitle": [
         {
           "properties": {
             "show": {
@@ -108,13 +84,27 @@
           }
         }
       ],
-      "background": [
+      "card": [
         {
           "properties": {
-            "show": {
+            "outlineWeight": {
+              "expr": {
+                "Literal": {
+                  "Value": "0"
+                }
+              }
+            },
+            "barShow": {
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            },
+            "cardPadding": {
+              "expr": {
+                "Literal": {
+                  "Value": "3"
                 }
               }
             }

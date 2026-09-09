@@ -40,7 +40,7 @@ table _Measures
 
 	measure 'Oldest Open' =
 			CALCULATE ( MAX ( Tickets[Age (Days)] ), Tickets[Is Open] = TRUE ) + 0
-		formatString: 0" d"
+		formatString: #,0
 		lineageTag: f1000009-0000-4001-a009-000000000013
 
 	measure 'Closed This Week' =
