@@ -6,11 +6,12 @@ model Model
 		legacyRedirects
 		returnErrorValuesAsNull
 
-annotation PBI_QueryOrder = ["Tickets","_Measures"]
+annotation PBI_QueryOrder = ["Tickets","Ticket Flow","_Measures"]
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
 ref table Tickets
+ref table 'Ticket Flow'
 ref table Date
 ref table _Measures
 

@@ -1,0 +1,64 @@
+/// One row per in-scope ticket over the trailing ~13 months — created and completed dates only.
+/// Same scoping as Tickets (no Cobalt co-managed, no Minerva/Accounting) BUT without the 35-day
+/// closed cutoff, so it can drive a YTD ticket-flow chart.
+table 'Ticket Flow'
+	lineageTag: f1000006-0000-4001-a006-000000000001
+
+	column 'Created Date'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: f1000006-0000-4001-a006-000000000002
+		summarizeBy: none
+		sourceColumn: Created Date
+
+		annotation SummarizationSetBy = User
+
+	column 'Completed Date'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: f1000006-0000-4001-a006-000000000003
+		summarizeBy: none
+		sourceColumn: Completed Date
+
+		annotation SummarizationSetBy = User
+
+	column 'Is Open'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: f1000006-0000-4001-a006-000000000004
+		summarizeBy: none
+		sourceColumn: Is Open
+
+		annotation SummarizationSetBy = User
+
+	partition 'Ticket Flow' = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database("os-syncro-db.postgres.database.azure.com", "syncro_reporting"),
+					Nav = Source{[Schema = "public", Item = "tickets"]}[Data],
+					Keep = Table.SelectColumns(Nav, {"status", "customer_business_then_name", "user", "created_at", "updated_at", "resolved_at"}),
+					Terminal = {"Resolved", "Ready for Invoice"},
+					GetField = (j, f) => let u = try Json.Document(j) otherwise null in if u = null then null else Record.FieldOrDefault(u, f, null),
+					AddEmail = Table.AddColumn(Keep, "em", each let v = GetField([user], "email") in if v = null then "" else Text.Lower(Text.From(v)), type text),
+					Renamed = Table.RenameColumns(AddEmail, {{"customer_business_then_name", "Client"}}),
+					AddOpen = Table.AddColumn(Renamed, "Is Open", each not List.Contains(Terminal, [status]), type logical),
+					AddCompleted = Table.AddColumn(AddOpen, "CompletedAt", each
+						if not List.Contains(Terminal, [status]) then null
+						else if [resolved_at] <> null then [resolved_at]
+						else [updated_at], type datetime),
+					Scoped = Table.SelectRows(AddCompleted, each
+						[em] <> "mr@onesource.tech"
+						and not Text.EndsWith([em], "@cobalt-engineering.com")
+						and (if [Client] = "Cobalt Engineering"
+							then List.Contains({"ae@onesource.tech", "ar@onesource.tech"}, [em])
+							else true)),
+					AddCDate = Table.AddColumn(Scoped, "Created Date", each Date.From([created_at]), type date),
+					AddCompDate = Table.AddColumn(AddCDate, "Completed Date", each if [CompletedAt] = null then null else Date.From([CompletedAt]), type date),
+					Since = Date.AddMonths(Date.From(DateTime.LocalNow()), -13),
+					Window = Table.SelectRows(AddCompDate, each [Created Date] >= Since or ([Completed Date] <> null and [Completed Date] >= Since)),
+					Final = Table.SelectColumns(Window, {"Created Date", "Completed Date", "Is Open"})
+				in
+					Final
+
+	annotation PBI_ResultType = Table

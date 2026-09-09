@@ -6,3 +6,12 @@ relationship f1000010-0000-4001-a010-000000000002
 	isActive: false
 	fromColumn: Tickets.'Completed Date'
 	toColumn: Date.Date
+
+relationship f1000010-0000-4001-a010-000000000003
+	fromColumn: 'Ticket Flow'.'Created Date'
+	toColumn: Date.Date
+
+relationship f1000010-0000-4001-a010-000000000004
+	isActive: false
+	fromColumn: 'Ticket Flow'.'Completed Date'
+	toColumn: Date.Date

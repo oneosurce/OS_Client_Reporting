@@ -38,17 +38,38 @@ table Date
 
 		annotation SummarizationSetBy = User
 
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: f1000005-0000-4001-a005-000000000006
+		summarizeBy: none
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = User
+
+	column 'Is YTD'
+		dataType: boolean
+		lineageTag: f1000005-0000-4001-a005-000000000007
+		summarizeBy: none
+		sourceColumn: [Is YTD]
+
+		annotation SummarizationSetBy = User
+
 	partition Date = calculated
 		mode: import
 		source =
-				VAR MinDate = DATE ( YEAR ( MIN ( Tickets[Created Date] ) ), 1, 1 )
+				VAR MinFromTickets = DATE ( YEAR ( MIN ( Tickets[Created Date] ) ), 1, 1 )
+				VAR MinFromFlow = DATE ( YEAR ( MIN ( 'Ticket Flow'[Created Date] ) ), 1, 1 )
+				VAR MinDate = MIN ( MinFromTickets, MinFromFlow )
 				VAR MaxDate = DATE ( YEAR ( TODAY () ), 12, 31 )
 				RETURN
 					ADDCOLUMNS (
 						CALENDAR ( MinDate, MaxDate ),
 						"Week Start", [Date] - WEEKDAY ( [Date], 2 ) + 1,
 						"Week Label", FORMAT ( [Date] - WEEKDAY ( [Date], 2 ) + 1, "MMM d" ),
-						"Is Past", [Date] <= TODAY ()
+						"Is Past", [Date] <= TODAY (),
+						"Year", YEAR ( [Date] ),
+						"Is YTD", YEAR ( [Date] ) = YEAR ( TODAY () ) && [Date] <= TODAY ()
 					)
 
 	annotation PBI_ResultType = Table
