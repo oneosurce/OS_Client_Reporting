@@ -46,14 +46,14 @@ table _Measures
 	measure 'Closed This Week' =
 			VAR WkStart = TODAY () - WEEKDAY ( TODAY (), 2 ) + 1
 			RETURN
-				CALCULATE ( COUNTROWS ( Tickets ), Tickets[Completed Date] >= WkStart, REMOVEFILTERS ( 'Date' ) ) + 0
+				CALCULATE ( COUNTROWS ( Tickets ), Tickets[Completed Date] >= WkStart, REMOVEFILTERS ( 'Date' ), REMOVEFILTERS ( Tickets[Is Open] ) ) + 0
 		formatString: #,0
 		lineageTag: f1000009-0000-4001-a009-000000000014
 
 	measure 'Created This Week' =
 			VAR WkStart = TODAY () - WEEKDAY ( TODAY (), 2 ) + 1
 			RETURN
-				CALCULATE ( COUNTROWS ( Tickets ), Tickets[Created Date] >= WkStart, REMOVEFILTERS ( 'Date' ) ) + 0
+				CALCULATE ( COUNTROWS ( Tickets ), Tickets[Created Date] >= WkStart, REMOVEFILTERS ( 'Date' ), REMOVEFILTERS ( Tickets[Is Open] ) ) + 0
 		formatString: #,0
 		lineageTag: f1000009-0000-4001-a009-000000000015
 
@@ -63,11 +63,11 @@ table _Measures
 		lineageTag: f1000009-0000-4001-a009-000000000016
 
 	measure 'Closed 7d' =
-			CALCULATE ( COUNTROWS ( Tickets ), Tickets[Completed Date] >= TODAY () - 7, REMOVEFILTERS ( 'Date' ) ) + 0
+			CALCULATE ( COUNTROWS ( Tickets ), Tickets[Completed Date] >= TODAY () - 7, REMOVEFILTERS ( 'Date' ), REMOVEFILTERS ( Tickets[Is Open] ) ) + 0
 		formatString: #,0
 		lineageTag: f1000009-0000-4001-a009-000000000017
 
 	measure 'Closed 30d' =
-			CALCULATE ( COUNTROWS ( Tickets ), Tickets[Completed Date] >= TODAY () - 30, REMOVEFILTERS ( 'Date' ) ) + 0
+			CALCULATE ( COUNTROWS ( Tickets ), Tickets[Completed Date] >= TODAY () - 30, REMOVEFILTERS ( 'Date' ), REMOVEFILTERS ( Tickets[Is Open] ) ) + 0
 		formatString: #,0
 		lineageTag: f1000009-0000-4001-a009-000000000018
