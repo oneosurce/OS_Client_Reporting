@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "chart_pulse_this",
   "position": {
-    "x": 1020,
-    "y": 398,
+    "x": 780,
+    "y": 544,
     "z": 25,
-    "width": 236,
-    "height": 306,
+    "width": 476,
+    "height": 156,
     "tabOrder": 25
   },
   "filterConfig": {
@@ -174,7 +174,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8"
+                  "Value": "7"
                 }
               }
             }
