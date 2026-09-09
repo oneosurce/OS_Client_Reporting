@@ -35,6 +35,21 @@ Each folder has its own `README.md` with the model/report detail.
 
 ---
 
+## Mobile / phone layout
+
+Every report has a **phone layout** for the Power BI mobile app, stored as `mobile.json`
+next to each visual (PBIR `visualContainerMobileState`). A page shows a phone layout only
+for the visuals that have a `mobile.json`; everything else (footers, secondary slicers,
+sub-labels, the second Ops-Pulse chart) is hidden on phone. Regenerate after layout changes:
+
+```bash
+python3 scripts/gen_mobile.py     # rewrites mobile.json for all reports, then commit + sync
+```
+
+New client dashboards inherit the phone layout automatically (cloned from `FWW/`).
+
+---
+
 ## Deployment
 
 All items live in the **OneSource Reporting** Fabric workspace (`3ca25e44-c70a-4827-85dd-50064f492051`), connected to this repo's `main` branch via **Fabric Git integration**. A workspace can only bind one repo, which is why every client dashboard lives here rather than in its own repo.
