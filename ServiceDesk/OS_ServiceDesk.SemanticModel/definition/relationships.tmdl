@@ -1,0 +1,8 @@
+relationship f1000010-0000-4001-a010-000000000001
+	fromColumn: Tickets.'Created Date'
+	toColumn: Date.Date
+
+relationship f1000010-0000-4001-a010-000000000002
+	isActive: false
+	fromColumn: Tickets.'Completed Date'
+	toColumn: Date.Date

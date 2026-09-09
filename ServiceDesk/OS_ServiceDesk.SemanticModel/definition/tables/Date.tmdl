@@ -1,0 +1,54 @@
+table Date
+	lineageTag: f1000005-0000-4001-a005-000000000001
+	dataCategory: Time
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: Short Date
+		lineageTag: f1000005-0000-4001-a005-000000000002
+		summarizeBy: none
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = User
+
+	column 'Week Start'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: f1000005-0000-4001-a005-000000000003
+		summarizeBy: none
+		sourceColumn: [Week Start]
+
+		annotation SummarizationSetBy = User
+
+	column 'Week Label'
+		dataType: string
+		lineageTag: f1000005-0000-4001-a005-000000000004
+		summarizeBy: none
+		sortByColumn: 'Week Start'
+		sourceColumn: [Week Label]
+
+		annotation SummarizationSetBy = User
+
+	column 'Is Past'
+		dataType: boolean
+		lineageTag: f1000005-0000-4001-a005-000000000005
+		summarizeBy: none
+		sourceColumn: [Is Past]
+
+		annotation SummarizationSetBy = User
+
+	partition Date = calculated
+		mode: import
+		source =
+				VAR MinDate = DATE ( YEAR ( MIN ( Tickets[Created Date] ) ), 1, 1 )
+				VAR MaxDate = DATE ( YEAR ( TODAY () ), 12, 31 )
+				RETURN
+					ADDCOLUMNS (
+						CALENDAR ( MinDate, MaxDate ),
+						"Week Start", [Date] - WEEKDAY ( [Date], 2 ) + 1,
+						"Week Label", FORMAT ( [Date] - WEEKDAY ( [Date], 2 ) + 1, "MMM d" ),
+						"Is Past", [Date] <= TODAY ()
+					)
+
+	annotation PBI_ResultType = Table

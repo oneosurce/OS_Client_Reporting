@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "OS_ServiceDesk"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "4c9c4938-a930-4cf5-9866-0ed3238cbe8a"
+  }
+}

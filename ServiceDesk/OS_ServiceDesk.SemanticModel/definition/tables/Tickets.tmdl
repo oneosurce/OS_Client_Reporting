@@ -1,0 +1,218 @@
+/// All Syncro tickets (all clients). Age / Idle / Overdue are computed at refresh time.
+/// Terminal = Resolved or Ready for Invoice. Assigned To / Tech Group are parsed from the user JSON.
+table Tickets
+	lineageTag: f1000001-0000-4001-a001-000000000001
+
+	column 'Ticket #'
+		dataType: int64
+		formatString: 0
+		lineageTag: f1000001-0000-4001-a001-000000000002
+		summarizeBy: none
+		sourceColumn: Ticket #
+
+		annotation SummarizationSetBy = User
+
+	column Subject
+		dataType: string
+		lineageTag: f1000001-0000-4001-a001-000000000003
+		summarizeBy: none
+		sourceColumn: Subject
+
+		annotation SummarizationSetBy = User
+
+	column Client
+		dataType: string
+		lineageTag: f1000001-0000-4001-a001-000000000004
+		summarizeBy: none
+		sourceColumn: Client
+
+		annotation SummarizationSetBy = User
+
+	column Status
+		dataType: string
+		lineageTag: f1000001-0000-4001-a001-000000000005
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = User
+
+	column Priority
+		dataType: string
+		lineageTag: f1000001-0000-4001-a001-000000000006
+		summarizeBy: none
+		sourceColumn: Priority
+
+		annotation SummarizationSetBy = User
+
+	column 'Problem Type'
+		dataType: string
+		lineageTag: f1000001-0000-4001-a001-000000000007
+		summarizeBy: none
+		sourceColumn: Problem Type
+
+		annotation SummarizationSetBy = User
+
+	column 'Assigned To'
+		dataType: string
+		lineageTag: f1000001-0000-4001-a001-000000000008
+		summarizeBy: none
+		sourceColumn: Assigned To
+
+		annotation SummarizationSetBy = User
+
+	column 'Tech Group'
+		dataType: string
+		lineageTag: f1000001-0000-4001-a001-000000000009
+		summarizeBy: none
+		sourceColumn: Tech Group
+
+		annotation SummarizationSetBy = User
+
+	column 'Created At'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: f1000001-0000-4001-a001-00000000000a
+		summarizeBy: none
+		sourceColumn: Created At
+
+		annotation SummarizationSetBy = User
+
+	column 'Updated At'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: f1000001-0000-4001-a001-00000000000b
+		summarizeBy: none
+		sourceColumn: Updated At
+
+		annotation SummarizationSetBy = User
+
+	column 'Due At'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: f1000001-0000-4001-a001-00000000000c
+		summarizeBy: none
+		sourceColumn: Due At
+
+		annotation SummarizationSetBy = User
+
+	column 'Completed At'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: f1000001-0000-4001-a001-00000000000d
+		summarizeBy: none
+		sourceColumn: Completed At
+
+		annotation SummarizationSetBy = User
+
+	column 'Created Date'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: f1000001-0000-4001-a001-00000000000e
+		summarizeBy: none
+		sourceColumn: Created Date
+
+		annotation SummarizationSetBy = User
+
+	column 'Completed Date'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: f1000001-0000-4001-a001-00000000000f
+		summarizeBy: none
+		sourceColumn: Completed Date
+
+		annotation SummarizationSetBy = User
+
+	column 'Is Open'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: f1000001-0000-4001-a001-000000000010
+		summarizeBy: none
+		sourceColumn: Is Open
+
+		annotation SummarizationSetBy = User
+
+	column 'Age (Days)'
+		dataType: int64
+		formatString: 0
+		lineageTag: f1000001-0000-4001-a001-000000000011
+		summarizeBy: none
+		sourceColumn: Age (Days)
+
+		annotation SummarizationSetBy = User
+
+	column 'Idle (Days)'
+		dataType: int64
+		formatString: 0
+		lineageTag: f1000001-0000-4001-a001-000000000012
+		summarizeBy: none
+		sourceColumn: Idle (Days)
+
+		annotation SummarizationSetBy = User
+
+	column 'Overdue By (Days)'
+		dataType: int64
+		formatString: 0
+		lineageTag: f1000001-0000-4001-a001-000000000013
+		summarizeBy: none
+		sourceColumn: Overdue By (Days)
+
+		annotation SummarizationSetBy = User
+
+	column Overdue
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: f1000001-0000-4001-a001-000000000014
+		summarizeBy: none
+		sourceColumn: Overdue
+
+		annotation SummarizationSetBy = User
+
+	column 'Attention Score'
+		dataType: int64
+		formatString: 0
+		lineageTag: f1000001-0000-4001-a001-000000000015
+		summarizeBy: none
+		sourceColumn: Attention Score
+
+		annotation SummarizationSetBy = User
+
+	partition Tickets = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database("os-syncro-db.postgres.database.azure.com", "syncro_reporting"),
+					Nav = Source{[Schema = "public", Item = "tickets"]}[Data],
+					Keep = Table.SelectColumns(Nav, {"number", "subject", "status", "priority", "problem_type", "customer_business_then_name", "user", "created_at", "updated_at", "resolved_at", "due_date"}),
+					Now = DateTime.LocalNow(),
+					Terminal = {"Resolved", "Ready for Invoice"},
+					GetField = (j, f) => let u = try Json.Document(j) otherwise null in if u = null then null else Record.FieldOrDefault(u, f, null),
+					AddTech = Table.AddColumn(Keep, "Assigned To", each let v = GetField([user], "full_name") in if v = null or v = "" then "(unassigned)" else Text.From(v), type text),
+					AddGrp = Table.AddColumn(AddTech, "Tech Group", each let v = GetField([user], "group") in if v = null then "" else Text.From(v), type text),
+					AddOpen = Table.AddColumn(AddGrp, "Is Open", each not List.Contains(Terminal, [status]), type logical),
+					AddPrio = Table.AddColumn(AddOpen, "PriorityClean", each
+						let p = if [priority] = null then "" else Text.Trim([priority]),
+							nd = if Text.Length(p) > 1 and List.Contains({"0" .. "9"}, Text.Start(p, 1)) then Text.Trim(Text.Range(p, 1)) else p
+						in if nd = "" then "Normal" else nd, type text),
+					AddCompleted = Table.AddColumn(AddPrio, "Completed At", each
+						if not List.Contains(Terminal, [status]) then null
+						else if [resolved_at] <> null then [resolved_at]
+						else [updated_at], type datetime),
+					AddAge = Table.AddColumn(AddCompleted, "Age (Days)", each Number.RoundDown(Duration.TotalDays(Now - [created_at])), Int64.Type),
+					AddIdle = Table.AddColumn(AddAge, "Idle (Days)", each Number.RoundDown(Duration.TotalDays(Now - [updated_at])), Int64.Type),
+					AddOD = Table.AddColumn(AddIdle, "Overdue By (Days)", each if [due_date] = null then 0 else Number.RoundDown(Duration.TotalDays(Now - [due_date])), Int64.Type),
+					AddOverdue = Table.AddColumn(AddOD, "Overdue", each [Is Open] and [Overdue By (Days)] > 0, type logical),
+					AddScore = Table.AddColumn(AddOverdue, "Attention Score", each [Age (Days)] + [Idle (Days)] * 2 + (if [Overdue] then 30 else 0), Int64.Type),
+					Renamed = Table.RenameColumns(AddScore, {
+						{"number", "Ticket #"}, {"subject", "Subject"}, {"status", "Status"}, {"problem_type", "Problem Type"},
+						{"customer_business_then_name", "Client"}, {"PriorityClean", "Priority"},
+						{"created_at", "Created At"}, {"updated_at", "Updated At"}, {"due_date", "Due At"}}),
+					AddCDate = Table.AddColumn(Renamed, "Created Date", each Date.From([Created At]), type date),
+					AddCompDate = Table.AddColumn(AddCDate, "Completed Date", each if [Completed At] = null then null else Date.From([Completed At]), type date),
+					Drop = Table.RemoveColumns(AddCompDate, {"user", "resolved_at", "priority"}),
+					Typed = Table.TransformColumnTypes(Drop, {
+						{"Ticket #", Int64.Type}, {"Subject", type text}, {"Client", type text}, {"Status", type text},
+						{"Created At", type datetime}, {"Updated At", type datetime}, {"Due At", type datetime}})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table

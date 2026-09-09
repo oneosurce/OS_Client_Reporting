@@ -1,0 +1,73 @@
+table _Measures
+	lineageTag: f1000009-0000-4001-a009-000000000001
+
+	column Column
+		dataType: string
+		isHidden
+		lineageTag: f1000009-0000-4001-a009-000000000002
+		summarizeBy: none
+		sourceColumn: Column
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Measures = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [Column = text], {})
+				in
+					Source
+
+	annotation PBI_ResultType = Table
+
+	/// Open (non-terminal) tickets in context.
+	measure 'Open Tickets' =
+			CALCULATE ( COUNTROWS ( Tickets ), Tickets[Is Open] = TRUE ) + 0
+		formatString: #,0
+		lineageTag: f1000009-0000-4001-a009-000000000010
+
+	/// Open tickets past their Syncro due date.
+	measure 'Overdue Now' =
+			CALCULATE ( COUNTROWS ( Tickets ), Tickets[Is Open] = TRUE, Tickets[Overdue] = TRUE ) + 0
+		formatString: #,0
+		lineageTag: f1000009-0000-4001-a009-000000000011
+
+	/// Open tickets with no update in 7+ days.
+	measure 'Idle 7d+' =
+			CALCULATE ( COUNTROWS ( Tickets ), Tickets[Is Open] = TRUE, Tickets[Idle (Days)] >= 7 ) + 0
+		formatString: #,0
+		lineageTag: f1000009-0000-4001-a009-000000000012
+
+	measure 'Oldest Open' =
+			CALCULATE ( MAX ( Tickets[Age (Days)] ), Tickets[Is Open] = TRUE ) + 0
+		formatString: 0" d"
+		lineageTag: f1000009-0000-4001-a009-000000000013
+
+	measure 'Closed This Week' =
+			VAR WkStart = TODAY () - WEEKDAY ( TODAY (), 2 ) + 1
+			RETURN
+				CALCULATE ( COUNTROWS ( Tickets ), Tickets[Completed Date] >= WkStart, REMOVEFILTERS ( 'Date' ) ) + 0
+		formatString: #,0
+		lineageTag: f1000009-0000-4001-a009-000000000014
+
+	measure 'Created This Week' =
+			VAR WkStart = TODAY () - WEEKDAY ( TODAY (), 2 ) + 1
+			RETURN
+				CALCULATE ( COUNTROWS ( Tickets ), Tickets[Created Date] >= WkStart, REMOVEFILTERS ( 'Date' ) ) + 0
+		formatString: #,0
+		lineageTag: f1000009-0000-4001-a009-000000000015
+
+	measure 'Net Backlog (Week)' =
+			[Created This Week] - [Closed This Week]
+		formatString: +0;-0;0
+		lineageTag: f1000009-0000-4001-a009-000000000016
+
+	measure 'Closed 7d' =
+			CALCULATE ( COUNTROWS ( Tickets ), Tickets[Completed Date] >= TODAY () - 7, REMOVEFILTERS ( 'Date' ) ) + 0
+		formatString: #,0
+		lineageTag: f1000009-0000-4001-a009-000000000017
+
+	measure 'Closed 30d' =
+			CALCULATE ( COUNTROWS ( Tickets ), Tickets[Completed Date] >= TODAY () - 30, REMOVEFILTERS ( 'Date' ) ) + 0
+		formatString: #,0
+		lineageTag: f1000009-0000-4001-a009-000000000018
