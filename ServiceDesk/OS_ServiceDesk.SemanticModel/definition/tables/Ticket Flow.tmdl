@@ -1,6 +1,8 @@
-/// One row per in-scope ticket over the trailing ~13 months — created and completed dates only.
-/// Same scoping as Tickets (no Cobalt co-managed, no Minerva/Accounting) BUT without the 35-day
-/// closed cutoff, so it can drive a YTD ticket-flow chart.
+/// One row per ticket over the trailing ~13 months — created and completed dates only.
+/// Drives the Ops Pulse chart (overall intake vs resolution rate). Excludes the Cobalt
+/// co-managed portion (not OneSource's work) but KEEPS Minerva/Accounting tickets — they
+/// represent completed work that flowed through, so they belong in the pulse even though
+/// they're filtered out of the "who has open work" views.
 table 'Ticket Flow'
 	lineageTag: f1000006-0000-4001-a006-000000000001
 
@@ -48,8 +50,7 @@ table 'Ticket Flow'
 						else if [resolved_at] <> null then [resolved_at]
 						else [updated_at], type datetime),
 					Scoped = Table.SelectRows(AddCompleted, each
-						[em] <> "mr@onesource.tech"
-						and not Text.EndsWith([em], "@cobalt-engineering.com")
+						not Text.EndsWith([em], "@cobalt-engineering.com")
 						and (if [Client] = "Cobalt Engineering"
 							then List.Contains({"ae@onesource.tech", "ar@onesource.tech"}, [em])
 							else true)),
