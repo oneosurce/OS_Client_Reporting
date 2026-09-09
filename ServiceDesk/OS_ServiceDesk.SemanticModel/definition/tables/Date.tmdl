@@ -55,6 +55,14 @@ table Date
 
 		annotation SummarizationSetBy = User
 
+	column 'Is This Quarter'
+		dataType: boolean
+		lineageTag: f1000005-0000-4001-a005-00000000000a
+		summarizeBy: none
+		sourceColumn: [Is This Quarter]
+
+		annotation SummarizationSetBy = User
+
 	column 'Month Sort'
 		dataType: int64
 		isHidden
@@ -89,6 +97,7 @@ table Date
 						"Is Past", [Date] <= TODAY (),
 						"Year", YEAR ( [Date] ),
 						"Is YTD", YEAR ( [Date] ) = YEAR ( TODAY () ) && [Date] <= TODAY (),
+						"Is This Quarter", YEAR ( [Date] ) = YEAR ( TODAY () ) && QUARTER ( [Date] ) = QUARTER ( TODAY () ) && [Date] <= TODAY (),
 						"Month Sort", YEAR ( [Date] ) * 12 + MONTH ( [Date] ),
 						"Month Label", FORMAT ( [Date], "MMM" )
 					)

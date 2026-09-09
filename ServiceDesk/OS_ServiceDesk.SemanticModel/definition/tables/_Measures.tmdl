@@ -73,13 +73,13 @@ table _Measures
 		lineageTag: f1000009-0000-4001-a009-000000000018
 
 	/// Tickets created in the date context (Ops Pulse chart).
-	measure 'Flow Created' =
+	measure Created =
 			COUNTROWS ( 'Ticket Flow' ) + 0
 		formatString: #,0
 		lineageTag: f1000009-0000-4001-a009-000000000030
 
-	/// Tickets that reached a terminal status in the date context (Ops Pulse chart).
-	measure 'Flow Closed' =
+	/// Tickets that reached a terminal status (Resolved / Ready for Invoice) in the date context.
+	measure Resolved =
 			CALCULATE (
 				COUNTROWS ( 'Ticket Flow' ),
 				USERELATIONSHIP ( 'Ticket Flow'[Completed Date], 'Date'[Date] ),
@@ -87,3 +87,8 @@ table _Measures
 			) + 0
 		formatString: #,0
 		lineageTag: f1000009-0000-4001-a009-000000000031
+
+	/// Dynamic Ops Pulse chart title — the current calendar quarter, e.g. "Ops Pulse  ·  Q3-2026".
+	measure 'Pulse Title' =
+			"Ops Pulse  ·  Q" & QUARTER ( TODAY () ) & "-" & YEAR ( TODAY () )
+		lineageTag: f1000009-0000-4001-a009-000000000032

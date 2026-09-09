@@ -20,7 +20,7 @@
                 "Entity": "Date"
               }
             },
-            "Property": "Is YTD"
+            "Property": "Is This Quarter"
           }
         },
         "type": "Categorical",
@@ -45,7 +45,7 @@
                             "Source": "d"
                           }
                         },
-                        "Property": "Is YTD"
+                        "Property": "Is This Quarter"
                       }
                     }
                   ],
@@ -80,11 +80,11 @@
                       "Entity": "Date"
                     }
                   },
-                  "Property": "Month Label"
+                  "Property": "Week Label"
                 }
               },
-              "queryRef": "Date.Month Label",
-              "nativeQueryRef": "Month Label"
+              "queryRef": "Date.Week Label",
+              "nativeQueryRef": "Week Label"
             }
           ]
         },
@@ -98,11 +98,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Flow Created"
+                  "Property": "Created"
                 }
               },
-              "queryRef": "_Measures.Flow Created",
-              "nativeQueryRef": "Flow Created"
+              "queryRef": "_Measures.Created",
+              "nativeQueryRef": "Created"
             },
             {
               "field": {
@@ -112,11 +112,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Flow Closed"
+                  "Property": "Resolved"
                 }
               },
-              "queryRef": "_Measures.Flow Closed",
-              "nativeQueryRef": "Flow Closed"
+              "queryRef": "_Measures.Resolved",
+              "nativeQueryRef": "Resolved"
             }
           ]
         }
@@ -131,7 +131,7 @@
                     "Entity": "Date"
                   }
                 },
-                "Property": "Month Sort"
+                "Property": "Week Start"
               }
             },
             "direction": "Ascending"
@@ -223,7 +223,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Flow Created"
+            "metadata": "_Measures.Created"
           }
         },
         {
@@ -241,7 +241,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Flow Closed"
+            "metadata": "_Measures.Resolved"
           }
         }
       ],
@@ -381,8 +381,13 @@
             },
             "text": {
               "expr": {
-                "Literal": {
-                  "Value": "'Ops Pulse \u2014 ticket flow (YTD)'"
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Pulse Title"
                 }
               }
             },
