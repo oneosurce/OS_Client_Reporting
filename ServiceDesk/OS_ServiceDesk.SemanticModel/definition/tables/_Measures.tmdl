@@ -90,5 +90,9 @@ table _Measures
 
 	/// Dynamic Ops Pulse chart title — the current calendar quarter, e.g. "Ops Pulse  ·  Q3-2026".
 	measure 'Pulse Title' =
-			"Ops Pulse  ·  Q" & QUARTER ( TODAY () ) & "-" & YEAR ( TODAY () )
+			VAR cq = QUARTER ( TODAY () )
+			VAR cy = YEAR ( TODAY () )
+			VAR pq = IF ( cq = 1, 4, cq - 1 )
+			VAR py = IF ( cq = 1, cy - 1, cy )
+			RETURN "Ops Pulse  ·  Q" & pq & "-" & py & "  vs  Q" & cq & "-" & cy
 		lineageTag: f1000009-0000-4001-a009-000000000032

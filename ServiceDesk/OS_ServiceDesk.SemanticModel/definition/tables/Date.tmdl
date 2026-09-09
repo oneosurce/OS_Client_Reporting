@@ -82,6 +82,41 @@ table Date
 
 		annotation SummarizationSetBy = User
 
+	column 'Quarter Sort'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: f1000005-0000-4001-a005-00000000000b
+		summarizeBy: none
+		sourceColumn: [Quarter Sort]
+
+		annotation SummarizationSetBy = User
+
+	column 'Quarter Label'
+		dataType: string
+		lineageTag: f1000005-0000-4001-a005-00000000000c
+		summarizeBy: none
+		sortByColumn: 'Quarter Sort'
+		sourceColumn: [Quarter Label]
+
+		annotation SummarizationSetBy = User
+
+	column 'Week of Quarter'
+		dataType: string
+		lineageTag: f1000005-0000-4001-a005-00000000000d
+		summarizeBy: none
+		sourceColumn: [Week of Quarter]
+
+		annotation SummarizationSetBy = User
+
+	column 'Is Recent Quarter'
+		dataType: boolean
+		lineageTag: f1000005-0000-4001-a005-00000000000e
+		summarizeBy: none
+		sourceColumn: [Is Recent Quarter]
+
+		annotation SummarizationSetBy = User
+
 	partition Date = calculated
 		mode: import
 		source =
@@ -89,6 +124,7 @@ table Date
 				VAR MinFromFlow = DATE ( YEAR ( MIN ( 'Ticket Flow'[Created Date] ) ), 1, 1 )
 				VAR MinDate = MIN ( MinFromTickets, MinFromFlow )
 				VAR MaxDate = DATE ( YEAR ( TODAY () ), 12, 31 )
+				VAR CurQS = YEAR ( TODAY () ) * 4 + QUARTER ( TODAY () )
 				RETURN
 					ADDCOLUMNS (
 						CALENDAR ( MinDate, MaxDate ),
@@ -99,7 +135,13 @@ table Date
 						"Is YTD", YEAR ( [Date] ) = YEAR ( TODAY () ) && [Date] <= TODAY (),
 						"Is This Quarter", YEAR ( [Date] ) = YEAR ( TODAY () ) && QUARTER ( [Date] ) = QUARTER ( TODAY () ) && [Date] <= TODAY (),
 						"Month Sort", YEAR ( [Date] ) * 12 + MONTH ( [Date] ),
-						"Month Label", FORMAT ( [Date], "MMM" )
+						"Month Label", FORMAT ( [Date], "MMM" ),
+						"Quarter Sort", YEAR ( [Date] ) * 4 + QUARTER ( [Date] ),
+						"Quarter Label", "Q" & QUARTER ( [Date] ) & "-" & YEAR ( [Date] ),
+						"Week of Quarter", "W" & FORMAT ( INT ( ( [Date] - DATE ( YEAR ( [Date] ), ( QUARTER ( [Date] ) - 1 ) * 3 + 1, 1 ) ) / 7 ) + 1, "00" ),
+						"Is Recent Quarter",
+							VAR qs = YEAR ( [Date] ) * 4 + QUARTER ( [Date] )
+							RETURN ( qs = CurQS - 1 ) || ( qs = CurQS && [Date] <= TODAY () )
 					)
 
 	annotation PBI_ResultType = Table

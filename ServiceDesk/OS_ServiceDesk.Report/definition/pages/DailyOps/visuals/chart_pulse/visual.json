@@ -3,10 +3,10 @@
   "name": "chart_pulse",
   "position": {
     "x": 780,
-    "y": 484,
+    "y": 398,
     "z": 25,
     "width": 476,
-    "height": 220,
+    "height": 306,
     "tabOrder": 25
   },
   "filterConfig": {
@@ -20,7 +20,7 @@
                 "Entity": "Date"
               }
             },
-            "Property": "Is This Quarter"
+            "Property": "Is Recent Quarter"
           }
         },
         "type": "Categorical",
@@ -45,7 +45,7 @@
                             "Source": "d"
                           }
                         },
-                        "Property": "Is This Quarter"
+                        "Property": "Is Recent Quarter"
                       }
                     }
                   ],
@@ -80,11 +80,11 @@
                       "Entity": "Date"
                     }
                   },
-                  "Property": "Week Label"
+                  "Property": "Week of Quarter"
                 }
               },
-              "queryRef": "Date.Week Label",
-              "nativeQueryRef": "Week Label"
+              "queryRef": "Date.Week of Quarter",
+              "nativeQueryRef": "Week of Quarter"
             }
           ]
         },
@@ -119,6 +119,24 @@
               "nativeQueryRef": "Resolved"
             }
           ]
+        },
+        "SmallMultiples": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Date"
+                    }
+                  },
+                  "Property": "Quarter Label"
+                }
+              },
+              "queryRef": "Date.Quarter Label",
+              "nativeQueryRef": "Quarter Label"
+            }
+          ]
         }
       },
       "sortDefinition": {
@@ -131,7 +149,7 @@
                     "Entity": "Date"
                   }
                 },
-                "Property": "Week Start"
+                "Property": "Quarter Sort"
               }
             },
             "direction": "Ascending"
@@ -245,14 +263,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8"
-                }
-              }
-            },
-            "concatenateLabels": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
+                  "Value": "7"
                 }
               }
             }
@@ -273,6 +284,44 @@
               "expr": {
                 "Literal": {
                   "Value": "8"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "smallMultiplesLayout": [
+        {
+          "properties": {
+            "maxRowCount": {
+              "expr": {
+                "Literal": {
+                  "Value": "1"
+                }
+              }
+            },
+            "maxColumnCount": {
+              "expr": {
+                "Literal": {
+                  "Value": "2"
+                }
+              }
+            },
+            "gridLineType": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Inner'"
+                }
+              }
+            },
+            "gridLineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#E3E8F0'"
+                    }
+                  }
                 }
               }
             }
