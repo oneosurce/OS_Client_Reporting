@@ -390,7 +390,7 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "gap_top15",
+        "name": "gap_material",
         "field": {
           "Column": {
             "Expression": {
@@ -401,7 +401,7 @@
             "Property": "Suggested Recurring"
           }
         },
-        "type": "TopN",
+        "type": "Advanced",
         "filter": {
           "Version": 2,
           "From": [
@@ -415,7 +415,7 @@
             {
               "Condition": {
                 "Comparison": {
-                  "ComparisonKind": 0,
+                  "ComparisonKind": 1,
                   "Left": {
                     "Column": {
                       "Expression": {
@@ -423,39 +423,12 @@
                           "Source": "c"
                         }
                       },
-                      "Property": "Client"
+                      "Property": "Suggested Recurring"
                     }
                   },
                   "Right": {
                     "Literal": {
-                      "Value": "null"
-                    }
-                  }
-                }
-              }
-            }
-          ]
-        },
-        "objects": {
-          "general": [
-            {
-              "properties": {
-                "top": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "15L"
-                    }
-                  }
-                },
-                "orderBy": {
-                  "expr": {
-                    "Column": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Source": "c"
-                        }
-                      },
-                      "Property": "Suggested Recurring"
+                      "Value": "900D"
                     }
                   }
                 }
