@@ -16,7 +16,8 @@ One folder in the [`OS_Client_Reporting`](../README.md) monorepo; deploys to the
 
 ## Page — Business Health
 
-- **KPI cards:** Billed · Collected · Outstanding (AR) · Collection Rate — all honour the Range picker (default *Last 12 months*).
+- **KPI cards:** Billed · Collected · Outstanding (AR) · Collection Rate · **Est. MRR** — the first four honour the Range picker (default *Last 12 months*); Outstanding and Est. MRR are fixed "as of now" / trailing-12 snapshots.
+- **Est. MRR** is *derived* (no live contracts feed): for each client, its lowest monthly billable total over the last 12 complete months = its recurring floor (project spikes excluded), summed across clients billed in ≥6 of those months. ~$67K vs ~$97K typical monthly billings, so ~30% of monthly revenue is variable/project work. It's an estimate — treat QuickBooks as the source of truth for true contract MRR.
 - **Billings vs. Receipts — Monthly:** column chart, auto-zooms with the Range picker.
 - **Revenue by Client:** bar, sorted by billed.
 - **Accounts Receivable — Aging:** unpaid billable invoices by age of invoice (0–30 / 31–60 / 61–90 / 90+).
