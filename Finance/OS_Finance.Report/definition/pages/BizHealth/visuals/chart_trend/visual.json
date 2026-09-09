@@ -41,11 +41,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Billed (Trend)"
+                  "Property": "Billings"
                 }
               },
-              "queryRef": "_Measures.Billed (Trend)",
-              "nativeQueryRef": "Billed (Trend)"
+              "queryRef": "_Measures.Billings",
+              "nativeQueryRef": "Billings"
             },
             {
               "field": {
@@ -55,11 +55,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Collected (Trend)"
+                  "Property": "Receipts"
                 }
               },
-              "queryRef": "_Measures.Collected (Trend)",
-              "nativeQueryRef": "Collected (Trend)"
+              "queryRef": "_Measures.Receipts",
+              "nativeQueryRef": "Receipts"
             }
           ]
         }
@@ -153,7 +153,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Billed (Trend)"
+            "metadata": "_Measures.Billings"
           }
         },
         {
@@ -171,7 +171,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Collected (Trend)"
+            "metadata": "_Measures.Receipts"
           }
         }
       ],
@@ -305,7 +305,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Billed vs. Collected \u2014 Monthly'"
+                  "Value": "'Billings vs. Receipts \u2014 Monthly'"
                 }
               }
             },
