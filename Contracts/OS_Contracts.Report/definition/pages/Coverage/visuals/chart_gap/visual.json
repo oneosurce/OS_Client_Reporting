@@ -344,7 +344,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Target recurring vs contracted  ·  top 14'"
+                  "Value": "'Target recurring vs contracted'"
                 }
               }
             }
@@ -386,74 +386,5 @@
         }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "gap_topn",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Measures"
-              }
-            },
-            "Property": "Target Recurring"
-          }
-        },
-        "type": "TopN",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "c",
-              "Entity": "Clients",
-              "Type": 0
-            },
-            {
-              "Name": "m",
-              "Entity": "_Measures",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "TopN": {
-                  "Expressions": [
-                    {
-                      "Column": {
-                        "Expression": {
-                          "SourceRef": {
-                            "Source": "c"
-                          }
-                        },
-                        "Property": "Client"
-                      }
-                    }
-                  ],
-                  "OrderBy": [
-                    {
-                      "Direction": 2,
-                      "Expression": {
-                        "Measure": {
-                          "Expression": {
-                            "SourceRef": {
-                              "Source": "m"
-                            }
-                          },
-                          "Property": "Target Recurring"
-                        }
-                      }
-                    }
-                  ],
-                  "Top": 14
-                }
-              }
-            }
-          ]
-        }
-      }
-    ]
   }
 }
