@@ -80,11 +80,11 @@
                       "Entity": "Date"
                     }
                   },
-                  "Property": "Week Label"
+                  "Property": "Month Label"
                 }
               },
-              "queryRef": "Date.Week Label",
-              "nativeQueryRef": "Week Label"
+              "queryRef": "Date.Month Label",
+              "nativeQueryRef": "Month Label"
             }
           ]
         },
@@ -131,7 +131,7 @@
                     "Entity": "Date"
                   }
                 },
-                "Property": "Week Start"
+                "Property": "Month Sort"
               }
             },
             "direction": "Ascending"
@@ -382,7 +382,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Ops Pulse \\u2014 ticket flow (YTD)'"
+                  "Value": "'Ops Pulse \u2014 ticket flow (YTD)'"
                 }
               }
             },

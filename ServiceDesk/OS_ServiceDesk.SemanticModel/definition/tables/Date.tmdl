@@ -55,6 +55,25 @@ table Date
 
 		annotation SummarizationSetBy = User
 
+	column 'Month Sort'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: f1000005-0000-4001-a005-000000000008
+		summarizeBy: none
+		sourceColumn: [Month Sort]
+
+		annotation SummarizationSetBy = User
+
+	column 'Month Label'
+		dataType: string
+		lineageTag: f1000005-0000-4001-a005-000000000009
+		summarizeBy: none
+		sortByColumn: 'Month Sort'
+		sourceColumn: [Month Label]
+
+		annotation SummarizationSetBy = User
+
 	partition Date = calculated
 		mode: import
 		source =
@@ -69,7 +88,9 @@ table Date
 						"Week Label", FORMAT ( [Date] - WEEKDAY ( [Date], 2 ) + 1, "MMM d" ),
 						"Is Past", [Date] <= TODAY (),
 						"Year", YEAR ( [Date] ),
-						"Is YTD", YEAR ( [Date] ) = YEAR ( TODAY () ) && [Date] <= TODAY ()
+						"Is YTD", YEAR ( [Date] ) = YEAR ( TODAY () ) && [Date] <= TODAY (),
+						"Month Sort", YEAR ( [Date] ) * 12 + MONTH ( [Date] ),
+						"Month Label", FORMAT ( [Date], "MMM" )
 					)
 
 	annotation PBI_ResultType = Table
