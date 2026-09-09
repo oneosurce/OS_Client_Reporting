@@ -24,6 +24,12 @@ One folder per client. All of them share the same design; they differ only by th
 | [`ServiceDesk/`](ServiceDesk/) | Daily Ops — open-ticket action list + team board for technicians | `tickets` (all clients) |
 | [`Fleet/`](Fleet/) | Fleet Health — endpoints per client, OS mix, Windows 10 / pending-reboot / low-RAM / low-disk exposure, risk-ranked device list | `assets` (all clients) |
 
+**Data-improvement work (feeding future reports):**
+
+| Folder | Purpose |
+|---|---|
+| [`Finance/contract-data/`](Finance/contract-data/) | Target spec + build worksheet for rebuilding Syncro Contracts, so `OS_Finance` can show real MRR / contract-vs-project margin / renewal runway instead of a derived estimate |
+
 Each folder has its own `README.md` with the model/report detail.
 
 ---
