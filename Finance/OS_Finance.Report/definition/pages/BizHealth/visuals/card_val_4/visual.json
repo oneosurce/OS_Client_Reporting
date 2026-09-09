@@ -212,7 +212,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'EST. MRR / MO'"
+                  "Value": "'EST. MRR'"
                 }
               }
             },

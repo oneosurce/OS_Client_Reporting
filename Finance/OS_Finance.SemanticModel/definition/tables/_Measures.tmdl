@@ -143,7 +143,7 @@ table _Measures
 					FILTER ( VALUES ( Invoices[Invoice Date] ), Invoices[Invoice Date] < TODAY () - 60 )
 				)
 			RETURN
-				IF ( ISBLANK ( N ), "nothing outstanding", N & " invoices · $" & FORMAT ( Old, "#,0" ) & " over 60 days" )
+				IF ( ISBLANK ( N ), "nothing outstanding", N & " invoices · $" & FORMAT ( DIVIDE ( Old, 1000 ), "#,0.0" ) & "K aged 60d+" )
 		displayFolder: AR
 		lineageTag: f0000009-0000-4001-9009-000000000031
 
