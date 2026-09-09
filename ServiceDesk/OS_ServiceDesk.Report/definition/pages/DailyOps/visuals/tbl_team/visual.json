@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "tbl_team",
   "position": {
-    "x": 816,
+    "x": 780,
     "y": 196,
     "z": 21,
-    "width": 440,
+    "width": 476,
     "height": 508,
     "tabOrder": 21
   },
