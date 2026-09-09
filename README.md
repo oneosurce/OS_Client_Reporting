@@ -16,6 +16,12 @@ One folder per client. All of them share the same design; they differ only by th
 | [`Curry/`](Curry/) | Curry Excavation & Site Work Inc. | 12701269 |
 | [`TDEC/`](TDEC/) | TDEC, Inc | 14623202 |
 
+**Internal (not client-facing):**
+
+| Folder | Report | Source |
+|---|---|---|
+| [`Finance/`](Finance/) | Business Health — billed / collected / AR aging / revenue by client | `invoices`, `payments`, `tickets` (all clients) |
+
 Each folder has its own `README.md` with the model/report detail.
 
 ---
