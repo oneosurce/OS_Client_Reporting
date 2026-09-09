@@ -37,20 +37,6 @@
                       "Entity": "Contracts"
                     }
                   },
-                  "Property": "Plan"
-                }
-              },
-              "queryRef": "Contracts.Plan",
-              "nativeQueryRef": "Plan"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Contracts"
-                    }
-                  },
                   "Property": "Amount"
                 }
               },

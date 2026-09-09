@@ -65,20 +65,6 @@
                       "Entity": "Clients"
                     }
                   },
-                  "Property": "Contract Plan"
-                }
-              },
-              "queryRef": "Clients.Contract Plan",
-              "nativeQueryRef": "Contract Plan"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Clients"
-                    }
-                  },
                   "Property": "Contract End"
                 }
               },

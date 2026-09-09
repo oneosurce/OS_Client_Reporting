@@ -35,31 +35,31 @@
           "projections": [
             {
               "field": {
-                "Column": {
+                "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Clients"
+                      "Entity": "_Measures"
                     }
                   },
-                  "Property": "Suggested Recurring"
+                  "Property": "Target Recurring"
                 }
               },
-              "queryRef": "Clients.Suggested Recurring",
-              "nativeQueryRef": "Suggested Recurring"
+              "queryRef": "_Measures.Target Recurring",
+              "nativeQueryRef": "Target Recurring"
             },
             {
               "field": {
-                "Column": {
+                "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Clients"
+                      "Entity": "_Measures"
                     }
                   },
-                  "Property": "Contract MRR"
+                  "Property": "Contracted MRR"
                 }
               },
-              "queryRef": "Clients.Contract MRR",
-              "nativeQueryRef": "Contract MRR"
+              "queryRef": "_Measures.Contracted MRR",
+              "nativeQueryRef": "Contracted MRR"
             }
           ]
         }
@@ -68,19 +68,19 @@
         "sort": [
           {
             "field": {
-              "Column": {
+              "Measure": {
                 "Expression": {
                   "SourceRef": {
-                    "Entity": "Clients"
+                    "Entity": "_Measures"
                   }
                 },
-                "Property": "Suggested Recurring"
+                "Property": "Target Recurring"
               }
             },
             "direction": "Descending"
           }
         ],
-        "isDefaultSort": true
+        "isDefaultSort": false
       }
     },
     "objects": {
@@ -153,7 +153,7 @@
             }
           },
           "selector": {
-            "metadata": "Clients.Suggested Recurring"
+            "metadata": "_Measures.Target Recurring"
           }
         },
         {
@@ -171,7 +171,7 @@
             }
           },
           "selector": {
-            "metadata": "Clients.Contract MRR"
+            "metadata": "_Measures.Contracted MRR"
           }
         }
       ],
@@ -344,7 +344,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Target recurring vs contracted'"
+                  "Value": "'Target recurring vs contracted  ·  top 14'"
                 }
               }
             }
@@ -390,18 +390,18 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "gap_material",
+        "name": "gap_topn",
         "field": {
-          "Column": {
+          "Measure": {
             "Expression": {
               "SourceRef": {
-                "Entity": "Clients"
+                "Entity": "_Measures"
               }
             },
-            "Property": "Suggested Recurring"
+            "Property": "Target Recurring"
           }
         },
-        "type": "Advanced",
+        "type": "TopN",
         "filter": {
           "Version": 2,
           "From": [
@@ -409,28 +409,45 @@
               "Name": "c",
               "Entity": "Clients",
               "Type": 0
+            },
+            {
+              "Name": "m",
+              "Entity": "_Measures",
+              "Type": 0
             }
           ],
           "Where": [
             {
               "Condition": {
-                "Comparison": {
-                  "ComparisonKind": 1,
-                  "Left": {
-                    "Column": {
+                "TopN": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "c"
+                          }
+                        },
+                        "Property": "Client"
+                      }
+                    }
+                  ],
+                  "OrderBy": [
+                    {
+                      "Direction": 2,
                       "Expression": {
-                        "SourceRef": {
-                          "Source": "c"
+                        "Measure": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Source": "m"
+                            }
+                          },
+                          "Property": "Target Recurring"
                         }
-                      },
-                      "Property": "Suggested Recurring"
+                      }
                     }
-                  },
-                  "Right": {
-                    "Literal": {
-                      "Value": "900D"
-                    }
-                  }
+                  ],
+                  "Top": 14
                 }
               }
             }
