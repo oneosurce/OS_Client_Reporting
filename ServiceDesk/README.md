@@ -14,6 +14,8 @@ Single table **Tickets** (from `tickets`). Money-free — this is an operations 
 
 Filtering is by **email**, not name — there are two "Rafael Vera" in Syncro (the Cobalt one, and a former OneSource tech `rv@onesource.tech`); only the Cobalt one is excluded.
 
+**Minerva Ruiz (`mr@onesource.tech`) is excluded** — she's Accounting, not a tech. She's the assignee on every "Ready for Invoice" ticket (the billing holding queue), so all her tickets are dropped. Side effect: CLOSED (WK) / Closed-30d only count closures still held by a tech, not ones already handed to billing.
+
 **Closed tickets** are handled two ways: (1) the model keeps only tickets completed in the **last 35 days** (plus all open) — the ~8,000-row Resolved history is dropped, model ~260 rows; (2) a **page-level filter defaults to open tickets only**, so Resolved / Ready-for-Invoice are hidden by default on every visual. That filter shows in the Filters pane as *"Show closed tickets"* and can be expanded to include recent closures. `Closed This Week` / `Created This Week` / `Closed 7d` / `Closed 30d` carry `REMOVEFILTERS(Tickets[Is Open])` so they ignore the page filter and keep counting.
 
 - `Assigned To` / `Assigned Email` (hidden) / `Tech Group` parsed from the `user` JSON blob.
