@@ -1,0 +1,145 @@
+/// One row per active client (billed 6+ of last 13 months, or 3+ active endpoints). Billing context + the client's current Syncro contract merged in. Coverage State = Contracted / Contract missing amount / Expired contract / No contract.
+table Clients
+	lineageTag: c1a50001-0000-4c01-9c01-000000000001
+
+	column Client
+		dataType: string
+		lineageTag: c1a50001-0000-4c01-9c01-000000000002
+		summarizeBy: none
+		sourceColumn: client
+
+		annotation SummarizationSetBy = User
+
+	column 'Customer ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: c1a50001-0000-4c01-9c01-000000000003
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = User
+
+	column 'Months Billed'
+		dataType: int64
+		formatString: 0
+		lineageTag: c1a50001-0000-4c01-9c01-000000000004
+		summarizeBy: none
+		sourceColumn: mos_billed
+
+		annotation SummarizationSetBy = User
+
+	column 'Billed 12mo'
+		dataType: double
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: c1a50001-0000-4c01-9c01-000000000005
+		summarizeBy: sum
+		sourceColumn: billed_12mo
+
+		annotation SummarizationSetBy = User
+
+	column 'Median Monthly'
+		dataType: double
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: c1a50001-0000-4c01-9c01-000000000006
+		summarizeBy: sum
+		sourceColumn: median_mo
+
+		annotation SummarizationSetBy = User
+
+	column 'Suggested Recurring'
+		dataType: double
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: c1a50001-0000-4c01-9c01-000000000007
+		summarizeBy: sum
+		sourceColumn: suggested_recurring
+
+		annotation SummarizationSetBy = User
+
+	column 'Active Endpoints'
+		dataType: int64
+		formatString: 0
+		lineageTag: c1a50001-0000-4c01-9c01-000000000008
+		summarizeBy: none
+		sourceColumn: active_endpoints
+
+		annotation SummarizationSetBy = User
+
+	column 'Tickets 90d'
+		dataType: int64
+		formatString: 0
+		lineageTag: c1a50001-0000-4c01-9c01-000000000009
+		summarizeBy: none
+		sourceColumn: tickets_90d
+
+		annotation SummarizationSetBy = User
+
+	column 'Contract Plan'
+		dataType: string
+		lineageTag: c1a50001-0000-4c01-9c01-00000000000a
+		summarizeBy: none
+		sourceColumn: contract_plan
+
+		annotation SummarizationSetBy = User
+
+	column 'Contract MRR'
+		dataType: double
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: c1a50001-0000-4c01-9c01-00000000000b
+		summarizeBy: sum
+		sourceColumn: contract_mrr
+
+		annotation SummarizationSetBy = User
+
+	column 'Contract Start'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: c1a50001-0000-4c01-9c01-00000000000c
+		summarizeBy: none
+		sourceColumn: contract_start
+
+		annotation SummarizationSetBy = User
+
+	column 'Contract End'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: c1a50001-0000-4c01-9c01-00000000000d
+		summarizeBy: none
+		sourceColumn: contract_end
+
+		annotation SummarizationSetBy = User
+
+	column 'Contract Status'
+		dataType: string
+		lineageTag: c1a50001-0000-4c01-9c01-00000000000e
+		summarizeBy: none
+		sourceColumn: contract_status
+
+		annotation SummarizationSetBy = User
+
+	column 'Has Active Contract'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: c1a50001-0000-4c01-9c01-00000000000f
+		summarizeBy: none
+		sourceColumn: has_active_contract
+
+		annotation SummarizationSetBy = User
+
+	column 'Coverage State'
+		dataType: string
+		lineageTag: c1a50001-0000-4c01-9c01-000000000010
+		summarizeBy: none
+		sourceColumn: coverage_state
+
+		annotation SummarizationSetBy = User
+
+	partition Clients = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database("os-syncro-db.postgres.database.azure.com", "syncro_reporting"),
+					Q = Value.NativeQuery(Source, "WITH mo AS ( SELECT customer_id, max(customer_business_then_name) nm, date_trunc('month', date) m, sum(NULLIF(regexp_replace(coalesce(total,'0'),'[^0-9.-]','','g'),'')::numeric) tot FROM invoices WHERE date > now() - interval '13 months' GROUP BY 1, 3), recent AS (SELECT * FROM mo WHERE m >= date_trunc('month', now()) - interval '6 months' AND m < date_trunc('month', now())), bill AS ( SELECT customer_id, max(nm) nm, count(*) FILTER (WHERE tot > 0) mos_billed, round(sum(tot) FILTER (WHERE m >= date_trunc('month', now()) - interval '12 months')) billed_12mo, round(percentile_cont(0.5) WITHIN GROUP (ORDER BY tot) FILTER (WHERE tot > 0)) median_mo FROM mo GROUP BY 1), flr AS (SELECT customer_id, round(percentile_cont(0.25) WITHIN GROUP (ORDER BY tot) FILTER (WHERE tot > 0) / 50.0) * 50 suggested FROM recent GROUP BY 1), ast AS (SELECT customer_id, count(*) FILTER (WHERE updated_at > now() - interval '30 days') ep FROM assets WHERE asset_type = 'Syncro Device' GROUP BY 1), tk AS (SELECT customer_id, count(*) tix FROM tickets WHERE created_at > now() - interval '90 days' GROUP BY 1), ct AS ( SELECT DISTINCT ON (customer_id) customer_id, name plan, NULLIF(regexp_replace(coalesce(contract_amount,'0'),'[^0-9.]','','g'),'')::numeric amt, start_date, end_date, status, (status = 'Won' AND (end_date IS NULL OR end_date >= now())) is_active FROM contracts ORDER BY customer_id, (status = 'Won' AND (end_date IS NULL OR end_date >= now())) DESC, end_date DESC NULLS FIRST) SELECT b.nm AS client, b.customer_id::bigint, b.mos_billed::int, b.billed_12mo::float8, b.median_mo::float8, COALESCE(f.suggested, 0)::float8 suggested_recurring, COALESCE(a.ep, 0)::int active_endpoints, COALESCE(t.tix, 0)::int tickets_90d, COALESCE(ct.plan, '') contract_plan, (CASE WHEN ct.is_active THEN COALESCE(ct.amt, 0) ELSE 0 END)::float8 contract_mrr, ct.start_date::timestamp contract_start, ct.end_date::timestamp contract_end, COALESCE(ct.status, '-') contract_status, COALESCE(ct.is_active, false) has_active_contract, (CASE WHEN ct.is_active AND COALESCE(ct.amt, 0) > 0 THEN 'Contracted' WHEN ct.is_active THEN 'Contract missing amount' WHEN ct.customer_id IS NOT NULL THEN 'Expired contract' ELSE 'No contract' END) coverage_state FROM bill b LEFT JOIN flr f ON f.customer_id = b.customer_id LEFT JOIN ast a ON a.customer_id = b.customer_id LEFT JOIN tk t ON t.customer_id = b.customer_id LEFT JOIN ct ON ct.customer_id = b.customer_id WHERE b.mos_billed >= 6 OR COALESCE(a.ep, 0) >= 3 ORDER BY b.billed_12mo DESC NULLS LAST", null, [EnableFolding=false])
+				in
+					Q
+
+	annotation PBI_ResultType = Table

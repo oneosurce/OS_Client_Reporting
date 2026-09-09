@@ -1,0 +1,3 @@
+relationship c1a5e770-0000-4c00-9a00-0000000000d1
+	fromColumn: Contracts.'Customer ID'
+	toColumn: Clients.'Customer ID'

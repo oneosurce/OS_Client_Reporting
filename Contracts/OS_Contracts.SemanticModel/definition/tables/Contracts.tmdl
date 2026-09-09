@@ -1,0 +1,92 @@
+/// Every Syncro contract row (current and historical). Is Active = status Won and not past end date. Days To Renewal is negative once expired.
+table Contracts
+	lineageTag: c1a50002-0000-4c02-9c02-000000000001
+
+	column 'Customer ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: c1a50002-0000-4c02-9c02-000000000002
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = User
+
+	column Client
+		dataType: string
+		lineageTag: c1a50002-0000-4c02-9c02-000000000003
+		summarizeBy: none
+		sourceColumn: client
+
+		annotation SummarizationSetBy = User
+
+	column Plan
+		dataType: string
+		lineageTag: c1a50002-0000-4c02-9c02-000000000004
+		summarizeBy: none
+		sourceColumn: plan
+
+		annotation SummarizationSetBy = User
+
+	column Amount
+		dataType: double
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: c1a50002-0000-4c02-9c02-000000000005
+		summarizeBy: sum
+		sourceColumn: amount
+
+		annotation SummarizationSetBy = User
+
+	column 'Contract Start'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: c1a50002-0000-4c02-9c02-000000000006
+		summarizeBy: none
+		sourceColumn: contract_start
+
+		annotation SummarizationSetBy = User
+
+	column 'Contract End'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: c1a50002-0000-4c02-9c02-000000000007
+		summarizeBy: none
+		sourceColumn: contract_end
+
+		annotation SummarizationSetBy = User
+
+	column Status
+		dataType: string
+		lineageTag: c1a50002-0000-4c02-9c02-000000000008
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = User
+
+	column 'Is Active'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: c1a50002-0000-4c02-9c02-000000000009
+		summarizeBy: none
+		sourceColumn: is_active
+
+		annotation SummarizationSetBy = User
+
+	column 'Days To Renewal'
+		dataType: int64
+		formatString: 0
+		lineageTag: c1a50002-0000-4c02-9c02-00000000000a
+		summarizeBy: none
+		sourceColumn: days_to_renewal
+
+		annotation SummarizationSetBy = User
+
+	partition Contracts = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database("os-syncro-db.postgres.database.azure.com", "syncro_reporting"),
+					Q = Value.NativeQuery(Source, "SELECT c.customer_id::bigint, COALESCE(cu.business_name, cu.business_then_name, c.customer_id::text) client, COALESCE(NULLIF(c.name, ''), c.description, '(unnamed)') plan, NULLIF(regexp_replace(coalesce(c.contract_amount,'0'),'[^0-9.]','','g'),'')::numeric::float8 amount, c.start_date::timestamp contract_start, c.end_date::timestamp contract_end, COALESCE(c.status, '-') status, (c.status = 'Won' AND (c.end_date IS NULL OR c.end_date >= now())) is_active, (c.end_date::date - now()::date)::int days_to_renewal FROM contracts c LEFT JOIN customers cu ON cu.id = c.customer_id::text", null, [EnableFolding=false])
+				in
+					Q
+
+	annotation PBI_ResultType = Table

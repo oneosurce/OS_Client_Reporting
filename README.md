@@ -29,6 +29,7 @@ One folder per client. All of them share the same design; they differ only by th
 | Folder | Purpose |
 |---|---|
 | [`Finance/contract-data/`](Finance/contract-data/) | Target spec + build worksheet for rebuilding Syncro Contracts, so `OS_Finance` can show real MRR / contract-vs-project margin / renewal runway instead of a derived estimate |
+| [`Contracts/`](Contracts/) | Contract Coverage dashboard — Contracted MRR vs target recurring, coverage gap, renewal runway; fills in as Syncro Contracts are rebuilt |
 
 Each folder has its own `README.md` with the model/report detail.
 

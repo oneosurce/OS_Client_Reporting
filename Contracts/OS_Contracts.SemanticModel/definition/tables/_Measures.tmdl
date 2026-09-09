@@ -1,0 +1,85 @@
+table _Measures
+	lineageTag: c1a50009-0000-4c09-9c09-000000000001
+
+	column Col
+		dataType: string
+		isHidden
+		lineageTag: c1a50009-0000-4c09-9c09-000000000002
+		summarizeBy: none
+		sourceColumn: Col
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Measures = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [Col = text], {})
+				in
+					Source
+
+	annotation PBI_ResultType = Table
+
+	/// Sum of the monthly amount on clients that have a live, priced contract.
+	measure 'Contracted MRR' =
+			SUMX ( Clients, Clients[Contract MRR] ) + 0
+		formatString: \$#,0
+		lineageTag: c1a50009-0000-4c09-9c09-000000000010
+
+	/// Sum of the per-client "suggested recurring" estimate (25th-pctile monthly invoice, last 6 mo).
+	measure 'Target Recurring' =
+			SUMX ( Clients, Clients[Suggested Recurring] ) + 0
+		formatString: \$#,0
+		lineageTag: c1a50009-0000-4c09-9c09-000000000011
+
+	measure 'MRR Gap' =
+			[Target Recurring] - [Contracted MRR]
+		formatString: \$#,0
+		lineageTag: c1a50009-0000-4c09-9c09-000000000012
+
+	measure 'Clients Total' =
+			COUNTROWS ( Clients ) + 0
+		formatString: #,0
+		lineageTag: c1a50009-0000-4c09-9c09-000000000013
+
+	measure 'Clients Covered' =
+			CALCULATE ( COUNTROWS ( Clients ), Clients[Coverage State] = "Contracted" ) + 0
+		formatString: #,0
+		lineageTag: c1a50009-0000-4c09-9c09-000000000014
+
+	measure 'Clients Uncovered' =
+			[Clients Total] - [Clients Covered]
+		formatString: #,0
+		lineageTag: c1a50009-0000-4c09-9c09-000000000015
+
+	measure 'Coverage %' =
+			DIVIDE ( [Clients Covered], [Clients Total] )
+		formatString: 0%
+		lineageTag: c1a50009-0000-4c09-9c09-000000000016
+
+	/// Priced-contract clients as "x / y".
+	measure 'Coverage Label' =
+			[Clients Covered] & " / " & [Clients Total]
+		lineageTag: c1a50009-0000-4c09-9c09-000000000017
+
+	/// Active contracts whose end date is within the next 90 days.
+	measure 'Renewals 90d' =
+			CALCULATE (
+				COUNTROWS ( Contracts ),
+				Contracts[Is Active] = TRUE,
+				Contracts[Days To Renewal] >= 0,
+				Contracts[Days To Renewal] <= 90
+			) + 0
+		formatString: #,0
+		lineageTag: c1a50009-0000-4c09-9c09-000000000018
+
+	/// Clients whose contract is live but has no dollar amount entered.
+	measure 'Missing Amount' =
+			CALCULATE ( COUNTROWS ( Clients ), Clients[Coverage State] = "Contract missing amount" ) + 0
+		formatString: #,0
+		lineageTag: c1a50009-0000-4c09-9c09-000000000019
+
+	measure 'Billed 12mo (All)' =
+			SUMX ( Clients, Clients[Billed 12mo] ) + 0
+		formatString: \$#,0
+		lineageTag: c1a50009-0000-4c09-9c09-00000000001a
