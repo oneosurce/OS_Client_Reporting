@@ -58,7 +58,7 @@ table _Measures
 	/// Total invoiced (incl. tax) in the selected window.
 	measure Billed =
 			CALCULATE ( SUM ( Invoices[Total] ), REMOVEFILTERS ( 'Date' ), DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) )
-		formatString: \$#,0,"K"
+		formatString: \$#,0
 		displayFolder: Revenue
 		lineageTag: f0000009-0000-4001-9009-000000000020
 
@@ -67,7 +67,7 @@ table _Measures
 			VAR Len = [_Window Max] - MinD + 1
 			RETURN
 				CALCULATE ( SUM ( Invoices[Total] ), REMOVEFILTERS ( 'Date' ), DATESINPERIOD ( 'Date'[Date], MinD - 1, - Len, DAY ) )
-		formatString: \$#,0,"K"
+		formatString: \$#,0
 		displayFolder: Revenue
 		lineageTag: f0000009-0000-4001-9009-000000000021
 
@@ -87,7 +87,7 @@ table _Measures
 	/// Cash collected (payments applied) in the selected window.
 	measure Collected =
 			CALCULATE ( SUM ( Payments[Amount] ), REMOVEFILTERS ( 'Date' ), DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) )
-		formatString: \$#,0,"K"
+		formatString: \$#,0
 		displayFolder: Revenue
 		lineageTag: f0000009-0000-4001-9009-000000000023
 
@@ -96,7 +96,7 @@ table _Measures
 			VAR Len = [_Window Max] - MinD + 1
 			RETURN
 				CALCULATE ( SUM ( Payments[Amount] ), REMOVEFILTERS ( 'Date' ), DATESINPERIOD ( 'Date'[Date], MinD - 1, - Len, DAY ) )
-		formatString: \$#,0,"K"
+		formatString: \$#,0
 		displayFolder: Revenue
 		lineageTag: f0000009-0000-4001-9009-000000000024
 
@@ -127,7 +127,7 @@ table _Measures
 	/// Unpaid billable invoices, as of today (ignores the date window).
 	measure Outstanding =
 			CALCULATE ( SUM ( Invoices[Total] ), Invoices[Is Paid] = FALSE, Invoices[Is Billable] = TRUE, REMOVEFILTERS ( 'Date' ) )
-		formatString: \$#,0,"K"
+		formatString: \$#,0
 		displayFolder: AR
 		lineageTag: f0000009-0000-4001-9009-000000000030
 
@@ -167,7 +167,7 @@ table _Measures
 							&& DATEDIFF ( Invoices[Invoice Date], T, DAY ) <= Hi
 					)
 				)
-		formatString: \$#,0,"K"
+		formatString: \$#,0
 		displayFolder: AR
 		lineageTag: f0000009-0000-4001-9009-000000000032
 
@@ -198,13 +198,13 @@ table _Measures
 	/// Billed, clipped to the window so the monthly chart auto-zooms with the Range picker.
 	measure Billings =
 			CALCULATE ( SUM ( Invoices[Total] ), KEEPFILTERS ( DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) ) )
-		formatString: \$#,0,"K"
+		formatString: \$#,0
 		displayFolder: Trend
 		lineageTag: f0000009-0000-4001-9009-000000000050
 
 	measure Receipts =
 			CALCULATE ( SUM ( Payments[Amount] ), KEEPFILTERS ( DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) ) )
-		formatString: \$#,0,"K"
+		formatString: \$#,0
 		displayFolder: Trend
 		lineageTag: f0000009-0000-4001-9009-000000000051
 
