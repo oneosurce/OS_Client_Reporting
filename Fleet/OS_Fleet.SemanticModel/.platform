@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "OS_Fleet"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "a9874593-432b-466a-bbd7-3f2eef916ad3"
+  }
+}

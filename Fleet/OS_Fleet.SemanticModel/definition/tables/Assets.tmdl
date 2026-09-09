@@ -1,0 +1,309 @@
+/// One row per Syncro-managed endpoint seen in the last 90 days. Hardware / OS / health
+/// facts are parsed from the asset `properties` JSON at refresh time. Is Active = seen in
+/// the last 30 days; Is Stale = last seen 31-90 days ago (went dark, worth a look).
+table Assets
+	lineageTag: fa000001-0000-4001-b001-000000000001
+
+	column 'Device Name'
+		dataType: string
+		lineageTag: fa000001-0000-4001-b001-000000000002
+		summarizeBy: none
+		sourceColumn: Device Name
+
+		annotation SummarizationSetBy = User
+
+	column Client
+		dataType: string
+		lineageTag: fa000001-0000-4001-b001-000000000003
+		summarizeBy: none
+		sourceColumn: Client
+
+		annotation SummarizationSetBy = User
+
+	column Serial
+		dataType: string
+		lineageTag: fa000001-0000-4001-b001-000000000004
+		summarizeBy: none
+		sourceColumn: Serial
+
+		annotation SummarizationSetBy = User
+
+	column OS
+		dataType: string
+		lineageTag: fa000001-0000-4001-b001-000000000005
+		summarizeBy: none
+		sourceColumn: OS
+
+		annotation SummarizationSetBy = User
+
+	column 'OS Family'
+		dataType: string
+		lineageTag: fa000001-0000-4001-b001-000000000006
+		summarizeBy: none
+		sourceColumn: OS Family
+
+		annotation SummarizationSetBy = User
+
+	column 'OS Release'
+		dataType: string
+		lineageTag: fa000001-0000-4001-b001-000000000007
+		summarizeBy: none
+		sourceColumn: OS Release
+
+		annotation SummarizationSetBy = User
+
+	column 'Is Windows 10'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: fa000001-0000-4001-b001-000000000008
+		summarizeBy: none
+		sourceColumn: Is Windows 10
+
+		annotation SummarizationSetBy = User
+
+	column 'RAM (GB)'
+		dataType: double
+		formatString: #,0.#
+		lineageTag: fa000001-0000-4001-b001-000000000009
+		summarizeBy: none
+		sourceColumn: RAM (GB)
+
+		annotation SummarizationSetBy = User
+
+	column 'Low RAM'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: fa000001-0000-4001-b001-00000000000a
+		summarizeBy: none
+		sourceColumn: Low RAM
+
+		annotation SummarizationSetBy = User
+
+	column Model
+		dataType: string
+		lineageTag: fa000001-0000-4001-b001-00000000000b
+		summarizeBy: none
+		sourceColumn: Model
+
+		annotation SummarizationSetBy = User
+
+	column Manufacturer
+		dataType: string
+		lineageTag: fa000001-0000-4001-b001-00000000000c
+		summarizeBy: none
+		sourceColumn: Manufacturer
+
+		annotation SummarizationSetBy = User
+
+	column 'Form Factor'
+		dataType: string
+		lineageTag: fa000001-0000-4001-b001-00000000000d
+		summarizeBy: none
+		sourceColumn: Form Factor
+
+		annotation SummarizationSetBy = User
+
+	column CPU
+		dataType: string
+		lineageTag: fa000001-0000-4001-b001-00000000000e
+		summarizeBy: none
+		sourceColumn: CPU
+
+		annotation SummarizationSetBy = User
+
+	column 'Disk Free %'
+		dataType: double
+		formatString: #,0
+		lineageTag: fa000001-0000-4001-b001-00000000000f
+		summarizeBy: none
+		sourceColumn: Disk Free %
+
+		annotation SummarizationSetBy = User
+
+	column 'Low Disk'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: fa000001-0000-4001-b001-000000000010
+		summarizeBy: none
+		sourceColumn: Low Disk
+
+		annotation SummarizationSetBy = User
+
+	column 'Pending Reboot'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: fa000001-0000-4001-b001-000000000011
+		summarizeBy: none
+		sourceColumn: Pending Reboot
+
+		annotation SummarizationSetBy = User
+
+	column 'W11 Status'
+		dataType: string
+		lineageTag: fa000001-0000-4001-b001-000000000012
+		summarizeBy: none
+		sourceColumn: W11 Status
+
+		annotation SummarizationSetBy = User
+
+	column 'W11 Blocked'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: fa000001-0000-4001-b001-000000000013
+		summarizeBy: none
+		sourceColumn: W11 Blocked
+
+		annotation SummarizationSetBy = User
+
+	column 'Agent Version'
+		dataType: string
+		lineageTag: fa000001-0000-4001-b001-000000000014
+		summarizeBy: none
+		sourceColumn: Agent Version
+
+		annotation SummarizationSetBy = User
+
+	column 'Last Boot'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: fa000001-0000-4001-b001-000000000015
+		summarizeBy: none
+		sourceColumn: Last Boot
+
+		annotation SummarizationSetBy = User
+
+	column 'Uptime (Days)'
+		dataType: int64
+		formatString: 0
+		lineageTag: fa000001-0000-4001-b001-000000000016
+		summarizeBy: none
+		sourceColumn: Uptime (Days)
+
+		annotation SummarizationSetBy = User
+
+	column 'Last Seen'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: fa000001-0000-4001-b001-000000000017
+		summarizeBy: none
+		sourceColumn: Last Seen
+
+		annotation SummarizationSetBy = User
+
+	column 'Days Since Seen'
+		dataType: int64
+		formatString: 0
+		lineageTag: fa000001-0000-4001-b001-000000000018
+		summarizeBy: none
+		sourceColumn: Days Since Seen
+
+		annotation SummarizationSetBy = User
+
+	column 'Is Active'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: fa000001-0000-4001-b001-000000000019
+		summarizeBy: none
+		sourceColumn: Is Active
+
+		annotation SummarizationSetBy = User
+
+	column 'Is Stale'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: fa000001-0000-4001-b001-00000000001a
+		summarizeBy: none
+		sourceColumn: Is Stale
+
+		annotation SummarizationSetBy = User
+
+	column 'Long Uptime'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: fa000001-0000-4001-b001-00000000001b
+		summarizeBy: none
+		sourceColumn: Long Uptime
+
+		annotation SummarizationSetBy = User
+
+	column 'Fleet Risk Score'
+		dataType: int64
+		formatString: 0
+		lineageTag: fa000001-0000-4001-b001-00000000001c
+		summarizeBy: none
+		sourceColumn: Fleet Risk Score
+
+		annotation SummarizationSetBy = User
+
+	column 'Needs Attention'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: fa000001-0000-4001-b001-00000000001d
+		summarizeBy: none
+		sourceColumn: Needs Attention
+
+		annotation SummarizationSetBy = User
+
+	partition Assets = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database("os-syncro-db.postgres.database.azure.com", "syncro_reporting"),
+					Nav = Source{[Schema = "public", Item = "assets"]}[Data],
+					Devices = Table.SelectRows(Nav, each [asset_type] = "Syncro Device"),
+					Keep = Table.SelectColumns(Devices, {"name", "asset_serial", "customer", "properties", "updated_at"}),
+					Now = DateTime.LocalNow(),
+					J = (t) => try Json.Document(t) otherwise null,
+					Get = (r, f) => if r = null then null else Record.FieldOrDefault(r, f, null),
+					AsText = (v) => if v = null then "" else Text.From(v),
+					ParseDT = (v) => if v = null or v = "" then null else try DateTimeZone.RemoveZone(DateTimeZone.FromText(Text.From(v))) otherwise (try DateTime.From(v) otherwise null),
+					AddP = Table.AddColumn(Keep, "P", each J([properties])),
+					AddK = Table.AddColumn(AddP, "K", each Get([P], "kabuto_information")),
+					AddOSI = Table.AddColumn(AddK, "OSI", each Get([K], "os")),
+					AddPart = Table.AddColumn(AddOSI, "Part", each Get([K], "system_partition")),
+					AddClient = Table.AddColumn(AddPart, "Client", each let v = Get(J([customer]), "business_then_name") in if v = null or v = "" then "(unassigned)" else Text.From(v), type text),
+					AddOS = Table.AddColumn(AddClient, "OS", each let v = Get([P], "os") in if v = null or v = "" then "(unknown)" else Text.From(v), type text),
+					AddFamily = Table.AddColumn(AddOS, "OS Family", each
+						let s = Text.Lower([OS]) in
+						if Text.Contains(s, "server") then "Windows Server"
+						else if Text.Contains(s, "windows 11") then "Windows 11"
+						else if Text.Contains(s, "windows 10") then "Windows 10"
+						else if Text.Contains(s, "windows") then "Windows (older)"
+						else if Text.Contains(s, "mac") or Text.Contains(s, "os x") or Text.Contains(s, "darwin") then "macOS"
+						else "Other", type text),
+					AddW10 = Table.AddColumn(AddFamily, "Is Windows 10", each [OS Family] = "Windows 10", type logical),
+					AddRel = Table.AddColumn(AddW10, "OS Release", each AsText(Get([OSI], "windows_release_version")), type text),
+					AddRam = Table.AddColumn(AddRel, "RamGB", each try Number.From(Get([K], "ram_gb")) otherwise null, type number),
+					AddLowRam = Table.AddColumn(AddRam, "Low RAM", each [RamGB] <> null and [RamGB] < 8, type logical),
+					AddModel = Table.AddColumn(AddLowRam, "Model", each AsText(Get([P], "model")), type text),
+					AddMfr = Table.AddColumn(AddModel, "Manufacturer", each AsText(Get([P], "manufacturer")), type text),
+					AddForm = Table.AddColumn(AddMfr, "Form Factor", each AsText(Get([P], "form_factor")), type text),
+					AddCPU = Table.AddColumn(AddForm, "CPU", each Text.Trim(AsText(Get([P], "cpu_name"))), type text),
+					AddDisk = Table.AddColumn(AddCPU, "DiskFreePct", each try Number.From(Get([Part], "free_percent")) otherwise null, type number),
+					AddLowDisk = Table.AddColumn(AddDisk, "Low Disk", each [DiskFreePct] <> null and [DiskFreePct] < 10, type logical),
+					AddReboot = Table.AddColumn(AddLowDisk, "Pending Reboot", each Get([OSI], "pending_reboot") = true, type logical),
+					AddW11 = Table.AddColumn(AddReboot, "W11 Status", each AsText(Get([P], "Windows 11 Status")), type text),
+					AddW11B = Table.AddColumn(AddW11, "W11 Blocked", each Text.StartsWith([W11 Status], "Not W11"), type logical),
+					AddAgent = Table.AddColumn(AddW11B, "Agent Version", each AsText(Get([P], "agent_version")), type text),
+					AddBoot = Table.AddColumn(AddAgent, "Last Boot", each ParseDT(Get([P], "last_boot")), type datetime),
+					AddUptime = Table.AddColumn(AddBoot, "UptimeDays", each if [Last Boot] = null then null else Number.RoundDown(Duration.TotalDays(Now - [Last Boot])), Int64.Type),
+					AddSeen = Table.AddColumn(AddUptime, "DaysSinceSeen", each Number.RoundDown(Duration.TotalDays(Now - [updated_at])), Int64.Type),
+					AddActive = Table.AddColumn(AddSeen, "Is Active", each [DaysSinceSeen] <= 30, type logical),
+					AddStale = Table.AddColumn(AddActive, "Is Stale", each [DaysSinceSeen] > 30 and [DaysSinceSeen] <= 90, type logical),
+					AddLongUp = Table.AddColumn(AddStale, "Long Uptime", each [UptimeDays] <> null and [UptimeDays] >= 14, type logical),
+					AddScore = Table.AddColumn(AddLongUp, "Fleet Risk Score", each
+						(if [Low Disk] then 30 else 0)
+						+ (if [Low RAM] then 25 else 0)
+						+ (if [Is Windows 10] then 20 else 0)
+						+ (if [Pending Reboot] then 15 else 0)
+						+ (if [W11 Blocked] then 10 else 0)
+						+ (if [Long Uptime] then 10 else 0), Int64.Type),
+					AddNeeds = Table.AddColumn(AddScore, "Needs Attention", each [Is Active] and [Fleet Risk Score] > 0, type logical),
+					Window = Table.SelectRows(AddNeeds, each [DaysSinceSeen] <= 90),
+					Renamed = Table.RenameColumns(Window, {{"name", "Device Name"}, {"asset_serial", "Serial"}, {"updated_at", "Last Seen"}, {"RamGB", "RAM (GB)"}, {"DiskFreePct", "Disk Free %"}, {"UptimeDays", "Uptime (Days)"}, {"DaysSinceSeen", "Days Since Seen"}}),
+					Final = Table.SelectColumns(Renamed, {"Device Name", "Client", "Serial", "OS", "OS Family", "OS Release", "Is Windows 10", "RAM (GB)", "Low RAM", "Model", "Manufacturer", "Form Factor", "CPU", "Disk Free %", "Low Disk", "Pending Reboot", "W11 Status", "W11 Blocked", "Agent Version", "Last Boot", "Uptime (Days)", "Last Seen", "Days Since Seen", "Is Active", "Is Stale", "Long Uptime", "Fleet Risk Score", "Needs Attention"}),
+					Typed = Table.TransformColumnTypes(Final, {{"Device Name", type text}, {"Client", type text}, {"Serial", type text}, {"Last Seen", type datetime}})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table

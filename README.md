@@ -22,6 +22,7 @@ One folder per client. All of them share the same design; they differ only by th
 |---|---|---|
 | [`Finance/`](Finance/) | Business Health — billed / collected / AR aging / revenue by client / est. MRR | `invoices`, `payments`, `tickets` (all clients) |
 | [`ServiceDesk/`](ServiceDesk/) | Daily Ops — open-ticket action list + team board for technicians | `tickets` (all clients) |
+| [`Fleet/`](Fleet/) | Fleet Health — endpoints per client, OS mix, Windows 10 / pending-reboot / low-RAM / low-disk exposure, risk-ranked device list | `assets` (all clients) |
 
 Each folder has its own `README.md` with the model/report detail.
 

@@ -1,0 +1,84 @@
+table _Measures
+	lineageTag: fa000009-0000-4001-b009-000000000001
+
+	column Column
+		dataType: string
+		isHidden
+		lineageTag: fa000009-0000-4001-b009-000000000002
+		summarizeBy: none
+		sourceColumn: Column
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Measures = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [Column = text], {})
+				in
+					Source
+
+	annotation PBI_ResultType = Table
+
+	/// Endpoints seen in the last 30 days.
+	measure 'Active Endpoints' =
+			CALCULATE ( COUNTROWS ( Assets ), Assets[Is Active] = TRUE ) + 0
+		formatString: #,0
+		lineageTag: fa000009-0000-4001-b009-000000000010
+
+	/// Endpoints last seen 31-90 days ago (gone dark).
+	measure 'Stale Endpoints' =
+			CALCULATE ( COUNTROWS ( Assets ), Assets[Is Stale] = TRUE ) + 0
+		formatString: #,0
+		lineageTag: fa000009-0000-4001-b009-000000000011
+
+	/// Active endpoints still on Windows 10 (out of support Oct 2025).
+	measure 'Windows 10' =
+			CALCULATE ( COUNTROWS ( Assets ), Assets[Is Windows 10] = TRUE, Assets[Is Active] = TRUE ) + 0
+		formatString: #,0
+		lineageTag: fa000009-0000-4001-b009-000000000012
+
+	/// Active endpoints with a reboot pending.
+	measure 'Pending Reboots' =
+			CALCULATE ( COUNTROWS ( Assets ), Assets[Pending Reboot] = TRUE, Assets[Is Active] = TRUE ) + 0
+		formatString: #,0
+		lineageTag: fa000009-0000-4001-b009-000000000013
+
+	/// Active endpoints with under 8 GB RAM.
+	measure 'Low RAM' =
+			CALCULATE ( COUNTROWS ( Assets ), Assets[Low RAM] = TRUE, Assets[Is Active] = TRUE ) + 0
+		formatString: #,0
+		lineageTag: fa000009-0000-4001-b009-000000000014
+
+	/// Active endpoints with under 10% free disk.
+	measure 'Low Disk' =
+			CALCULATE ( COUNTROWS ( Assets ), Assets[Low Disk] = TRUE, Assets[Is Active] = TRUE ) + 0
+		formatString: #,0
+		lineageTag: fa000009-0000-4001-b009-000000000015
+
+	/// Active endpoints flagged not Windows 11 ready.
+	measure 'W11 Blocked' =
+			CALCULATE ( COUNTROWS ( Assets ), Assets[W11 Blocked] = TRUE, Assets[Is Active] = TRUE ) + 0
+		formatString: #,0
+		lineageTag: fa000009-0000-4001-b009-000000000016
+
+	/// Active endpoints with 14+ days of uptime.
+	measure 'Long Uptime' =
+			CALCULATE ( COUNTROWS ( Assets ), Assets[Long Uptime] = TRUE, Assets[Is Active] = TRUE ) + 0
+		formatString: #,0
+		lineageTag: fa000009-0000-4001-b009-000000000017
+
+	measure 'Total Endpoints' =
+			COUNTROWS ( Assets ) + 0
+		formatString: #,0
+		lineageTag: fa000009-0000-4001-b009-000000000018
+
+	measure 'Avg RAM (GB)' =
+			AVERAGEX ( FILTER ( Assets, Assets[Is Active] = TRUE && NOT ISBLANK ( Assets[RAM (GB)] ) ), Assets[RAM (GB)] )
+		formatString: #,0.0
+		lineageTag: fa000009-0000-4001-b009-000000000019
+
+	measure 'Agent Versions' =
+			CALCULATE ( DISTINCTCOUNT ( Assets[Agent Version] ), Assets[Is Active] = TRUE, Assets[Agent Version] <> "" )
+		formatString: #,0
+		lineageTag: fa000009-0000-4001-b009-00000000001a
