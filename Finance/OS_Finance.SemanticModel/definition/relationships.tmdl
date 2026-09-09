@@ -1,0 +1,19 @@
+relationship f0000010-0000-4001-9010-000000000001
+	fromColumn: Invoices.'Customer ID'
+	toColumn: Customers.'Customer ID'
+
+relationship f0000010-0000-4001-9010-000000000002
+	fromColumn: Invoices.'Invoice Date'
+	toColumn: Date.Date
+
+relationship f0000010-0000-4001-9010-000000000003
+	fromColumn: Payments.'Payment Date'
+	toColumn: Date.Date
+
+relationship f0000010-0000-4001-9010-000000000004
+	fromColumn: 'Ticket Volume'.'Created Date'
+	toColumn: Date.Date
+
+relationship f0000010-0000-4001-9010-000000000005
+	fromColumn: 'Ticket Volume'.'Customer ID'
+	toColumn: Customers.'Customer ID'

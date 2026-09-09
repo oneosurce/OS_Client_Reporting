@@ -1,0 +1,46 @@
+/// Trimmed ticket feed — just enough to compare a client's support load against its revenue.
+table 'Ticket Volume'
+	lineageTag: f0000004-0000-4001-9004-000000000001
+
+	column 'Customer ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: f0000004-0000-4001-9004-000000000002
+		summarizeBy: none
+		sourceColumn: Customer ID
+
+		annotation SummarizationSetBy = User
+
+	column 'Created Date'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: f0000004-0000-4001-9004-000000000003
+		summarizeBy: none
+		sourceColumn: Created Date
+
+		annotation SummarizationSetBy = User
+
+	column 'Is Open'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: f0000004-0000-4001-9004-000000000004
+		summarizeBy: none
+		sourceColumn: Is Open
+
+		annotation SummarizationSetBy = User
+
+	partition 'Ticket Volume' = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database("os-syncro-db.postgres.database.azure.com", "syncro_reporting"),
+					Nav = Source{[Schema = "public", Item = "tickets"]}[Data],
+					Keep = Table.SelectColumns(Nav, {"customer_id", "created_at", "status"}),
+					Renamed = Table.RenameColumns(Keep, {{"customer_id", "Customer ID"}, {"created_at", "Created Date"}}),
+					Open = Table.AddColumn(Renamed, "Is Open", each not List.Contains({"Resolved", "Ready for Invoice"}, [status]), type logical),
+					Typed = Table.TransformColumnTypes(Open, {{"Customer ID", Int64.Type}, {"Created Date", type datetime}}),
+					Final = Table.SelectColumns(Typed, {"Customer ID", "Created Date", "Is Open"})
+				in
+					Final
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,39 @@
+/// Disconnected helper: preset options for the Range picker. Slicer item order = Sort.
+table 'Date Range'
+	lineageTag: f0000006-0000-4001-9006-000000000001
+
+	column Range
+		isNameInferred
+		dataType: string
+		summarizeBy: none
+		sortByColumn: Sort
+		sourceColumn: [Range]
+		lineageTag: f0000006-0000-4001-9006-000000000002
+
+	column Sort
+		isNameInferred
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: [Sort]
+		lineageTag: f0000006-0000-4001-9006-000000000003
+
+	partition 'Date Range' = calculated
+		mode: import
+		source =
+				DATATABLE (
+					"Range", STRING,
+					"Sort", INTEGER,
+					{
+						{ "This month", 1 },
+						{ "Last month", 2 },
+						{ "Last 3 months", 3 },
+						{ "Last 6 months", 4 },
+						{ "Last 12 months", 5 },
+						{ "Year to date", 6 },
+						{ "Last year", 7 },
+						{ "All time", 8 }
+					}
+				)
+
+	annotation PBI_ResultType = Table

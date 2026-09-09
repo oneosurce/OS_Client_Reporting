@@ -2,21 +2,24 @@
 # Sync the OneSource Reporting workspace from this repo (Fabric Git integration),
 # then optionally refresh one client's semantic model and export a preview PNG.
 #
-#   scripts/deploy.sh <ClientFolder>          e.g. scripts/deploy.sh Sophia
-#   scripts/deploy.sh <ClientFolder> refresh  also triggers a dataset refresh
+#   scripts/deploy.sh <Folder>          e.g. scripts/deploy.sh Sophia
+#   scripts/deploy.sh <Folder> refresh  also triggers a dataset refresh
 #
-# Item names in the workspace are assumed to be OS_<ClientFolder>_Tickets.
+# The workspace item name is taken from the folder's *.SemanticModel directory
+# (e.g. FWW/OS_FWW_Tickets.SemanticModel -> item "OS_FWW_Tickets").
 set -uo pipefail
 
 WS=3ca25e44-c70a-4827-85dd-50064f492051
 FB=https://api.fabric.microsoft.com/v1
 PB=https://api.powerbi.com/v1.0/myorg
+REPO="$(cd "$(dirname "$0")/.." && pwd)"
 OUT="$(cd "$(dirname "$0")" && pwd)/out"
 mkdir -p "$OUT"
 
-CLIENT="${1:?usage: deploy.sh <ClientFolder> [refresh]}"
+CLIENT="${1:?usage: deploy.sh <Folder> [refresh]}"
 DO_REFRESH="${2:-no}"
-ITEM="OS_${CLIENT}_Tickets"
+ITEM=$(basename "$(ls -d "$REPO/$CLIENT"/*.SemanticModel 2>/dev/null | head -1)" .SemanticModel)
+[ -z "$ITEM" ] && { echo "no *.SemanticModel under $CLIENT/"; exit 1; }
 
 FT=$(az account get-access-token --resource "https://api.fabric.microsoft.com" --query accessToken -o tsv)
 PT=$(az account get-access-token --resource "https://analysis.windows.net/powerbi/api" --query accessToken -o tsv)

@@ -1,0 +1,215 @@
+table _Measures
+	lineageTag: f0000009-0000-4001-9009-000000000001
+
+	column Column
+		dataType: string
+		isHidden
+		lineageTag: f0000009-0000-4001-9009-000000000002
+		summarizeBy: none
+		sourceColumn: Column
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Measures = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [Column = text], {})
+				in
+					Source
+
+	annotation PBI_ResultType = Table
+
+	/// Start of the active window. Driven by the Range picker; last 12 months when nothing is picked.
+	measure '_Window Min' =
+			VAR P = SELECTEDVALUE ( 'Date Range'[Range], "Last 12 months" )
+			VAR T = TODAY ()
+			VAR MStart = DATE ( YEAR ( T ), MONTH ( T ), 1 )
+			RETURN
+				SWITCH (
+					P,
+					"This month", MStart,
+					"Last month", EDATE ( MStart, -1 ),
+					"Last 3 months", EDATE ( MStart, -2 ),
+					"Last 6 months", EDATE ( MStart, -5 ),
+					"Last 12 months", EDATE ( MStart, -11 ),
+					"Year to date", DATE ( YEAR ( T ), 1, 1 ),
+					"Last year", DATE ( YEAR ( T ) - 1, 1, 1 ),
+					"All time", CALCULATE ( MIN ( 'Date'[Date] ), REMOVEFILTERS ( 'Date' ) ),
+					EDATE ( MStart, -11 )
+				)
+		displayFolder: Window
+		lineageTag: f0000009-0000-4001-9009-000000000010
+
+	measure '_Window Max' =
+			VAR P = SELECTEDVALUE ( 'Date Range'[Range], "Last 12 months" )
+			VAR T = TODAY ()
+			VAR MStart = DATE ( YEAR ( T ), MONTH ( T ), 1 )
+			RETURN
+				SWITCH (
+					P,
+					"Last month", EOMONTH ( EDATE ( MStart, -1 ), 0 ),
+					"Last year", DATE ( YEAR ( T ) - 1, 12, 31 ),
+					T
+				)
+		displayFolder: Window
+		lineageTag: f0000009-0000-4001-9009-000000000011
+
+	/// Total invoiced (incl. tax) in the selected window.
+	measure Billed =
+			CALCULATE ( SUM ( Invoices[Total] ), REMOVEFILTERS ( 'Date' ), DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) )
+		formatString: \$#,0
+		displayFolder: Revenue
+		lineageTag: f0000009-0000-4001-9009-000000000020
+
+	measure 'Billed (Prior)' =
+			VAR MinD = [_Window Min]
+			VAR Len = [_Window Max] - MinD + 1
+			RETURN
+				CALCULATE ( SUM ( Invoices[Total] ), REMOVEFILTERS ( 'Date' ), DATESINPERIOD ( 'Date'[Date], MinD - 1, - Len, DAY ) )
+		formatString: \$#,0
+		displayFolder: Revenue
+		lineageTag: f0000009-0000-4001-9009-000000000021
+
+	measure 'Billed Change Label' =
+			VAR Pct = DIVIDE ( [Billed] - [Billed (Prior)], [Billed (Prior)] )
+			RETURN
+				SWITCH (
+					TRUE (),
+					ISBLANK ( [Billed (Prior)] ) || [Billed (Prior)] = 0, "",
+					Pct > 0.005, "▲ " & FORMAT ( Pct, "0%" ) & " vs prior",
+					Pct < -0.005, "▼ " & FORMAT ( ABS ( Pct ), "0%" ) & " vs prior",
+					"— flat vs prior"
+				)
+		displayFolder: Revenue
+		lineageTag: f0000009-0000-4001-9009-000000000022
+
+	/// Cash collected (payments applied) in the selected window.
+	measure Collected =
+			CALCULATE ( SUM ( Payments[Amount] ), REMOVEFILTERS ( 'Date' ), DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) )
+		formatString: \$#,0
+		displayFolder: Revenue
+		lineageTag: f0000009-0000-4001-9009-000000000023
+
+	measure 'Collected (Prior)' =
+			VAR MinD = [_Window Min]
+			VAR Len = [_Window Max] - MinD + 1
+			RETURN
+				CALCULATE ( SUM ( Payments[Amount] ), REMOVEFILTERS ( 'Date' ), DATESINPERIOD ( 'Date'[Date], MinD - 1, - Len, DAY ) )
+		formatString: \$#,0
+		displayFolder: Revenue
+		lineageTag: f0000009-0000-4001-9009-000000000024
+
+	measure 'Collected Change Label' =
+			VAR Pct = DIVIDE ( [Collected] - [Collected (Prior)], [Collected (Prior)] )
+			RETURN
+				SWITCH (
+					TRUE (),
+					ISBLANK ( [Collected (Prior)] ) || [Collected (Prior)] = 0, "",
+					Pct > 0.005, "▲ " & FORMAT ( Pct, "0%" ) & " vs prior",
+					Pct < -0.005, "▼ " & FORMAT ( ABS ( Pct ), "0%" ) & " vs prior",
+					"— flat vs prior"
+				)
+		displayFolder: Revenue
+		lineageTag: f0000009-0000-4001-9009-000000000025
+
+	measure 'Collection Rate' =
+			DIVIDE ( [Collected], [Billed] )
+		formatString: 0%
+		displayFolder: Revenue
+		lineageTag: f0000009-0000-4001-9009-000000000026
+
+	measure 'Collection Rate Label' =
+			IF ( ISBLANK ( [Billed] ) || [Billed] = 0, "", "of $" & FORMAT ( [Billed] / 1000, "0.0" ) & "k billed" )
+		displayFolder: Revenue
+		lineageTag: f0000009-0000-4001-9009-000000000027
+
+	/// Unpaid billable invoices, as of today (ignores the date window).
+	measure Outstanding =
+			CALCULATE ( SUM ( Invoices[Total] ), Invoices[Is Paid] = FALSE, Invoices[Is Billable] = TRUE, REMOVEFILTERS ( 'Date' ) )
+		formatString: \$#,0
+		displayFolder: AR
+		lineageTag: f0000009-0000-4001-9009-000000000030
+
+	measure 'Outstanding Label' =
+			VAR N =
+				CALCULATE ( COUNTROWS ( Invoices ), Invoices[Is Paid] = FALSE, Invoices[Is Billable] = TRUE, REMOVEFILTERS ( 'Date' ) )
+			VAR Old =
+				CALCULATE (
+					SUM ( Invoices[Total] ),
+					Invoices[Is Paid] = FALSE,
+					Invoices[Is Billable] = TRUE,
+					REMOVEFILTERS ( 'Date' ),
+					FILTER ( VALUES ( Invoices[Invoice Date] ), Invoices[Invoice Date] < TODAY () - 60 )
+				)
+			RETURN
+				IF ( ISBLANK ( N ), "nothing outstanding", N & " invoices · $" & FORMAT ( Old, "#,0" ) & " over 60 days" )
+		displayFolder: AR
+		lineageTag: f0000009-0000-4001-9009-000000000031
+
+	/// AR amount for the age bucket on the axis (disconnected 'AR Bucket' table).
+	measure 'AR by Age' =
+			VAR B = SELECTEDVALUE ( 'AR Bucket'[Bucket] )
+			VAR T = TODAY ()
+			VAR Lo =
+				SWITCH ( B, "0–30 days", 0, "31–60 days", 31, "61–90 days", 61, "90+ days", 91, 0 )
+			VAR Hi =
+				SWITCH ( B, "0–30 days", 30, "31–60 days", 60, "61–90 days", 90, "90+ days", 100000, 100000 )
+			RETURN
+				CALCULATE (
+					SUM ( Invoices[Total] ),
+					Invoices[Is Paid] = FALSE,
+					Invoices[Is Billable] = TRUE,
+					REMOVEFILTERS ( 'Date' ),
+					FILTER (
+						VALUES ( Invoices[Invoice Date] ),
+						DATEDIFF ( Invoices[Invoice Date], T, DAY ) >= Lo
+							&& DATEDIFF ( Invoices[Invoice Date], T, DAY ) <= Hi
+					)
+				)
+		formatString: \$#,0
+		displayFolder: AR
+		lineageTag: f0000009-0000-4001-9009-000000000032
+
+	measure 'Billable Invoices' =
+			CALCULATE ( COUNTROWS ( Invoices ), Invoices[Is Billable] = TRUE, REMOVEFILTERS ( 'Date' ), DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) ) + 0
+		formatString: #,0
+		displayFolder: Revenue
+		lineageTag: f0000009-0000-4001-9009-000000000040
+
+	measure 'Avg Invoice' =
+			DIVIDE ( [Billed], [Billable Invoices] )
+		formatString: \$#,0
+		displayFolder: Revenue
+		lineageTag: f0000009-0000-4001-9009-000000000041
+
+	measure 'Active Clients' =
+			CALCULATE ( DISTINCTCOUNT ( Invoices[Customer ID] ), Invoices[Is Billable] = TRUE, REMOVEFILTERS ( 'Date' ), DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) ) + 0
+		formatString: #,0
+		displayFolder: Revenue
+		lineageTag: f0000009-0000-4001-9009-000000000042
+
+	measure 'Active Clients Label' =
+			VAR N = [Active Clients]
+			RETURN IF ( N = 0, "", "avg $" & FORMAT ( DIVIDE ( [Billed], N ), "#,0" ) & " / client" )
+		displayFolder: Revenue
+		lineageTag: f0000009-0000-4001-9009-000000000043
+
+	/// Billed, clipped to the window so the monthly chart auto-zooms with the Range picker.
+	measure 'Billed (Trend)' =
+			CALCULATE ( SUM ( Invoices[Total] ), KEEPFILTERS ( DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) ) )
+		formatString: \$#,0
+		displayFolder: Trend
+		lineageTag: f0000009-0000-4001-9009-000000000050
+
+	measure 'Collected (Trend)' =
+			CALCULATE ( SUM ( Payments[Amount] ), KEEPFILTERS ( DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) ) )
+		formatString: \$#,0
+		displayFolder: Trend
+		lineageTag: f0000009-0000-4001-9009-000000000051
+
+	measure 'Ticket Count' =
+			CALCULATE ( COUNTROWS ( 'Ticket Volume' ), REMOVEFILTERS ( 'Date' ), DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) ) + 0
+		formatString: #,0
+		displayFolder: Load
+		lineageTag: f0000009-0000-4001-9009-000000000060

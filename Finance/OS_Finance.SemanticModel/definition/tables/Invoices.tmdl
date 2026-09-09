@@ -1,0 +1,117 @@
+/// One row per Syncro invoice. Money columns arrive as text and are parsed to numbers.
+/// "Billable" = a non-zero total; ~42% of invoices are $0 (contract-covered work).
+table Invoices
+	lineageTag: f0000001-0000-4001-9001-000000000001
+
+	column 'Invoice Number'
+		dataType: string
+		lineageTag: f0000001-0000-4001-9001-000000000002
+		summarizeBy: none
+		sourceColumn: Invoice Number
+
+		annotation SummarizationSetBy = User
+
+	column 'Customer ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: f0000001-0000-4001-9001-000000000003
+		summarizeBy: none
+		sourceColumn: Customer ID
+
+		annotation SummarizationSetBy = User
+
+	column Customer
+		dataType: string
+		lineageTag: f0000001-0000-4001-9001-000000000004
+		summarizeBy: none
+		sourceColumn: Customer
+
+		annotation SummarizationSetBy = User
+
+	column 'Invoice Date'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: f0000001-0000-4001-9001-000000000005
+		summarizeBy: none
+		sourceColumn: Invoice Date
+
+		annotation SummarizationSetBy = User
+
+	column 'Due Date'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: f0000001-0000-4001-9001-000000000006
+		summarizeBy: none
+		sourceColumn: Due Date
+
+		annotation SummarizationSetBy = User
+
+	column Total
+		dataType: double
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: f0000001-0000-4001-9001-000000000007
+		summarizeBy: sum
+		sourceColumn: Total
+
+		annotation SummarizationSetBy = User
+
+	column Subtotal
+		dataType: double
+		formatString: \$#,0
+		lineageTag: f0000001-0000-4001-9001-000000000008
+		summarizeBy: sum
+		sourceColumn: Subtotal
+
+		annotation SummarizationSetBy = User
+
+	column Tax
+		dataType: double
+		formatString: \$#,0
+		lineageTag: f0000001-0000-4001-9001-000000000009
+		summarizeBy: sum
+		sourceColumn: Tax
+
+		annotation SummarizationSetBy = User
+
+	column 'Is Paid'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: f0000001-0000-4001-9001-00000000000a
+		summarizeBy: none
+		sourceColumn: Is Paid
+
+		annotation SummarizationSetBy = User
+
+	column 'Is Billable'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: f0000001-0000-4001-9001-00000000000b
+		summarizeBy: none
+		sourceColumn: Is Billable
+
+		annotation SummarizationSetBy = User
+
+	partition Invoices = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database("os-syncro-db.postgres.database.azure.com", "syncro_reporting"),
+					Nav = Source{[Schema = "public", Item = "invoices"]}[Data],
+					Keep = Table.SelectColumns(Nav, {"number", "customer_id", "customer_business_then_name", "date", "due_date", "total", "subtotal", "tax", "is_paid"}),
+					ToNum = (t) as nullable number =>
+						let s = if t = null then null else Text.Select(Text.From(t), {"0" .. "9", ".", "-"})
+						in if s = null or s = "" then null else Number.From(s),
+					Nums = Table.TransformColumns(Keep, {{"total", ToNum, type number}, {"subtotal", ToNum, type number}, {"tax", ToNum, type number}}),
+					Renamed = Table.RenameColumns(Nums, {
+						{"number", "Invoice Number"}, {"customer_id", "Customer ID"}, {"customer_business_then_name", "Customer"},
+						{"date", "Invoice Date"}, {"due_date", "Due Date"}, {"total", "Total"}, {"subtotal", "Subtotal"}, {"tax", "Tax"}, {"is_paid", "Is Paid"}}),
+					Typed = Table.TransformColumnTypes(Renamed, {
+						{"Invoice Number", type text}, {"Customer ID", Int64.Type}, {"Customer", type text},
+						{"Invoice Date", type datetime}, {"Due Date", type datetime}, {"Is Paid", type logical}}),
+					WithDate = Table.SelectRows(Typed, each [Invoice Date] <> null),
+					Filled = Table.ReplaceValue(WithDate, null, 0, Replacer.ReplaceValue, {"Total", "Subtotal", "Tax"}),
+					Billable = Table.AddColumn(Filled, "Is Billable", each [Total] <> 0, type logical)
+				in
+					Billable
+
+	annotation PBI_ResultType = Table

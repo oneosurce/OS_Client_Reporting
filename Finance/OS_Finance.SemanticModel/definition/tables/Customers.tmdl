@@ -1,0 +1,42 @@
+/// All Syncro customers (unfiltered — this is an internal, all-client dashboard).
+table Customers
+	lineageTag: f0000003-0000-4001-9003-000000000001
+
+	column 'Customer ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: f0000003-0000-4001-9003-000000000002
+		summarizeBy: none
+		sourceColumn: Customer ID
+
+		annotation SummarizationSetBy = User
+
+	column 'Business Name'
+		dataType: string
+		lineageTag: f0000003-0000-4001-9003-000000000003
+		summarizeBy: none
+		sourceColumn: Business Name
+
+		annotation SummarizationSetBy = User
+
+	column State
+		dataType: string
+		lineageTag: f0000003-0000-4001-9003-000000000004
+		summarizeBy: none
+		sourceColumn: State
+
+		annotation SummarizationSetBy = User
+
+	partition Customers = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database("os-syncro-db.postgres.database.azure.com", "syncro_reporting"),
+					Nav = Source{[Schema = "public", Item = "customers"]}[Data],
+					Keep = Table.SelectColumns(Nav, {"id", "business_name", "state"}),
+					Renamed = Table.RenameColumns(Keep, {{"id", "Customer ID"}, {"business_name", "Business Name"}, {"state", "State"}}),
+					Typed = Table.TransformColumnTypes(Renamed, {{"Customer ID", Int64.Type}, {"Business Name", type text}, {"State", type text}})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table

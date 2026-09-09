@@ -1,0 +1,47 @@
+/// One row per payment received (Syncro payments.applied_at). $0 rows are contract-covered
+/// invoices marked settled; they are kept so counts line up but contribute nothing to cash.
+table Payments
+	lineageTag: f0000002-0000-4001-9002-000000000001
+
+	column 'Payment Date'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: f0000002-0000-4001-9002-000000000002
+		summarizeBy: none
+		sourceColumn: Payment Date
+
+		annotation SummarizationSetBy = User
+
+	column Amount
+		dataType: double
+		formatString: \$#,0
+		lineageTag: f0000002-0000-4001-9002-000000000003
+		summarizeBy: sum
+		sourceColumn: Amount
+
+		annotation SummarizationSetBy = User
+
+	column Method
+		dataType: string
+		lineageTag: f0000002-0000-4001-9002-000000000004
+		summarizeBy: none
+		sourceColumn: Method
+
+		annotation SummarizationSetBy = User
+
+	partition Payments = m
+		mode: import
+		source =
+				let
+					Source = PostgreSQL.Database("os-syncro-db.postgres.database.azure.com", "syncro_reporting"),
+					Nav = Source{[Schema = "public", Item = "payments"]}[Data],
+					Keep = Table.SelectColumns(Nav, {"payment_amount", "payment_method", "applied_at"}),
+					Valid = Table.SelectRows(Keep, each [applied_at] <> null and Text.StartsWith([applied_at], "2")),
+					Dated = Table.AddColumn(Valid, "Payment Date", each Date.FromText(Text.Start([applied_at], 10)), type date),
+					Renamed = Table.RenameColumns(Dated, {{"payment_amount", "Amount"}, {"payment_method", "Method"}}),
+					Typed = Table.TransformColumnTypes(Renamed, {{"Amount", type number}, {"Method", type text}, {"Payment Date", type datetime}}),
+					Final = Table.SelectColumns(Typed, {"Payment Date", "Amount", "Method"})
+				in
+					Final
+
+	annotation PBI_ResultType = Table

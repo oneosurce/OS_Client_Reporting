@@ -1,0 +1,35 @@
+/// Disconnected helper: age buckets for the AR-aging chart axis.
+table 'AR Bucket'
+	lineageTag: f0000007-0000-4001-9007-000000000001
+
+	column Bucket
+		isNameInferred
+		dataType: string
+		summarizeBy: none
+		sortByColumn: Sort
+		sourceColumn: [Bucket]
+		lineageTag: f0000007-0000-4001-9007-000000000002
+
+	column Sort
+		isNameInferred
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: [Sort]
+		lineageTag: f0000007-0000-4001-9007-000000000003
+
+	partition 'AR Bucket' = calculated
+		mode: import
+		source =
+				DATATABLE (
+					"Bucket", STRING,
+					"Sort", INTEGER,
+					{
+						{ "0–30 days", 1 },
+						{ "31–60 days", 2 },
+						{ "61–90 days", 3 },
+						{ "90+ days", 4 }
+					}
+				)
+
+	annotation PBI_ResultType = Table
