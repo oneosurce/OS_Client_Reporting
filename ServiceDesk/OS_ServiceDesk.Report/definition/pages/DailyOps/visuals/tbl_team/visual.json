@@ -327,7 +327,7 @@
             {
               "Condition": {
                 "Comparison": {
-                  "ComparisonKind": 2,
+                  "ComparisonKind": 1,
                   "Left": {
                     "Measure": {
                       "Expression": {
