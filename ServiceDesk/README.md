@@ -6,8 +6,15 @@ Fabric workspace. Refreshes **hourly at :30** (it's a live queue view).
 
 ## Model
 
-Single table **Tickets** (all clients, from `tickets`). Money-free — this is an operations model.
-- `Assigned To` / `Tech Group` parsed from the `user` JSON blob.
+Single table **Tickets** (from `tickets`). Money-free — this is an operations model.
+
+**Co-managed scoping (model-level filter):** Cobalt Engineering is co-managed — Cobalt's own IT hold `@cobalt-engineering.com` Syncro logins. The model drops:
+- every ticket assigned to an `@cobalt-engineering.com` address (anywhere), and
+- every Cobalt Engineering ticket **not** assigned to `ae@onesource.tech` (Alexander) or `ar@onesource.tech` (Antonio).
+
+Filtering is by **email**, not name — there are two "Rafael Vera" in Syncro (the Cobalt one, and a former OneSource tech `rv@onesource.tech`); only the Cobalt one is excluded.
+
+- `Assigned To` / `Assigned Email` (hidden) / `Tech Group` parsed from the `user` JSON blob.
 - `Age (Days)` = since created, `Idle (Days)` = since last update, `Overdue By (Days)` = past the Syncro `due_date` — all computed at refresh time (`DateTime.LocalNow()`), so they're accurate to the last hourly refresh.
 - `Attention Score` = age + idle×2 + 30 if overdue (available for sorting; the list currently sorts by Idle).
 - `Completed At` = `resolved_at` for Resolved, else `updated_at` for Ready-for-Invoice (same convention as the client dashboards).
