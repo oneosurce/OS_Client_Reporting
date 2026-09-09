@@ -14,6 +14,8 @@ Single table **Tickets** (from `tickets`). Money-free — this is an operations 
 
 Filtering is by **email**, not name — there are two "Rafael Vera" in Syncro (the Cobalt one, and a former OneSource tech `rv@onesource.tech`); only the Cobalt one is excluded.
 
+**Closed tickets:** the model keeps only tickets completed in the **last 35 days** (plus all open tickets). The ~8,000-row Resolved history is dropped — it serves no ops purpose and the 35-day window still feeds CLOSED (WK), NET (WK), and the team board's Closed 30d column. Model is ~260 rows.
+
 - `Assigned To` / `Assigned Email` (hidden) / `Tech Group` parsed from the `user` JSON blob.
 - `Age (Days)` = since created, `Idle (Days)` = since last update, `Overdue By (Days)` = past the Syncro `due_date` — all computed at refresh time (`DateTime.LocalNow()`), so they're accurate to the last hourly refresh.
 - `Attention Score` = age + idle×2 + 30 if overdue (available for sorting; the list currently sorts by Idle).
