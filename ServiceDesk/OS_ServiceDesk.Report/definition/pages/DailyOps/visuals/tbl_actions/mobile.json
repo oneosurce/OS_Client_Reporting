@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainerMobileState/2.0.0/schema.json",
   "position": {
     "x": 0,
-    "y": 384,
-    "z": 10000,
+    "y": 552,
+    "z": 8000,
     "width": 324,
-    "height": 384,
-    "tabOrder": 10000
+    "height": 380,
+    "tabOrder": 8000
   }
 }
