@@ -55,9 +55,9 @@ table _Measures
 		displayFolder: Window
 		lineageTag: f0000009-0000-4001-9009-000000000011
 
-	/// Total invoiced (incl. tax) in the selected window.
+	/// Total invoiced, excl. sales tax, in the selected window.
 	measure Billed =
-			CALCULATE ( SUM ( Invoices[Total] ), REMOVEFILTERS ( 'Date' ), DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) )
+			CALCULATE ( SUM ( Invoices[Subtotal] ), REMOVEFILTERS ( 'Date' ), DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) )
 		formatString: \$#,0
 		displayFolder: Revenue
 		lineageTag: f0000009-0000-4001-9009-000000000020
@@ -66,7 +66,7 @@ table _Measures
 			VAR MinD = [_Window Min]
 			VAR Len = [_Window Max] - MinD + 1
 			RETURN
-				CALCULATE ( SUM ( Invoices[Total] ), REMOVEFILTERS ( 'Date' ), DATESINPERIOD ( 'Date'[Date], MinD - 1, - Len, DAY ) )
+				CALCULATE ( SUM ( Invoices[Subtotal] ), REMOVEFILTERS ( 'Date' ), DATESINPERIOD ( 'Date'[Date], MinD - 1, - Len, DAY ) )
 		formatString: \$#,0
 		displayFolder: Revenue
 		lineageTag: f0000009-0000-4001-9009-000000000021
@@ -124,9 +124,9 @@ table _Measures
 		displayFolder: Revenue
 		lineageTag: f0000009-0000-4001-9009-000000000027
 
-	/// Unpaid billable invoices, as of today (ignores the date window).
+	/// Unpaid billable invoices, excl. sales tax, as of today (ignores the date window).
 	measure Outstanding =
-			CALCULATE ( SUM ( Invoices[Total] ), Invoices[Is Paid] = FALSE, Invoices[Is Billable] = TRUE, REMOVEFILTERS ( 'Date' ) )
+			CALCULATE ( SUM ( Invoices[Subtotal] ), Invoices[Is Paid] = FALSE, Invoices[Is Billable] = TRUE, REMOVEFILTERS ( 'Date' ) )
 		formatString: \$#,0
 		displayFolder: AR
 		lineageTag: f0000009-0000-4001-9009-000000000030
@@ -136,7 +136,7 @@ table _Measures
 				CALCULATE ( COUNTROWS ( Invoices ), Invoices[Is Paid] = FALSE, Invoices[Is Billable] = TRUE, REMOVEFILTERS ( 'Date' ) )
 			VAR Old =
 				CALCULATE (
-					SUM ( Invoices[Total] ),
+					SUM ( Invoices[Subtotal] ),
 					Invoices[Is Paid] = FALSE,
 					Invoices[Is Billable] = TRUE,
 					REMOVEFILTERS ( 'Date' ),
@@ -157,7 +157,7 @@ table _Measures
 				SWITCH ( B, "0–30 days", 30, "31–60 days", 60, "61–90 days", 90, "90+ days", 100000, 100000 )
 			RETURN
 				CALCULATE (
-					SUM ( Invoices[Total] ),
+					SUM ( Invoices[Subtotal] ),
 					Invoices[Is Paid] = FALSE,
 					Invoices[Is Billable] = TRUE,
 					REMOVEFILTERS ( 'Date' ),
@@ -197,7 +197,7 @@ table _Measures
 
 	/// Billed, clipped to the window so the monthly chart auto-zooms with the Range picker.
 	measure Billings =
-			CALCULATE ( SUM ( Invoices[Total] ), KEEPFILTERS ( DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) ) )
+			CALCULATE ( SUM ( Invoices[Subtotal] ), KEEPFILTERS ( DATESBETWEEN ( 'Date'[Date], [_Window Min], [_Window Max] ) ) )
 		formatString: \$#,0
 		displayFolder: Trend
 		lineageTag: f0000009-0000-4001-9009-000000000050
@@ -228,7 +228,7 @@ table _Measures
 						Invoices,
 						Invoices[Customer ID],
 						'Date'[Year Month Sort],
-						"Amt", CALCULATE ( SUM ( Invoices[Total] ) )
+						"Amt", CALCULATE ( SUM ( Invoices[Subtotal] ) )
 					),
 					Invoices[Is Billable] = TRUE,
 					REMOVEFILTERS ( 'Date' ),
@@ -254,7 +254,7 @@ table _Measures
 			VAR LastYM = YEAR ( T ) * 12 + MONTH ( T ) - 1
 			VAR Monthly =
 				CALCULATETABLE (
-					ADDCOLUMNS ( VALUES ( 'Date'[Year Month Sort] ), "t", CALCULATE ( SUM ( Invoices[Total] ) ) ),
+					ADDCOLUMNS ( VALUES ( 'Date'[Year Month Sort] ), "t", CALCULATE ( SUM ( Invoices[Subtotal] ) ) ),
 					Invoices[Is Billable] = TRUE,
 					REMOVEFILTERS ( 'Date' ),
 					'Date'[Year Month Sort] >= FirstYM,
