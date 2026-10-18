@@ -1,10 +1,10 @@
 table Alerts
-	lineageTag: 22222222-0000-0000-0000-000000000001
+	lineageTag: 88888888-0000-0000-0000-000000000001
 
 	column AlertId
 		dataType: string
 		isHidden
-		lineageTag: 22222222-0001-0000-0000-000000000001
+		lineageTag: 88888888-0001-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: AlertId
 
@@ -12,7 +12,7 @@ table Alerts
 
 	column AlertName
 		dataType: string
-		lineageTag: 22222222-0002-0000-0000-000000000001
+		lineageTag: 88888888-0002-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: AlertName
 
@@ -20,7 +20,7 @@ table Alerts
 
 	column Severity
 		dataType: string
-		lineageTag: 22222222-0003-0000-0000-000000000001
+		lineageTag: 88888888-0003-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: Severity
 
@@ -30,7 +30,7 @@ table Alerts
 		dataType: int64
 		isHidden
 		formatString: 0
-		lineageTag: 22222222-0003-0001-0000-000000000001
+		lineageTag: 88888888-0003-0001-0000-000000000001
 		summarizeBy: none
 		sourceColumn: SeveritySort
 		sortByColumn: SeveritySort
@@ -39,7 +39,7 @@ table Alerts
 
 	column Status
 		dataType: string
-		lineageTag: 22222222-0004-0000-0000-000000000001
+		lineageTag: 88888888-0004-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: Status
 
@@ -47,7 +47,7 @@ table Alerts
 
 	column Tactics
 		dataType: string
-		lineageTag: 22222222-0005-0000-0000-000000000001
+		lineageTag: 88888888-0005-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: Tactics
 
@@ -56,7 +56,7 @@ table Alerts
 	column AlertTime
 		dataType: dateTime
 		formatString: General Date
-		lineageTag: 22222222-0006-0000-0000-000000000001
+		lineageTag: 88888888-0006-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: AlertTime
 
@@ -66,7 +66,7 @@ table Alerts
 		dataType: dateTime
 		formatString: Short Date
 		isHidden
-		lineageTag: 22222222-0006-0001-0000-000000000001
+		lineageTag: 88888888-0006-0001-0000-000000000001
 		summarizeBy: none
 		sourceColumn: AlertDate
 
@@ -74,7 +74,7 @@ table Alerts
 
 	column ClientWorkspace
 		dataType: string
-		lineageTag: 22222222-0007-0000-0000-000000000001
+		lineageTag: 88888888-0007-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: ClientWorkspace
 

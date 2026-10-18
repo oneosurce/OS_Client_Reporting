@@ -1,116 +1,128 @@
-/// Hidden table that hosts all report-level DAX measures.
 table _Measures
 	lineageTag: 00000000-ffff-0000-0000-000000000001
 	isHidden
 
-	/// ── SOC Overview ──────────────────────────────────────────────────────────────
-	measure [Total Incidents] =
+	measure 'Total Incidents' =
 			COUNTROWS(Incidents)
 		formatString: 0
-		lineageTag: 00000000-ffff-0001-0000-000000000001
 		displayFolder: SOC Overview
+		lineageTag: 00000000-ffff-0001-0000-000000000001
 
-	measure [Open Incidents] =
+	measure 'Open Incidents' =
 			CALCULATE(COUNTROWS(Incidents), Incidents[Status] = "New" || Incidents[Status] = "Active")
 		formatString: 0
-		lineageTag: 00000000-ffff-0002-0000-000000000001
 		displayFolder: SOC Overview
+		lineageTag: 00000000-ffff-0002-0000-000000000001
 
-	measure [High Severity Incidents] =
+	measure 'High Severity Incidents' =
 			CALCULATE(COUNTROWS(Incidents), Incidents[Severity] = "High")
 		formatString: 0
-		lineageTag: 00000000-ffff-0003-0000-000000000001
 		displayFolder: SOC Overview
+		lineageTag: 00000000-ffff-0003-0000-000000000001
 
-	measure [Avg Resolution Hours] =
+	measure 'Avg Resolution Hours' =
 			AVERAGEX(FILTER(Incidents, NOT ISBLANK(Incidents[ResolutionHours])), Incidents[ResolutionHours])
 		formatString: 0.0
-		lineageTag: 00000000-ffff-0004-0000-000000000001
 		displayFolder: SOC Overview
+		lineageTag: 00000000-ffff-0004-0000-000000000001
 
-	measure [Total Alerts] =
+	measure 'Total Alerts' =
 			COUNTROWS(Alerts)
 		formatString: 0
-		lineageTag: 00000000-ffff-0005-0000-000000000001
 		displayFolder: SOC Overview
+		lineageTag: 00000000-ffff-0005-0000-000000000001
 
-	measure [Tenants Monitored] =
+	measure 'Tenants Monitored' =
 			DISTINCTCOUNT(Incidents[ClientWorkspace])
 		formatString: 0
-		lineageTag: 00000000-ffff-0006-0000-000000000001
 		displayFolder: SOC Overview
+		lineageTag: 00000000-ffff-0006-0000-000000000001
 
-	/// ── Threat Activity ───────────────────────────────────────────────────────────
-	measure [Failed Sign-ins] =
-			CALCULATE(SUMX(IdentityThreats, IdentityThreats[EventCount]),
+	measure 'Failed Sign-ins' =
+			CALCULATE(
+				SUMX(IdentityThreats, IdentityThreats[EventCount]),
 				IdentityThreats[EventType] <> "Brute Force" &&
 				IdentityThreats[EventType] <> "MFA Disabled" &&
 				IdentityThreats[EventType] <> "MFA Method Removed" &&
-				IdentityThreats[EventType] <> "MFA Rejected")
+				IdentityThreats[EventType] <> "MFA Rejected"
+			)
 		formatString: 0
-		lineageTag: 00000000-ffff-0007-0000-000000000001
 		displayFolder: Threat Activity
+		lineageTag: 00000000-ffff-0007-0000-000000000001
 
-	measure [Brute Force Events] =
+	measure 'Brute Force Events' =
 			CALCULATE(COUNTROWS(IdentityThreats), IdentityThreats[EventType] = "Brute Force")
 		formatString: 0
-		lineageTag: 00000000-ffff-0008-0000-000000000001
 		displayFolder: Threat Activity
+		lineageTag: 00000000-ffff-0008-0000-000000000001
 
-	measure [MFA Changes] =
-			CALCULATE(SUMX(IdentityThreats, IdentityThreats[EventCount]),
+	measure 'MFA Changes' =
+			CALCULATE(
+				SUMX(IdentityThreats, IdentityThreats[EventCount]),
 				IdentityThreats[EventType] = "MFA Disabled" ||
 				IdentityThreats[EventType] = "MFA Method Removed" ||
-				IdentityThreats[EventType] = "MFA Rejected")
+				IdentityThreats[EventType] = "MFA Rejected"
+			)
 		formatString: 0
-		lineageTag: 00000000-ffff-0009-0000-000000000001
 		displayFolder: Threat Activity
+		lineageTag: 00000000-ffff-0009-0000-000000000001
 
-	measure [TI Matches] =
+	measure 'TI Matches' =
 			COUNTROWS(ThreatIntelMatches)
 		formatString: 0
-		lineageTag: 00000000-ffff-0010-0000-000000000001
 		displayFolder: Threat Activity
+		lineageTag: 00000000-ffff-0010-0000-000000000001
 
-	/// ── Security Posture ──────────────────────────────────────────────────────────
-	measure [Rules Fired (30d)] =
+	measure 'Rules Fired (30d)' =
 			SUMX(RulesFired, RulesFired[FiringCount])
 		formatString: 0
-		lineageTag: 00000000-ffff-0011-0000-000000000001
 		displayFolder: Security Posture
+		lineageTag: 00000000-ffff-0011-0000-000000000001
 
-	measure [Distinct Rules Active] =
+	measure 'Distinct Rules Active' =
 			DISTINCTCOUNT(RulesFired[RuleName])
 		formatString: 0
-		lineageTag: 00000000-ffff-0012-0000-000000000001
 		displayFolder: Security Posture
+		lineageTag: 00000000-ffff-0012-0000-000000000001
 
-	measure [Azure Activity Events] =
+	measure 'Azure Activity Events' =
 			COUNTROWS(AzureActivityEvents)
 		formatString: 0
-		lineageTag: 00000000-ffff-0013-0000-000000000001
 		displayFolder: Security Posture
+		lineageTag: 00000000-ffff-0013-0000-000000000001
 
-	/// ── Trends (WoW deltas) ───────────────────────────────────────────────────────
-	measure [Incidents WoW Δ%] =
+	measure 'Incidents WoW Δ%' =
 			VAR CurrWk = CALCULATE([Total Incidents], DATESINPERIOD(Date[Date], LASTDATE(Date[Date]), -7, DAY))
 			VAR PrevWk = CALCULATE([Total Incidents], DATESINPERIOD(Date[Date], LASTDATE(Date[Date]) - 7, -7, DAY))
 			RETURN IF(PrevWk = 0, BLANK(), DIVIDE(CurrWk - PrevWk, PrevWk))
 		formatString: 0%;-0%;0%
-		lineageTag: 00000000-ffff-0014-0000-000000000001
 		displayFolder: Trends
+		lineageTag: 00000000-ffff-0014-0000-000000000001
 
-	measure [Alerts WoW Δ%] =
+	measure 'Alerts WoW Δ%' =
 			VAR CurrWk = CALCULATE([Total Alerts], DATESINPERIOD(Date[Date], LASTDATE(Date[Date]), -7, DAY))
 			VAR PrevWk = CALCULATE([Total Alerts], DATESINPERIOD(Date[Date], LASTDATE(Date[Date]) - 7, -7, DAY))
 			RETURN IF(PrevWk = 0, BLANK(), DIVIDE(CurrWk - PrevWk, PrevWk))
 		formatString: 0%;-0%;0%
-		lineageTag: 00000000-ffff-0015-0000-000000000001
 		displayFolder: Trends
+		lineageTag: 00000000-ffff-0015-0000-000000000001
+
+	column Column
+		dataType: string
+		isHidden
+		lineageTag: 00000000-ffff-c001-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Column
+
+		annotation SummarizationSetBy = Automatic
 
 	partition _Measures = m
 		mode: import
-		source = #table({}, {{}})
+		source =
+				let
+					Source = #table(type table [Column = text], {})
+				in
+					Source
 
 	annotation PBI_ResultType = Table
 
