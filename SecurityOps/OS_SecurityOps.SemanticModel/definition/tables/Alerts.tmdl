@@ -23,6 +23,7 @@ table Alerts
 		lineageTag: 88888888-0003-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: Severity
+		sortByColumn: SeveritySort
 
 		annotation SummarizationSetBy = User
 
@@ -33,7 +34,6 @@ table Alerts
 		lineageTag: 88888888-0003-0001-0000-000000000001
 		summarizeBy: none
 		sourceColumn: SeveritySort
-		sortByColumn: SeveritySort
 
 		annotation SummarizationSetBy = User
 
