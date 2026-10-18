@@ -1,0 +1,94 @@
+/// Continuous date dimension spanning the last 90 days from today.
+/// Supports all time-intelligence visuals without requiring DAX calendar functions.
+table Date
+	lineageTag: 11111111-0000-0000-0000-000000000001
+	isHidden
+
+	column Date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 11111111-0001-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Date
+		isKey
+		annotation SummarizationSetBy = User
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 11111111-0002-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Year
+		annotation SummarizationSetBy = User
+
+	column MonthNum
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 11111111-0003-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: MonthNum
+		annotation SummarizationSetBy = User
+
+	column MonthName
+		dataType: string
+		lineageTag: 11111111-0004-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: MonthName
+		sortByColumn: MonthNum
+		annotation SummarizationSetBy = User
+
+	column WeekNum
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 11111111-0005-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: WeekNum
+		annotation SummarizationSetBy = User
+
+	column DayOfWeek
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 11111111-0006-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: DayOfWeek
+		annotation SummarizationSetBy = User
+
+	column DayName
+		dataType: string
+		isHidden
+		lineageTag: 11111111-0007-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: DayName
+		sortByColumn: DayOfWeek
+		annotation SummarizationSetBy = User
+
+	partition Date = m
+		mode: import
+		source =
+				let
+					Today    = Date.From(DateTime.LocalNow()),
+					Start    = Date.AddDays(Today, -89),
+					DateList = List.Dates(Start, 90, #duration(1, 0, 0, 0)),
+					DateTbl  = Table.FromList(DateList, Splitter.SplitByNothing(), {"Date"}),
+					Typed    = Table.TransformColumnTypes(DateTbl, {{"Date", type date}}),
+					WithCols = Table.AddColumn(
+						Table.AddColumn(
+							Table.AddColumn(
+								Table.AddColumn(
+									Table.AddColumn(
+										Table.AddColumn(Typed,
+											"Year",     each Date.Year([Date]),      Int64.Type),
+										"MonthNum",     each Date.Month([Date]),     Int64.Type),
+									"MonthName",        each Date.MonthName([Date]), type text),
+								"WeekNum",          each Date.WeekOfYear([Date]),    Int64.Type),
+							"DayOfWeek",            each Date.DayOfWeek([Date]),     Int64.Type),
+						"DayName",              each Date.DayOfWeekName([Date]),     type text),
+					AsDateTime = Table.TransformColumnTypes(WithCols, {{"Date", type datetime}})
+				in
+					AsDateTime
+
+	annotation PBI_ResultType = Table
+

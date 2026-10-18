@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "diagrams": [
+    {
+      "name": "SecurityOps Data Model",
+      "ordinal": 0,
+      "nodes": [
+        { "name": "Date",                 "x": 420, "y": 20,  "width": 160, "height": 180 },
+        { "name": "Incidents",            "x": 20,  "y": 240, "width": 180, "height": 340 },
+        { "name": "Alerts",               "x": 220, "y": 240, "width": 160, "height": 240 },
+        { "name": "IdentityThreats",      "x": 400, "y": 240, "width": 160, "height": 220 },
+        { "name": "ThreatIntelMatches",   "x": 580, "y": 240, "width": 160, "height": 200 },
+        { "name": "AzureActivityEvents",  "x": 760, "y": 240, "width": 180, "height": 220 },
+        { "name": "RulesFired",           "x": 960, "y": 240, "width": 160, "height": 200 },
+        { "name": "TenantRegistry",       "x": 420, "y": 620, "width": 200, "height": 180 },
+        { "name": "_Measures",            "x": 760, "y": 620, "width": 160, "height": 400 }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+/// Key security-relevant Azure Activity log events across all workspaces.
+/// Filtered to operations that commonly indicate suspicious or high-risk activity.
+table AzureActivityEvents
+	lineageTag: 66666666-0000-0000-0000-000000000001
+
+	column OperationName
+		dataType: string
+		lineageTag: 66666666-0001-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: OperationName
+		annotation SummarizationSetBy = User
+
+	column Caller
+		dataType: string
+		lineageTag: 66666666-0002-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Caller
+		annotation SummarizationSetBy = User
+
+	column ResourceGroup
+		dataType: string
+		lineageTag: 66666666-0003-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ResourceGroup
+		annotation SummarizationSetBy = User
+
+	column ResourceType
+		dataType: string
+		lineageTag: 66666666-0004-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ResourceType
+		annotation SummarizationSetBy = User
+
+	column ResultType
+		dataType: string
+		lineageTag: 66666666-0005-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ResultType
+		annotation SummarizationSetBy = User
+
+	column Category
+		dataType: string
+		lineageTag: 66666666-0006-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Category
+		annotation SummarizationSetBy = User
+
+	column EventTime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 66666666-0007-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: EventTime
+		annotation SummarizationSetBy = User
+
+	column EventDate
+		dataType: dateTime
+		formatString: Short Date
+		isHidden
+		lineageTag: 66666666-0007-0001-0000-000000000001
+		summarizeBy: none
+		sourceColumn: EventDate
+		annotation SummarizationSetBy = User
+
+	column ClientWorkspace
+		dataType: string
+		lineageTag: 66666666-0008-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ClientWorkspace
+		annotation SummarizationSetBy = User
+
+	partition AzureActivityEvents = m
+		mode: import
+		source =
+				let
+					KQL = fnBuildUnion("AzureActivity") & "
+| where TimeGenerated > ago(30d)
+| where CategoryValue in (""Administrative"", ""Security"", ""Policy"")
+| where ActivityStatusValue in (""Success"", ""Failure"")
+| where OperationNameValue !has ""read"" and OperationNameValue !has ""/get""
+      and OperationNameValue !has ""/list""
+| project OperationName = OperationNameValue, Caller, ResourceGroup,
+    ResourceType = tostring(split(OperationNameValue, ""/providers/"")[1]),
+    ResultType   = ActivityStatusValue,
+    Category     = CategoryValue,
+    EventTime    = TimeGenerated,
+    EventDate    = bin(TimeGenerated, 1d),
+    ClientWorkspace",
+					Source = AzureLogAnalytics.Contents(
+						CentralWorkspaceId,
+						[Query = KQL, Timeout = #duration(0, 0, 4, 0)]
+					),
+					Typed = Table.TransformColumnTypes(Source, {
+						{"EventTime", type datetime},
+						{"EventDate", type datetime}
+					})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table
+

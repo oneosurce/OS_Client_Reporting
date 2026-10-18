@@ -1,0 +1,84 @@
+/// One row per managed Sentinel workspace.
+/// To add a new client tenant:
+///   1. Add a row here (IsManagingWorkspace = false).
+///   2. Ensure Lighthouse delegation is in place and the workspace is a
+///      Workspace Manager member in the AllClients group.
+///   That's it — fnBuildUnion picks up the new workspace on the next refresh.
+table TenantRegistry
+	lineageTag: 22222222-0000-0000-0000-000000000001
+
+	column WorkspaceName
+		dataType: string
+		lineageTag: 22222222-0001-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: WorkspaceName
+
+		annotation SummarizationSetBy = User
+
+	column ClientName
+		dataType: string
+		lineageTag: 22222222-0002-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ClientName
+
+		annotation SummarizationSetBy = User
+
+	column WorkspaceId
+		dataType: string
+		isHidden
+		lineageTag: 22222222-0003-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: WorkspaceId
+
+		annotation SummarizationSetBy = User
+
+	column WorkspaceResourceId
+		dataType: string
+		isHidden
+		lineageTag: 22222222-0004-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: WorkspaceResourceId
+
+		annotation SummarizationSetBy = User
+
+	column IsManagingWorkspace
+		dataType: boolean
+		isHidden
+		lineageTag: 22222222-0005-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: IsManagingWorkspace
+
+		annotation SummarizationSetBy = User
+
+	partition TenantRegistry = m
+		mode: import
+		source =
+				// ─────────────────────────────────────────────────────────────────
+				// ADD NEW CLIENT TENANTS HERE — one row per managed Sentinel workspace.
+				// WorkspaceResourceId must be the full ARM resource ID of the LAW.
+				// ─────────────────────────────────────────────────────────────────
+				let
+					Rows = {
+						[   WorkspaceName       = "OS-Sentinel-0",
+							ClientName          = "OneSource",
+							WorkspaceId         = "046d4a05-36e4-4b43-a67a-309741cfc1c7",
+							WorkspaceResourceId = "/subscriptions/42a6ebff-536a-4d2a-ba20-43225526bef8/resourceGroups/Sentinel/providers/Microsoft.OperationalInsights/workspaces/OS-Sentinel-0",
+							IsManagingWorkspace = true  ],
+						[   WorkspaceName       = "FWW-Sentinel-0",
+							ClientName          = "FW Walton",
+							WorkspaceId         = "5ee59a3e-18b9-4dc5-9bef-f5c8c7d8b3c4",
+							WorkspaceResourceId = "/subscriptions/dbb769af-50cb-4d0a-bf54-ca43e2b26539/resourceGroups/Sentinel/providers/Microsoft.OperationalInsights/workspaces/FWW-Sentinel-0",
+							IsManagingWorkspace = false ]
+					},
+					Source = Table.FromRecords(Rows, type table [
+						WorkspaceName       = text,
+						ClientName          = text,
+						WorkspaceId         = text,
+						WorkspaceResourceId = text,
+						IsManagingWorkspace = logical
+					])
+				in
+					Source
+
+	annotation PBI_ResultType = Table
+

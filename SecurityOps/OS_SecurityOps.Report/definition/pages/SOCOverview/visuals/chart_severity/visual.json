@@ -1,0 +1,36 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "name": "chart_severity",
+  "position": { "x": 32, "y": 486, "z": 30, "width": 290, "height": 210, "tabOrder": 30 },
+  "visual": {
+    "visualType": "donutChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "Severity" } },
+              "queryRef": "Incidents.Severity"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Total Incidents" } },
+              "queryRef": "_Measures.Total Incidents",
+              "nativeQueryRef": "Total Incidents"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "background": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#FFFFFF'" } } } } }, "transparency": { "expr": { "Literal": { "Value": "0" } } } } }],
+      "border": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#E3E8F0'" } } } } }, "radius": { "expr": { "Literal": { "Value": "8" } } } } }],
+      "title": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "text": { "expr": { "Literal": { "Value": "'By Severity'" } } }, "fontColor": { "solid": { "color": { "expr": { "Literal": { "Value": "'#1F2A5A'" } } } } }, "bold": { "expr": { "Literal": { "Value": "true" } } }, "fontSize": { "expr": { "Literal": { "Value": "10" } } } } }],
+      "padding": [{ "properties": { "left": { "expr": { "Literal": { "Value": "10" } } }, "right": { "expr": { "Literal": { "Value": "10" } } }, "top": { "expr": { "Literal": { "Value": "6" } } }, "bottom": { "expr": { "Literal": { "Value": "10" } } } } }],
+      "visualHeader": [{ "properties": { "show": { "expr": { "Literal": { "Value": "false" } } } } }]
+    }
+  }
+}

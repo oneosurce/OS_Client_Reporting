@@ -1,0 +1,46 @@
+/// Central Log Analytics workspace ID (OS-Sentinel-0).
+/// All KQL queries target this workspace; cross-workspace union rows are pulled
+/// via workspace("<ResourceId>") references built by fnBuildUnion.
+expression CentralWorkspaceId = "046d4a05-36e4-4b43-a67a-309741cfc1c7"
+	meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 11111111-0000-0000-0000-000000000001
+
+	annotation PBI_ResultType = Text
+
+/// Builds a KQL union clause that covers the central workspace plus every
+/// non-managing workspace in TenantRegistry.  Adding a new client tenant is a
+/// single-row change in TenantRegistry — this function re-derives the union
+/// automatically on the next dataset refresh.
+///
+/// Parameters
+///   tableName  – KQL table name, e.g. "SecurityIncident"
+///
+/// Returns a KQL string of the form:
+///   union
+///     (SecurityIncident | extend ClientWorkspace = "OS-Sentinel-0"),
+///     (workspace("/subscriptions/.../FWW-Sentinel-0").SecurityIncident
+///          | extend ClientWorkspace = "FWW-Sentinel-0"),
+///     ...
+expression fnBuildUnion =
+	(tableName as text) as text =>
+		let
+			Central  = Table.SelectRows(TenantRegistry, each [IsManagingWorkspace] = true){0},
+			Members  = Table.SelectRows(TenantRegistry, each [IsManagingWorkspace] = false),
+
+			CentralPart = "    (" & tableName
+				& " | extend ClientWorkspace = """ & Central[WorkspaceName] & """)",
+
+			MemberParts = List.Transform(
+				Table.ToRows(Table.SelectColumns(Members, {"WorkspaceResourceId", "WorkspaceName"})),
+				each "    (workspace(""" & _{0} & """)." & tableName
+					& " | extend ClientWorkspace = """ & _{1} & """)"
+			),
+
+			AllParts  = List.Combine({{CentralPart}, MemberParts}),
+			UnionKQL  = "union" & Character.FromNumber(10) & Text.Combine(AllParts, "," & Character.FromNumber(10))
+		in
+			UnionKQL
+	lineageTag: 11111111-0000-0000-0000-000000000002
+
+	annotation PBI_ResultType = Function
+

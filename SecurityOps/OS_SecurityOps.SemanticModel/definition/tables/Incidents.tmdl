@@ -1,0 +1,161 @@
+table Incidents
+	lineageTag: 33333333-0000-0000-0000-000000000001
+
+	column IncidentName
+		dataType: string
+		isHidden
+		lineageTag: 33333333-0001-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: IncidentName
+		annotation SummarizationSetBy = User
+
+	column Title
+		dataType: string
+		lineageTag: 33333333-0002-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Title
+		annotation SummarizationSetBy = User
+
+	column Severity
+		dataType: string
+		lineageTag: 33333333-0003-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Severity
+		annotation SummarizationSetBy = User
+
+	column SeveritySort
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 33333333-0003-0001-0000-000000000001
+		summarizeBy: none
+		sourceColumn: SeveritySort
+		sortByColumn: SeveritySort
+		annotation SummarizationSetBy = User
+
+	column Status
+		dataType: string
+		lineageTag: 33333333-0004-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Status
+		annotation SummarizationSetBy = User
+
+	column Classification
+		dataType: string
+		lineageTag: 33333333-0005-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Classification
+		annotation SummarizationSetBy = User
+
+	column IncidentUrl
+		dataType: string
+		isHidden
+		lineageTag: 33333333-0006-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: IncidentUrl
+		annotation SummarizationSetBy = User
+
+	column CreatedTime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 33333333-0007-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: CreatedTime
+		annotation SummarizationSetBy = User
+
+	column CreatedDate
+		dataType: dateTime
+		isHidden
+		formatString: Short Date
+		lineageTag: 33333333-0007-0001-0000-000000000001
+		summarizeBy: none
+		sourceColumn: CreatedDate
+		annotation SummarizationSetBy = User
+
+	column LastModifiedTime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 33333333-0008-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: LastModifiedTime
+		annotation SummarizationSetBy = User
+
+	column ClosedTime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 33333333-0009-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ClosedTime
+		annotation SummarizationSetBy = User
+
+	column Owner
+		dataType: string
+		lineageTag: 33333333-0010-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Owner
+		annotation SummarizationSetBy = User
+
+	column AlertsCount
+		dataType: int64
+		formatString: 0
+		lineageTag: 33333333-0011-0000-0000-000000000001
+		summarizeBy: sum
+		sourceColumn: AlertsCount
+		annotation SummarizationSetBy = User
+
+	column Tactics
+		dataType: string
+		lineageTag: 33333333-0012-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Tactics
+		annotation SummarizationSetBy = User
+
+	column ClientWorkspace
+		dataType: string
+		lineageTag: 33333333-0013-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ClientWorkspace
+		annotation SummarizationSetBy = User
+
+	column ResolutionHours
+		dataType: double
+		formatString: 0.0
+		lineageTag: 33333333-0014-0000-0000-000000000001
+		summarizeBy: average
+		sourceColumn: ResolutionHours
+		annotation SummarizationSetBy = User
+
+	partition Incidents = m
+		mode: import
+		source =
+				let
+					UnionClause = fnBuildUnion("SecurityIncident"),
+					KQL = UnionClause & "
+| where TimeGenerated > ago(30d)
+| extend
+    SeveritySort = case(Severity == ""High"", 1, Severity == ""Medium"", 2, Severity == ""Low"", 3, 4),
+    Owner        = tostring(Owner.assignedTo),
+    Tactics      = tostring(AdditionalData.tactics),
+    ResolutionHours = iff(isnotnull(ClosedTime), datetime_diff('hour', ClosedTime, CreatedTime), int(null)),
+    CreatedDate  = bin(CreatedTime, 1d)
+| project IncidentName, Title, Severity, SeveritySort, Status, Classification,
+          IncidentUrl, CreatedTime, CreatedDate, LastModifiedTime, ClosedTime,
+          Owner, AlertsCount, Tactics, ClientWorkspace, ResolutionHours",
+					Source  = AzureLogAnalytics.Contents(
+						CentralWorkspaceId,
+						[Query = KQL, Timeout = #duration(0, 0, 4, 0)]
+					),
+					Typed = Table.TransformColumnTypes(Source, {
+						{"CreatedTime",      type datetime},
+						{"CreatedDate",      type datetime},
+						{"LastModifiedTime", type datetime},
+						{"ClosedTime",       type datetime},
+						{"AlertsCount",      Int64.Type},
+						{"SeveritySort",     Int64.Type},
+						{"ResolutionHours",  type number}
+					})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table
+

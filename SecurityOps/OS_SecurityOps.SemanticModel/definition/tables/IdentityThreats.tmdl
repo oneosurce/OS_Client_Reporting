@@ -1,0 +1,116 @@
+/// Aggregated identity threat events from sign-in logs across all workspaces.
+/// Summarised to (EventType, UserPrincipalName, IPAddress, Country, EventDate, ClientWorkspace)
+/// to keep the import size small while supporting all planned visuals.
+table IdentityThreats
+	lineageTag: 44444444-0000-0000-0000-000000000001
+
+	column EventType
+		dataType: string
+		lineageTag: 44444444-0001-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: EventType
+		annotation SummarizationSetBy = User
+
+	column UserPrincipalName
+		dataType: string
+		lineageTag: 44444444-0002-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: UserPrincipalName
+		annotation SummarizationSetBy = User
+
+	column IPAddress
+		dataType: string
+		lineageTag: 44444444-0003-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: IPAddress
+		annotation SummarizationSetBy = User
+
+	column Country
+		dataType: string
+		lineageTag: 44444444-0004-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Country
+		annotation SummarizationSetBy = User
+
+	column EventCount
+		dataType: int64
+		formatString: 0
+		lineageTag: 44444444-0005-0000-0000-000000000001
+		summarizeBy: sum
+		sourceColumn: EventCount
+		annotation SummarizationSetBy = User
+
+	column EventDate
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 44444444-0006-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: EventDate
+		annotation SummarizationSetBy = User
+
+	column ClientWorkspace
+		dataType: string
+		lineageTag: 44444444-0007-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ClientWorkspace
+		annotation SummarizationSetBy = User
+
+	partition IdentityThreats = m
+		mode: import
+		source =
+				let
+					// --- Failed sign-ins (result type not Success) ---
+					FailedSignIns = fnBuildUnion("SigninLogs") & "
+| where TimeGenerated > ago(30d)
+| where ResultType != 0
+| extend EventType = case(
+    ResultType == 50126, ""Invalid Credentials"",
+    ResultType == 50053, ""Account Locked"",
+    ResultType == 50057, ""Account Disabled"",
+    ""Failed Sign-in"")
+| summarize EventCount = count() by EventType, UserPrincipalName, IPAddress,
+    Country = tostring(LocationDetails.countryOrRegion),
+    EventDate = bin(TimeGenerated, 1d), ClientWorkspace",
+
+					// --- MFA events (rejected or disabled) ---
+					MFAEvents = fnBuildUnion("AuditLogs") & "
+| where TimeGenerated > ago(30d)
+| where OperationName in (""Disable Strong Authentication"", ""User registered security info"",
+                          ""User deleted security info"")
+    or (OperationName == ""Sign-in activity"" and ResultDescription has ""MFA"" and ResultDescription has ""denied"")
+| extend EventType = case(
+    OperationName has ""Disable"", ""MFA Disabled"",
+    OperationName has ""deleted"", ""MFA Method Removed"",
+    ""MFA Rejected"")
+| extend UPN = tostring(InitiatedBy.user.userPrincipalName)
+| summarize EventCount = count() by EventType, UserPrincipalName = UPN, IPAddress = """",
+    Country = """", EventDate = bin(TimeGenerated, 1d), ClientWorkspace",
+
+					// --- Brute-force: 10+ failures from same IP in 1h ---
+					BruteForce = fnBuildUnion("SigninLogs") & "
+| where TimeGenerated > ago(30d)
+| where ResultType != 0
+| summarize FailCount = count() by IPAddress, UserPrincipalName, bin(TimeGenerated, 1h), ClientWorkspace,
+    Country = tostring(LocationDetails.countryOrRegion)
+| where FailCount >= 10
+| extend EventType = ""Brute Force"", EventCount = FailCount,
+    EventDate = bin(TimeGenerated, 1d)
+| project EventType, UserPrincipalName, IPAddress, Country, EventCount, EventDate, ClientWorkspace",
+
+					CombinedKQL = FailedSignIns & "
+| union (" & MFAEvents & ")
+| union (" & BruteForce & ")",
+
+					Source = AzureLogAnalytics.Contents(
+						CentralWorkspaceId,
+						[Query = CombinedKQL, Timeout = #duration(0, 0, 4, 0)]
+					),
+					Typed = Table.TransformColumnTypes(Source, {
+						{"EventCount", Int64.Type},
+						{"EventDate",  type datetime}
+					})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table
+

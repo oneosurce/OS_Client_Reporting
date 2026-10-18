@@ -1,0 +1,103 @@
+/// All SecurityAlert rows (non-TI) across all workspaces.
+/// Used for alert trend visuals and the Incident-to-Alert relationship.
+table Alerts
+	lineageTag: 22222222-0000-0000-0000-000000000001
+
+	column AlertId
+		dataType: string
+		isHidden
+		lineageTag: 22222222-0001-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: AlertId
+		annotation SummarizationSetBy = User
+
+	column AlertName
+		dataType: string
+		lineageTag: 22222222-0002-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: AlertName
+		annotation SummarizationSetBy = User
+
+	column Severity
+		dataType: string
+		lineageTag: 22222222-0003-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Severity
+		annotation SummarizationSetBy = User
+
+	column SeveritySort
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 22222222-0003-0001-0000-000000000001
+		summarizeBy: none
+		sourceColumn: SeveritySort
+		sortByColumn: SeveritySort
+		annotation SummarizationSetBy = User
+
+	column Status
+		dataType: string
+		lineageTag: 22222222-0004-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Status
+		annotation SummarizationSetBy = User
+
+	column Tactics
+		dataType: string
+		lineageTag: 22222222-0005-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Tactics
+		annotation SummarizationSetBy = User
+
+	column AlertTime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 22222222-0006-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: AlertTime
+		annotation SummarizationSetBy = User
+
+	column AlertDate
+		dataType: dateTime
+		formatString: Short Date
+		isHidden
+		lineageTag: 22222222-0006-0001-0000-000000000001
+		summarizeBy: none
+		sourceColumn: AlertDate
+		annotation SummarizationSetBy = User
+
+	column ClientWorkspace
+		dataType: string
+		lineageTag: 22222222-0007-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ClientWorkspace
+		annotation SummarizationSetBy = User
+
+	partition Alerts = m
+		mode: import
+		source =
+				let
+					KQL = fnBuildUnion("SecurityAlert") & "
+| where TimeGenerated > ago(30d)
+| where AlertName !startswith ""TI map"" and AlertName !startswith ""TI Map""
+| extend
+    SeveritySort = case(AlertSeverity == ""High"", 1, AlertSeverity == ""Medium"", 2,
+                        AlertSeverity == ""Low"", 3, 4),
+    Tactics      = tostring(Tactics)
+| project AlertId = SystemAlertId, AlertName, Severity = AlertSeverity, SeveritySort,
+    Status = AlertState, Tactics, AlertTime = StartTime,
+    AlertDate = bin(StartTime, 1d), ClientWorkspace",
+					Source = AzureLogAnalytics.Contents(
+						CentralWorkspaceId,
+						[Query = KQL, Timeout = #duration(0, 0, 4, 0)]
+					),
+					Typed = Table.TransformColumnTypes(Source, {
+						{"SeveritySort", Int64.Type},
+						{"AlertTime",    type datetime},
+						{"AlertDate",    type datetime}
+					})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,48 @@
+relationship Incidents_CreatedDate_Date
+	fromTable: Incidents
+	fromColumn: CreatedDate
+	toTable: Date
+	toColumn: Date
+	isActive: true
+	lineageTag: r0001-0000-0000-0000-000000000001
+
+relationship Alerts_AlertDate_Date
+	fromTable: Alerts
+	fromColumn: AlertDate
+	toTable: Date
+	toColumn: Date
+	isActive: true
+	lineageTag: r0002-0000-0000-0000-000000000001
+
+relationship IdentityThreats_EventDate_Date
+	fromTable: IdentityThreats
+	fromColumn: EventDate
+	toTable: Date
+	toColumn: Date
+	isActive: true
+	lineageTag: r0003-0000-0000-0000-000000000001
+
+relationship ThreatIntelMatches_AlertDate_Date
+	fromTable: ThreatIntelMatches
+	fromColumn: AlertDate
+	toTable: Date
+	toColumn: Date
+	isActive: true
+	lineageTag: r0004-0000-0000-0000-000000000001
+
+relationship AzureActivityEvents_EventDate_Date
+	fromTable: AzureActivityEvents
+	fromColumn: EventDate
+	toTable: Date
+	toColumn: Date
+	isActive: true
+	lineageTag: r0005-0000-0000-0000-000000000001
+
+relationship RulesFired_FiringDate_Date
+	fromTable: RulesFired
+	fromColumn: FiringDate
+	toTable: Date
+	toColumn: Date
+	isActive: true
+	lineageTag: r0006-0000-0000-0000-000000000001
+
