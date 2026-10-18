@@ -26,7 +26,7 @@ expression fnQueryLogAnalytics =
 				let
 						Result = AzureDataExplorer.Contents(
 								"https://ade.loganalytics.io/subscriptions/42a6ebff-536a-4d2a-ba20-43225526bef8/resourcegroups/Sentinel/providers/microsoft.operationalinsights/workspaces/OS-Sentinel-0",
-								"Default",
+								"OS-Sentinel-0",
 								kqlQuery,
 								[MaxRows=null, MaxSize=null, NoTruncate=true, AdditionalSetStatements=null]
 						)
