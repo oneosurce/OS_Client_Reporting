@@ -24,11 +24,11 @@ expression fnBuildUnion =
 expression fnQueryLogAnalytics =
 		(workspaceId as text, kqlQuery as text) as table =>
 				let
-						Url      = "https://api.loganalytics.io/v1/workspaces/" & workspaceId & "/query",
 						Response = Json.Document(
-								Web.Contents(Url, [
-										Content = Json.FromValue([query = kqlQuery]),
-										Headers = [#"Content-Type" = "application/json"]
+								Web.Contents("https://api.loganalytics.io", [
+										RelativePath = "/v1/workspaces/" & workspaceId & "/query",
+										Content      = Json.FromValue([query = kqlQuery]),
+										Headers      = [#"Content-Type" = "application/json"]
 								])
 						),
 						TableData = Response[tables]{0},
