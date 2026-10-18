@@ -1,5 +1,3 @@
-/// Alerts triggered by Threat Intelligence analytics rules across all workspaces.
-/// Identified by alert names that start with "TI map".
 table ThreatIntelMatches
 	lineageTag: 55555555-0000-0000-0000-000000000001
 
@@ -8,6 +6,7 @@ table ThreatIntelMatches
 		lineageTag: 55555555-0001-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: AlertName
+
 		annotation SummarizationSetBy = User
 
 	column IndicatorType
@@ -15,6 +14,7 @@ table ThreatIntelMatches
 		lineageTag: 55555555-0002-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: IndicatorType
+
 		annotation SummarizationSetBy = User
 
 	column Severity
@@ -22,6 +22,7 @@ table ThreatIntelMatches
 		lineageTag: 55555555-0003-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: Severity
+
 		annotation SummarizationSetBy = User
 
 	column MatchedEntity
@@ -29,6 +30,7 @@ table ThreatIntelMatches
 		lineageTag: 55555555-0004-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: MatchedEntity
+
 		annotation SummarizationSetBy = User
 
 	column AlertTime
@@ -37,6 +39,7 @@ table ThreatIntelMatches
 		lineageTag: 55555555-0005-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: AlertTime
+
 		annotation SummarizationSetBy = User
 
 	column AlertDate
@@ -46,6 +49,7 @@ table ThreatIntelMatches
 		lineageTag: 55555555-0005-0001-0000-000000000001
 		summarizeBy: none
 		sourceColumn: AlertDate
+
 		annotation SummarizationSetBy = User
 
 	column ClientWorkspace
@@ -53,26 +57,19 @@ table ThreatIntelMatches
 		lineageTag: 55555555-0006-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: ClientWorkspace
+
 		annotation SummarizationSetBy = User
 
 	partition ThreatIntelMatches = m
 		mode: import
 		source =
 				let
-					KQL = fnBuildUnion("SecurityAlert") & "
-| where TimeGenerated > ago(30d)
-| where AlertName startswith ""TI map"" or AlertName startswith ""TI Map""
-| extend IndicatorType = case(
-    AlertName has ""IP"",    ""IP Address"",
-    AlertName has ""Email"", ""Email"",
-    AlertName has ""URL"",   ""URL"",
-    AlertName has ""Domain"",""Domain"",
-    AlertName has ""Hash"",  ""File Hash"",
-    ""Other"")
-| extend MatchedEntity = tostring(Entities)
-| project AlertName, IndicatorType, AlertSeverity, MatchedEntity,
-    AlertTime = StartTime, AlertDate = bin(StartTime, 1d), ClientWorkspace
-| rename Severity = AlertSeverity",
+					KQL = fnBuildUnion("SecurityAlert")
+						& "#(lf)| where TimeGenerated > ago(30d)"
+						& "#(lf)| where AlertName startswith ""TI map"" or AlertName startswith ""TI Map"""
+						& "#(lf)| extend IndicatorType = case(AlertName has ""IP"", ""IP Address"", AlertName has ""Email"", ""Email"", AlertName has ""URL"", ""URL"", AlertName has ""Domain"", ""Domain"", AlertName has ""Hash"", ""File Hash"", ""Other"")"
+						& "#(lf)| extend MatchedEntity = tostring(Entities)"
+						& "#(lf)| project AlertName, IndicatorType, Severity = AlertSeverity, MatchedEntity, AlertTime = StartTime, AlertDate = bin(StartTime, 1d), ClientWorkspace",
 					Source = AzureLogAnalytics.Contents(
 						CentralWorkspaceId,
 						[Query = KQL, Timeout = #duration(0, 0, 4, 0)]

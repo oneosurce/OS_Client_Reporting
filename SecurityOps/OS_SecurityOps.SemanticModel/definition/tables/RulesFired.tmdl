@@ -1,5 +1,3 @@
-/// Count of analytics rule firings (SecurityAlert) per rule name per day across all workspaces.
-/// Used on the Security Posture page to surface the most active / noisy rules.
 table RulesFired
 	lineageTag: 77777777-0000-0000-0000-000000000001
 
@@ -8,6 +6,7 @@ table RulesFired
 		lineageTag: 77777777-0001-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: RuleName
+
 		annotation SummarizationSetBy = User
 
 	column Severity
@@ -15,6 +14,7 @@ table RulesFired
 		lineageTag: 77777777-0002-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: Severity
+
 		annotation SummarizationSetBy = User
 
 	column FiringCount
@@ -23,6 +23,7 @@ table RulesFired
 		lineageTag: 77777777-0003-0000-0000-000000000001
 		summarizeBy: sum
 		sourceColumn: FiringCount
+
 		annotation SummarizationSetBy = User
 
 	column LastFired
@@ -31,6 +32,7 @@ table RulesFired
 		lineageTag: 77777777-0004-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: LastFired
+
 		annotation SummarizationSetBy = User
 
 	column FiringDate
@@ -40,6 +42,7 @@ table RulesFired
 		lineageTag: 77777777-0004-0001-0000-000000000001
 		summarizeBy: none
 		sourceColumn: FiringDate
+
 		annotation SummarizationSetBy = User
 
 	column ClientWorkspace
@@ -47,18 +50,17 @@ table RulesFired
 		lineageTag: 77777777-0005-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: ClientWorkspace
+
 		annotation SummarizationSetBy = User
 
 	partition RulesFired = m
 		mode: import
 		source =
 				let
-					KQL = fnBuildUnion("SecurityAlert") & "
-| where TimeGenerated > ago(30d)
-| where AlertType !startswith ""TI map"" and AlertType !startswith ""TI Map""
-| summarize FiringCount = count(), LastFired = max(TimeGenerated)
-    by RuleName = AlertName, Severity = AlertSeverity,
-    FiringDate = bin(TimeGenerated, 1d), ClientWorkspace",
+					KQL = fnBuildUnion("SecurityAlert")
+						& "#(lf)| where TimeGenerated > ago(30d)"
+						& "#(lf)| where AlertType !startswith ""TI map"" and AlertType !startswith ""TI Map"""
+						& "#(lf)| summarize FiringCount = count(), LastFired = max(TimeGenerated) by RuleName = AlertName, Severity = AlertSeverity, FiringDate = bin(TimeGenerated, 1d), ClientWorkspace",
 					Source = AzureLogAnalytics.Contents(
 						CentralWorkspaceId,
 						[Query = KQL, Timeout = #duration(0, 0, 4, 0)]

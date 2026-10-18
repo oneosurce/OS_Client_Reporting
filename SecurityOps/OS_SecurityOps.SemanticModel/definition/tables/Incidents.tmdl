@@ -7,6 +7,7 @@ table Incidents
 		lineageTag: 33333333-0001-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: IncidentName
+
 		annotation SummarizationSetBy = User
 
 	column Title
@@ -14,6 +15,7 @@ table Incidents
 		lineageTag: 33333333-0002-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: Title
+
 		annotation SummarizationSetBy = User
 
 	column Severity
@@ -21,6 +23,7 @@ table Incidents
 		lineageTag: 33333333-0003-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: Severity
+
 		annotation SummarizationSetBy = User
 
 	column SeveritySort
@@ -31,6 +34,7 @@ table Incidents
 		summarizeBy: none
 		sourceColumn: SeveritySort
 		sortByColumn: SeveritySort
+
 		annotation SummarizationSetBy = User
 
 	column Status
@@ -38,6 +42,7 @@ table Incidents
 		lineageTag: 33333333-0004-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: Status
+
 		annotation SummarizationSetBy = User
 
 	column Classification
@@ -45,6 +50,7 @@ table Incidents
 		lineageTag: 33333333-0005-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: Classification
+
 		annotation SummarizationSetBy = User
 
 	column IncidentUrl
@@ -53,6 +59,7 @@ table Incidents
 		lineageTag: 33333333-0006-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: IncidentUrl
+
 		annotation SummarizationSetBy = User
 
 	column CreatedTime
@@ -61,6 +68,7 @@ table Incidents
 		lineageTag: 33333333-0007-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: CreatedTime
+
 		annotation SummarizationSetBy = User
 
 	column CreatedDate
@@ -70,6 +78,7 @@ table Incidents
 		lineageTag: 33333333-0007-0001-0000-000000000001
 		summarizeBy: none
 		sourceColumn: CreatedDate
+
 		annotation SummarizationSetBy = User
 
 	column LastModifiedTime
@@ -78,6 +87,7 @@ table Incidents
 		lineageTag: 33333333-0008-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: LastModifiedTime
+
 		annotation SummarizationSetBy = User
 
 	column ClosedTime
@@ -86,6 +96,7 @@ table Incidents
 		lineageTag: 33333333-0009-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: ClosedTime
+
 		annotation SummarizationSetBy = User
 
 	column Owner
@@ -93,6 +104,7 @@ table Incidents
 		lineageTag: 33333333-0010-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: Owner
+
 		annotation SummarizationSetBy = User
 
 	column AlertsCount
@@ -101,6 +113,7 @@ table Incidents
 		lineageTag: 33333333-0011-0000-0000-000000000001
 		summarizeBy: sum
 		sourceColumn: AlertsCount
+
 		annotation SummarizationSetBy = User
 
 	column Tactics
@@ -108,6 +121,7 @@ table Incidents
 		lineageTag: 33333333-0012-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: Tactics
+
 		annotation SummarizationSetBy = User
 
 	column ClientWorkspace
@@ -115,6 +129,7 @@ table Incidents
 		lineageTag: 33333333-0013-0000-0000-000000000001
 		summarizeBy: none
 		sourceColumn: ClientWorkspace
+
 		annotation SummarizationSetBy = User
 
 	column ResolutionHours
@@ -123,25 +138,22 @@ table Incidents
 		lineageTag: 33333333-0014-0000-0000-000000000001
 		summarizeBy: average
 		sourceColumn: ResolutionHours
+
 		annotation SummarizationSetBy = User
 
 	partition Incidents = m
 		mode: import
 		source =
 				let
-					UnionClause = fnBuildUnion("SecurityIncident"),
-					KQL = UnionClause & "
-| where TimeGenerated > ago(30d)
-| extend
-    SeveritySort = case(Severity == ""High"", 1, Severity == ""Medium"", 2, Severity == ""Low"", 3, 4),
-    Owner        = tostring(Owner.assignedTo),
-    Tactics      = tostring(AdditionalData.tactics),
-    ResolutionHours = iff(isnotnull(ClosedTime), datetime_diff('hour', ClosedTime, CreatedTime), int(null)),
-    CreatedDate  = bin(CreatedTime, 1d)
-| project IncidentName, Title, Severity, SeveritySort, Status, Classification,
-          IncidentUrl, CreatedTime, CreatedDate, LastModifiedTime, ClosedTime,
-          Owner, AlertsCount, Tactics, ClientWorkspace, ResolutionHours",
-					Source  = AzureLogAnalytics.Contents(
+					KQL = fnBuildUnion("SecurityIncident")
+						& "#(lf)| where TimeGenerated > ago(30d)"
+						& "#(lf)| extend SeveritySort = case(Severity == ""High"", 1, Severity == ""Medium"", 2, Severity == ""Low"", 3, 4)"
+						& "#(lf)| extend Owner = tostring(Owner.assignedTo)"
+						& "#(lf)| extend Tactics = tostring(AdditionalData.tactics)"
+						& "#(lf)| extend ResolutionHours = iff(isnotnull(ClosedTime), datetime_diff('hour', ClosedTime, CreatedTime), int(null))"
+						& "#(lf)| extend CreatedDate = bin(CreatedTime, 1d)"
+						& "#(lf)| project IncidentName, Title, Severity, SeveritySort, Status, Classification, IncidentUrl, CreatedTime, CreatedDate, LastModifiedTime, ClosedTime, Owner, AlertsCount, Tactics, ClientWorkspace, ResolutionHours",
+					Source = AzureLogAnalytics.Contents(
 						CentralWorkspaceId,
 						[Query = KQL, Timeout = #duration(0, 0, 4, 0)]
 					),
