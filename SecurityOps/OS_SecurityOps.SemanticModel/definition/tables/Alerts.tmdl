@@ -89,10 +89,7 @@ table Alerts
 						& "#(lf)| where AlertName !startswith ""TI map"" and AlertName !startswith ""TI Map"""
 						& "#(lf)| extend SeveritySort = case(AlertSeverity == ""High"", 1, AlertSeverity == ""Medium"", 2, AlertSeverity == ""Low"", 3, 4), Tactics = tostring(Tactics)"
 						& "#(lf)| project AlertId = SystemAlertId, AlertName, Severity = AlertSeverity, SeveritySort, Status = AlertState, Tactics, AlertTime = StartTime, AlertDate = bin(StartTime, 1d), ClientWorkspace",
-					Source = AzureLogAnalytics.Contents(
-						CentralWorkspaceId,
-						[Query = KQL, Timeout = #duration(0, 0, 4, 0)]
-					),
+					Source = fnQueryLogAnalytics(CentralWorkspaceId, KQL),
 					Typed = Table.TransformColumnTypes(Source, {
 						{"SeveritySort", Int64.Type},
 						{"AlertTime",    type datetime},

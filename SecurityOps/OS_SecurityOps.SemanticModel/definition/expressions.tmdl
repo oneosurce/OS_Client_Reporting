@@ -21,3 +21,23 @@ expression fnBuildUnion =
 
 	annotation PBI_ResultType = Function
 
+expression fnQueryLogAnalytics =
+		(workspaceId as text, kqlQuery as text) as table =>
+				let
+						Url      = "https://api.loganalytics.io/v1/workspaces/" & workspaceId & "/query",
+						Response = Json.Document(
+								Web.Contents(Url, [
+										Content = Json.FromValue([query = kqlQuery]),
+										Headers = [#"Content-Type" = "application/json"]
+								])
+						),
+						TableData = Response[tables]{0},
+						Cols      = List.Transform(TableData[columns], each [name]),
+						Rows      = TableData[rows],
+						Result    = Table.FromRows(Rows, Cols)
+				in
+						Result
+	lineageTag: 11111111-0000-0000-0000-000000000003
+
+	annotation PBI_ResultType = Function
+

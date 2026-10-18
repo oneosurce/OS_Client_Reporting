@@ -92,16 +92,16 @@ table _Measures
 		lineageTag: 00000000-ffff-0013-0000-000000000001
 
 	measure 'Incidents WoW Δ%' =
-			VAR CurrWk = CALCULATE([Total Incidents], DATESINPERIOD(Date[Date], LASTDATE(Date[Date]), -7, DAY))
-			VAR PrevWk = CALCULATE([Total Incidents], DATESINPERIOD(Date[Date], LASTDATE(Date[Date]) - 7, -7, DAY))
+			VAR CurrWk = CALCULATE([Total Incidents], DATESINPERIOD('Date'[Date], LASTDATE('Date'[Date]), -7, DAY))
+			VAR PrevWk = CALCULATE([Total Incidents], DATESINPERIOD('Date'[Date], LASTDATE('Date'[Date]) - 7, -7, DAY))
 			RETURN IF(PrevWk = 0, BLANK(), DIVIDE(CurrWk - PrevWk, PrevWk))
 		formatString: 0%;-0%;0%
 		displayFolder: Trends
 		lineageTag: 00000000-ffff-0014-0000-000000000001
 
 	measure 'Alerts WoW Δ%' =
-			VAR CurrWk = CALCULATE([Total Alerts], DATESINPERIOD(Date[Date], LASTDATE(Date[Date]), -7, DAY))
-			VAR PrevWk = CALCULATE([Total Alerts], DATESINPERIOD(Date[Date], LASTDATE(Date[Date]) - 7, -7, DAY))
+			VAR CurrWk = CALCULATE([Total Alerts], DATESINPERIOD('Date'[Date], LASTDATE('Date'[Date]), -7, DAY))
+			VAR PrevWk = CALCULATE([Total Alerts], DATESINPERIOD('Date'[Date], LASTDATE('Date'[Date]) - 7, -7, DAY))
 			RETURN IF(PrevWk = 0, BLANK(), DIVIDE(CurrWk - PrevWk, PrevWk))
 		formatString: 0%;-0%;0%
 		displayFolder: Trends

@@ -153,10 +153,7 @@ table Incidents
 						& "#(lf)| extend ResolutionHours = iff(isnotnull(ClosedTime), datetime_diff('hour', ClosedTime, CreatedTime), int(null))"
 						& "#(lf)| extend CreatedDate = bin(CreatedTime, 1d)"
 						& "#(lf)| project IncidentName, Title, Severity, SeveritySort, Status, Classification, IncidentUrl, CreatedTime, CreatedDate, LastModifiedTime, ClosedTime, Owner, AlertsCount, Tactics, ClientWorkspace, ResolutionHours",
-					Source = AzureLogAnalytics.Contents(
-						CentralWorkspaceId,
-						[Query = KQL, Timeout = #duration(0, 0, 4, 0)]
-					),
+					Source = fnQueryLogAnalytics(CentralWorkspaceId, KQL),
 					Typed = Table.TransformColumnTypes(Source, {
 						{"CreatedTime",      type datetime},
 						{"CreatedDate",      type datetime},

@@ -81,9 +81,9 @@ table IdentityThreats
 						& "#(lf)| where FailCount >= 10"
 						& "#(lf)| extend EventType = ""Brute Force"", EventCount = FailCount, EventDate = bin(TimeGenerated, 1d)"
 						& "#(lf)| project EventType, UserPrincipalName, IPAddress, Country, EventCount, EventDate, ClientWorkspace",
-					FailedSignIns = AzureLogAnalytics.Contents(CentralWorkspaceId, [Query = FailedSignInsKQL, Timeout = #duration(0, 0, 4, 0)]),
-					MFAEvents    = AzureLogAnalytics.Contents(CentralWorkspaceId, [Query = MFAEventsKQL,    Timeout = #duration(0, 0, 4, 0)]),
-					BruteForce   = AzureLogAnalytics.Contents(CentralWorkspaceId, [Query = BruteForceKQL,   Timeout = #duration(0, 0, 4, 0)]),
+					FailedSignIns = fnQueryLogAnalytics(CentralWorkspaceId, FailedSignInsKQL),
+					MFAEvents    = fnQueryLogAnalytics(CentralWorkspaceId, MFAEventsKQL),
+					BruteForce   = fnQueryLogAnalytics(CentralWorkspaceId, BruteForceKQL),
 					Combined = Table.Combine({FailedSignIns, MFAEvents, BruteForce}),
 					Typed = Table.TransformColumnTypes(Combined, {
 						{"EventCount", Int64.Type},
