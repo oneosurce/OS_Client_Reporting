@@ -70,7 +70,7 @@ table ThreatIntelMatches
 						& "#(lf)| extend IndicatorType = case(AlertName has ""IP"", ""IP Address"", AlertName has ""Email"", ""Email"", AlertName has ""URL"", ""URL"", AlertName has ""Domain"", ""Domain"", AlertName has ""Hash"", ""File Hash"", ""Other"")"
 						& "#(lf)| extend MatchedEntity = tostring(Entities)"
 						& "#(lf)| project AlertName, IndicatorType, Severity = AlertSeverity, MatchedEntity, AlertTime = StartTime, AlertDate = bin(StartTime, 1d), ClientWorkspace",
-					Source = fnQueryLogAnalytics(CentralWorkspaceId, KQL),
+					Source = fnQueryLogAnalytics(KQL),
 					Typed = Table.TransformColumnTypes(Source, {
 						{"AlertTime", type datetime},
 						{"AlertDate", type datetime}

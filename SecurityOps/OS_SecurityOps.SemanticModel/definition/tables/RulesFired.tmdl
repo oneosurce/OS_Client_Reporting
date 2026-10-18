@@ -61,7 +61,7 @@ table RulesFired
 						& "#(lf)| where TimeGenerated > ago(30d)"
 						& "#(lf)| where AlertType !startswith ""TI map"" and AlertType !startswith ""TI Map"""
 						& "#(lf)| summarize FiringCount = count(), LastFired = max(TimeGenerated) by RuleName = AlertName, Severity = AlertSeverity, FiringDate = bin(TimeGenerated, 1d), ClientWorkspace",
-					Source = fnQueryLogAnalytics(CentralWorkspaceId, KQL),
+					Source = fnQueryLogAnalytics(KQL),
 					Typed = Table.TransformColumnTypes(Source, {
 						{"FiringCount", Int64.Type},
 						{"LastFired",   type datetime},

@@ -86,7 +86,7 @@ table AzureActivityEvents
 						& "#(lf)| where ActivityStatusValue in (""Success"", ""Failure"")"
 						& "#(lf)| where OperationNameValue !has ""read"" and OperationNameValue !has ""/get"" and OperationNameValue !has ""/list"""
 						& "#(lf)| project OperationName = OperationNameValue, Caller, ResourceGroup, ResourceType = tostring(split(OperationNameValue, ""/providers/"")[1]), ResultType = ActivityStatusValue, Category = CategoryValue, EventTime = TimeGenerated, EventDate = bin(TimeGenerated, 1d), ClientWorkspace",
-					Source = fnQueryLogAnalytics(CentralWorkspaceId, KQL),
+					Source = fnQueryLogAnalytics(KQL),
 					Typed = Table.TransformColumnTypes(Source, {
 						{"EventTime", type datetime},
 						{"EventDate", type datetime}

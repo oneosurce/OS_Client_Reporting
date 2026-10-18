@@ -22,13 +22,13 @@ expression fnBuildUnion =
 	annotation PBI_ResultType = Function
 
 expression fnQueryLogAnalytics =
-		(workspaceId as text, kqlQuery as text) as table =>
+		(kqlQuery as text) as table =>
 				let
-						Response = Json.Document(
-								Web.Contents("https://api.loganalytics.io", [
-										RelativePath = "/v1/workspaces/" & workspaceId & "/query",
-										Content      = Json.FromValue([query = kqlQuery]),
-										Headers      = [#"Content-Type" = "application/json"]
+						QueryUrl  = "https://api.loganalytics.io/v1/workspaces/" & CentralWorkspaceId & "/query",
+						Response  = Json.Document(
+								Web.Contents(QueryUrl, [
+										Content = Json.FromValue([query = kqlQuery]),
+										Headers = [#"Content-Type" = "application/json"]
 								])
 						),
 						TableData = Response[tables]{0},
