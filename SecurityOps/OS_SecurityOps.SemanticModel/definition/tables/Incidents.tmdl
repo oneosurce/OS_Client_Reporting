@@ -152,6 +152,7 @@ table Incidents
 						& "#(lf)| extend Tactics = tostring(AdditionalData.tactics)"
 						& "#(lf)| extend ResolutionHours = iff(isnotnull(ClosedTime), datetime_diff('hour', ClosedTime, CreatedTime), int(null))"
 						& "#(lf)| extend CreatedDate = bin(CreatedTime, 1d)"
+						& "#(lf)| extend AlertsCount = toint(AdditionalData.alertsCount)"
 						& "#(lf)| project IncidentName, Title, Severity, SeveritySort, Status, Classification, IncidentUrl, CreatedTime, CreatedDate, LastModifiedTime, ClosedTime, Owner, AlertsCount, Tactics, ClientWorkspace, ResolutionHours",
 					Source = fnQueryLogAnalytics(KQL),
 					Typed = Table.TransformColumnTypes(Source, {
