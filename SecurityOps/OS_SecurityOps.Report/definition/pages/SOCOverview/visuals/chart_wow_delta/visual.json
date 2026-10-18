@@ -3,7 +3,7 @@
   "name": "chart_wow_delta",
   "position": { "x": 664, "y": 486, "z": 32, "width": 584, "height": 210, "tabOrder": 32 },
   "visual": {
-    "visualType": "card",
+    "visualType": "multiRowCard",
     "query": {
       "queryState": {
         "Values": {
