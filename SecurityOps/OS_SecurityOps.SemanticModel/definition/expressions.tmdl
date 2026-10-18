@@ -24,17 +24,12 @@ expression fnBuildUnion =
 expression fnQueryLogAnalytics =
 		(kqlQuery as text) as table =>
 				let
-						QueryUrl  = "https://api.loganalytics.io/v1/workspaces/" & CentralWorkspaceId & "/query",
-						Response  = Json.Document(
-								Web.Contents(QueryUrl, [
-										Content = Json.FromValue([query = kqlQuery]),
-										Headers = [#"Content-Type" = "application/json"]
-								])
-						),
-						TableData = Response[tables]{0},
-						Cols      = List.Transform(TableData[columns], each [name]),
-						Rows      = TableData[rows],
-						Result    = Table.FromRows(Rows, Cols)
+						Result = AzureDataExplorer.Contents(
+								"https://ade.loganalytics.io/subscriptions/42a6ebff-536a-4d2a-ba20-43225526bef8/resourcegroups/Sentinel/providers/microsoft.operationalinsights/workspaces/OS-Sentinel-0",
+								"Default",
+								kqlQuery,
+								[MaxRows=null, MaxSize=null, NoTruncate=true, AdditionalSetStatements=null]
+						)
 				in
 						Result
 	lineageTag: 11111111-0000-0000-0000-000000000003
