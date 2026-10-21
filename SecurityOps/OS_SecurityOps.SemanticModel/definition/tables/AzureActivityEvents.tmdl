@@ -81,7 +81,7 @@ table AzureActivityEvents
 		source =
 				let
 					KQL = fnBuildUnion("AzureActivity")
-						& "#(lf)| where TimeGenerated > ago(30d)"
+						& "#(lf)| where TimeGenerated > ago(90d)"
 						& "#(lf)| where CategoryValue in (""Administrative"", ""Security"", ""Policy"")"
 						& "#(lf)| where ActivityStatusValue in (""Success"", ""Failure"")"
 						& "#(lf)| where OperationNameValue !has ""read"" and OperationNameValue !has ""/get"" and OperationNameValue !has ""/list"""

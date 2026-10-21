@@ -26,7 +26,7 @@
     "visualContainerObjects": {
       "background": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#FFFFFF'" } } } } }, "transparency": { "expr": { "Literal": { "Value": "0" } } } } }],
       "border": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#E3E8F0'" } } } } }, "radius": { "expr": { "Literal": { "Value": "8" } } } } }],
-      "title": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "text": { "expr": { "Literal": { "Value": "'TOTAL ALERTS'" } } }, "fontColor": { "solid": { "color": { "expr": { "Literal": { "Value": "'#6B7280'" } } } } }, "bold": { "expr": { "Literal": { "Value": "true" } } }, "fontSize": { "expr": { "Literal": { "Value": "9" } } }, "alignment": { "expr": { "Literal": { "Value": "'left'" } } } } }],
+      "title": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "text": { "expr": { "Literal": { "Value": "'TOTAL ALERTS (90d)'" } } }, "fontColor": { "solid": { "color": { "expr": { "Literal": { "Value": "'#6B7280'" } } } } }, "bold": { "expr": { "Literal": { "Value": "true" } } }, "fontSize": { "expr": { "Literal": { "Value": "9" } } }, "alignment": { "expr": { "Literal": { "Value": "'left'" } } } } }],
       "padding": [{ "properties": { "left": { "expr": { "Literal": { "Value": "6" } } }, "right": { "expr": { "Literal": { "Value": "6" } } }, "top": { "expr": { "Literal": { "Value": "2" } } }, "bottom": { "expr": { "Literal": { "Value": "6" } } } } }],
       "visualHeader": [{ "properties": { "show": { "expr": { "Literal": { "Value": "false" } } } } }]
     }

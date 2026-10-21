@@ -185,7 +185,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'TARGETED USERS'"
+                  "Value": "'TARGETED USERS (90d)'"
                 }
               }
             },

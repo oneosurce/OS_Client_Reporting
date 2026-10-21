@@ -64,18 +64,18 @@ table IdentityThreats
 		source =
 				let
 					FailedSignInsKQL = fnBuildUnion("SigninLogs")
-						& "#(lf)| where TimeGenerated > ago(30d)"
+						& "#(lf)| where TimeGenerated > ago(90d)"
 						& "#(lf)| where ResultType != 0"
 						& "#(lf)| extend EventType = case(ResultType == 50126, ""Invalid Credentials"", ResultType == 50053, ""Account Locked"", ResultType == 50057, ""Account Disabled"", ""Failed Sign-in"")"
 						& "#(lf)| summarize EventCount = count() by EventType, UserPrincipalName, IPAddress, Country = tostring(LocationDetails.countryOrRegion), EventDate = bin(TimeGenerated, 1d), ClientWorkspace",
 					MFAEventsKQL = fnBuildUnion("AuditLogs")
-						& "#(lf)| where TimeGenerated > ago(30d)"
+						& "#(lf)| where TimeGenerated > ago(90d)"
 						& "#(lf)| where OperationName in (""Disable Strong Authentication"", ""User registered security info"", ""User deleted security info"") or (OperationName == ""Sign-in activity"" and ResultDescription has ""MFA"" and ResultDescription has ""denied"")"
 						& "#(lf)| extend EventType = case(OperationName has ""Disable"", ""MFA Disabled"", OperationName has ""deleted"", ""MFA Method Removed"", ""MFA Rejected"")"
 						& "#(lf)| extend UPN = tostring(InitiatedBy.user.userPrincipalName)"
 						& "#(lf)| summarize EventCount = count() by EventType, UserPrincipalName = UPN, IPAddress = """", Country = """", EventDate = bin(TimeGenerated, 1d), ClientWorkspace",
 					BruteForceKQL = fnBuildUnion("SigninLogs")
-						& "#(lf)| where TimeGenerated > ago(30d)"
+						& "#(lf)| where TimeGenerated > ago(90d)"
 						& "#(lf)| where ResultType != 0"
 						& "#(lf)| summarize FailCount = count() by IPAddress, UserPrincipalName, bin(TimeGenerated, 1h), ClientWorkspace, Country = tostring(LocationDetails.countryOrRegion)"
 						& "#(lf)| where FailCount >= 10"

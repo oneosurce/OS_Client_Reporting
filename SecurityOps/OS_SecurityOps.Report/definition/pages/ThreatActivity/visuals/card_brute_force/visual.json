@@ -185,7 +185,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'BRUTE FORCE EVENTS'"
+                  "Value": "'BRUTE FORCE EVENTS (90d)'"
                 }
               }
             },

@@ -185,7 +185,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'RULE FIRINGS (30d)'"
+                  "Value": "'RULE FIRINGS (90d)'"
                 }
               }
             },

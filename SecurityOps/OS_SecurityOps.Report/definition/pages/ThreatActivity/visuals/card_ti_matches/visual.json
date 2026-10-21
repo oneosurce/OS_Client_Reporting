@@ -185,7 +185,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'THREAT INTEL MATCHES'"
+                  "Value": "'THREAT INTEL MATCHES (90d)'"
                 }
               }
             },

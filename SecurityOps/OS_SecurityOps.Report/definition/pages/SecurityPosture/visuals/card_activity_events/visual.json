@@ -185,7 +185,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'AZURE ACTIVITY EVENTS'"
+                  "Value": "'AZURE ACTIVITY EVENTS (90d)'"
                 }
               }
             },
