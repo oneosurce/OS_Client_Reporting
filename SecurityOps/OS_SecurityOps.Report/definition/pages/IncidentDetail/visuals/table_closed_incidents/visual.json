@@ -20,23 +20,8 @@
             { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "Classification" } }, "queryRef": "Incidents.Classification" }
           ]
         }
-      },
-    },
-    "filters": [
-      {
-        "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "Status" } },
-        "filter": {
-          "In": {
-            "Expressions": [
-              { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "Status" } }
-            ],
-            "Values": [
-              [{ "Literal": { "Value": "'Closed'" } }]
-            ]
-          }
-        }
       }
-    ],
+    },
     "objects": {
       "grid": [{ "properties": { "gridVertical": { "expr": { "Literal": { "Value": "false" } } }, "fontColor": { "solid": { "color": { "expr": { "Literal": { "Value": "'#1F2A5A'" } } } } }, "fontSize": { "expr": { "Literal": { "Value": "11" } } } } }],
       "columnHeaders": [{ "properties": { "fontColor": { "solid": { "color": { "expr": { "Literal": { "Value": "'#6B7280'" } } } } }, "bold": { "expr": { "Literal": { "Value": "true" } } }, "fontSize": { "expr": { "Literal": { "Value": "10" } } } } }]
