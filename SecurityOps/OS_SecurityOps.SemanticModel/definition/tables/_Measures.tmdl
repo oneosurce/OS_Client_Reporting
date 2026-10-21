@@ -80,7 +80,7 @@ table _Measures
 		lineageTag: 00000000-ffff-0009-0000-000000000001
 
 	measure 'TI Matches' =
-			COUNTROWS(ThreatIntelMatches)
+			COALESCE(COUNTROWS(ThreatIntelMatches), 0)
 		formatString: 0
 		displayFolder: Threat Activity
 		lineageTag: 00000000-ffff-0010-0000-000000000001
