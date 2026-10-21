@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "table_closed_incidents",
-  "position": { "x": 32, "y": 517, "z": 21, "width": 1216, "height": 179, "tabOrder": 21 },
+  "position": { "x": 32, "y": 490, "z": 21, "width": 1216, "height": 216, "tabOrder": 21 },
   "visual": {
     "visualType": "tableEx",
     "query": {
