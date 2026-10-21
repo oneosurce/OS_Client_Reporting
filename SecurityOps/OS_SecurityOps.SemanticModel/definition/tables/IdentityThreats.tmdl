@@ -59,45 +59,6 @@ table IdentityThreats
 
 		annotation SummarizationSetBy = User
 
-	calculatedColumn CountryWithFlag
-		dataType: string
-		lineageTag: 44444444-0008-0000-0000-000000000001
-		summarizeBy: none
-
-		expression =
-				VAR Flag =
-					SWITCH(
-						[Country],
-						"US", "🇺🇸 ", "CA", "🇨🇦 ", "GB", "🇬🇧 ",
-						"DE", "🇩🇪 ", "FR", "🇫🇷 ", "ES", "🇪🇸 ",
-						"IT", "🇮🇹 ", "PT", "🇵🇹 ", "NL", "🇳🇱 ",
-						"BE", "🇧🇪 ", "SE", "🇸🇪 ", "NO", "🇳🇴 ",
-						"DK", "🇩🇰 ", "FI", "🇫🇮 ", "AT", "🇦🇹 ",
-						"CH", "🇨🇭 ", "PL", "🇵🇱 ", "CZ", "🇨🇿 ",
-						"HU", "🇭🇺 ", "RO", "🇷🇴 ", "UA", "🇺🇦 ",
-						"RU", "🇷🇺 ", "CN", "🇨🇳 ", "JP", "🇯🇵 ",
-						"KR", "🇰🇷 ", "IN", "🇮🇳 ", "AU", "🇦🇺 ",
-						"NZ", "🇳🇿 ", "BR", "🇧🇷 ", "AR", "🇦🇷 ",
-						"MX", "🇲🇽 ", "CO", "🇨🇴 ", "VE", "🇻🇪 ",
-						"CL", "🇨🇱 ", "PE", "🇵🇪 ", "ZA", "🇿🇦 ",
-						"NG", "🇳🇬 ", "EG", "🇪🇬 ", "SA", "🇸🇦 ",
-						"AE", "🇦🇪 ", "IL", "🇮🇱 ", "TR", "🇹🇷 ",
-						"IR", "🇮🇷 ", "PK", "🇵🇰 ", "ID", "🇮🇩 ",
-						"PH", "🇵🇭 ", "TH", "🇹🇭 ", "SG", "🇸🇬 ",
-						"HK", "🇭🇰 ", "TW", "🇹🇼 ", "MY", "🇲🇾 ",
-						"GR", "🇬🇷 ", "BG", "🇧🇬 ", "HR", "🇭🇷 ",
-						"RS", "🇷🇸 ", "SK", "🇸🇰 ", "LT", "🇱🇹 ",
-						"LV", "🇱🇻 ", "EE", "🇪🇪 ", "BY", "🇧🇾 ",
-						"KZ", "🇰🇿 ", "UZ", "🇺🇿 ", "VN", "🇻🇳 ",
-						"BD", "🇧🇩 ", "LK", "🇱🇰 ", "MM", "🇲🇲 ",
-						"MA", "🇲🇦 ", "TN", "🇹🇳 ", "DZ", "🇩🇿 ",
-						"KE", "🇰🇪 ", "GH", "🇬🇭 ", "ET", "🇪🇹 ",
-						"🌐 "
-					)
-				RETURN IF(ISBLANK([Country]) || [Country] = "", BLANK(), Flag & [Country])
-
-		annotation SummarizationSetBy = Automatic
-
 	partition IdentityThreats = m
 		mode: import
 		source =
