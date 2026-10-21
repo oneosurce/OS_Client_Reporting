@@ -1,0 +1,52 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "name": "table_closed_incidents",
+  "position": { "x": 32, "y": 517, "z": 21, "width": 1216, "height": 179, "tabOrder": 21 },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "ClientWorkspace" } }, "queryRef": "Incidents.ClientWorkspace" },
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "Severity" } }, "queryRef": "Incidents.Severity" },
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "Title" } }, "queryRef": "Incidents.Title" },
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "Owner" } }, "queryRef": "Incidents.Owner" },
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "Tactics" } }, "queryRef": "Incidents.Tactics" },
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "AlertsCount" } }, "queryRef": "Incidents.AlertsCount" },
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "CreatedTime" } }, "queryRef": "Incidents.CreatedTime" },
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "ClosedTime" } }, "queryRef": "Incidents.ClosedTime" },
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "ResolutionHours" } }, "queryRef": "Incidents.ResolutionHours" },
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "Classification" } }, "queryRef": "Incidents.Classification" }
+          ]
+        }
+      },
+      "filters": [
+        {
+          "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "Status" } },
+          "filter": {
+            "In": {
+              "Expressions": [
+                { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "Status" } }
+              ],
+              "Values": [
+                [{ "Literal": { "Value": "'Closed'" } }]
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "objects": {
+      "grid": [{ "properties": { "gridVertical": { "expr": { "Literal": { "Value": "false" } } }, "fontColor": { "solid": { "color": { "expr": { "Literal": { "Value": "'#1F2A5A'" } } } } }, "fontSize": { "expr": { "Literal": { "Value": "11" } } } } }],
+      "columnHeaders": [{ "properties": { "fontColor": { "solid": { "color": { "expr": { "Literal": { "Value": "'#6B7280'" } } } } }, "bold": { "expr": { "Literal": { "Value": "true" } } }, "fontSize": { "expr": { "Literal": { "Value": "10" } } } } }]
+    },
+    "visualContainerObjects": {
+      "background": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#FFFFFF'" } } } } }, "transparency": { "expr": { "Literal": { "Value": "0" } } } } }],
+      "border": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#E3E8F0'" } } } } }, "radius": { "expr": { "Literal": { "Value": "8" } } } } }],
+      "title": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "text": { "expr": { "Literal": { "Value": "'Closed Incidents'" } } }, "fontColor": { "solid": { "color": { "expr": { "Literal": { "Value": "'#2E9E5B'" } } } } }, "bold": { "expr": { "Literal": { "Value": "true" } } }, "fontSize": { "expr": { "Literal": { "Value": "10" } } } } }],
+      "padding": [{ "properties": { "left": { "expr": { "Literal": { "Value": "10" } } }, "right": { "expr": { "Literal": { "Value": "10" } } }, "top": { "expr": { "Literal": { "Value": "6" } } }, "bottom": { "expr": { "Literal": { "Value": "10" } } } } }],
+      "visualHeader": [{ "properties": { "show": { "expr": { "Literal": { "Value": "false" } } } } }]
+    }
+  }
+}
