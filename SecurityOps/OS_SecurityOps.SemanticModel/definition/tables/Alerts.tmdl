@@ -87,6 +87,7 @@ table Alerts
 					KQL = fnBuildUnion("SecurityAlert")
 						& "#(lf)| where TimeGenerated > ago(30d)"
 						& "#(lf)| where AlertName !startswith ""TI map"" and AlertName !startswith ""TI Map"""
+						& "#(lf)| summarize arg_max(TimeGenerated, *) by SystemAlertId, ClientWorkspace"
 						& "#(lf)| extend SeveritySort = case(AlertSeverity == ""High"", 1, AlertSeverity == ""Medium"", 2, AlertSeverity == ""Low"", 3, 4), Tactics = tostring(Tactics)"
 						& "#(lf)| project AlertId = SystemAlertId, AlertName, Severity = AlertSeverity, SeveritySort, Status, Tactics, AlertTime = StartTime, AlertDate = bin(StartTime, 1d), ClientWorkspace",
 					Source = fnQueryLogAnalytics(KQL),

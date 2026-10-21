@@ -147,6 +147,7 @@ table Incidents
 				let
 					KQL = fnBuildUnion("SecurityIncident")
 						& "#(lf)| where TimeGenerated > ago(30d)"
+						& "#(lf)| summarize arg_max(TimeGenerated, *) by IncidentNumber, ClientWorkspace"
 						& "#(lf)| extend SeveritySort = case(Severity == ""High"", 1, Severity == ""Medium"", 2, Severity == ""Low"", 3, 4)"
 						& "#(lf)| extend Owner = tostring(Owner.assignedTo)"
 						& "#(lf)| extend Tactics = tostring(AdditionalData.tactics)"

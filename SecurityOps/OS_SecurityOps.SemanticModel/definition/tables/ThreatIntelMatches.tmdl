@@ -67,6 +67,7 @@ table ThreatIntelMatches
 					KQL = fnBuildUnion("SecurityAlert")
 						& "#(lf)| where TimeGenerated > ago(30d)"
 						& "#(lf)| where AlertName startswith ""TI map"" or AlertName startswith ""TI Map"""
+						& "#(lf)| summarize arg_max(TimeGenerated, *) by SystemAlertId, ClientWorkspace"
 						& "#(lf)| extend IndicatorType = case(AlertName has ""IP"", ""IP Address"", AlertName has ""Email"", ""Email"", AlertName has ""URL"", ""URL"", AlertName has ""Domain"", ""Domain"", AlertName has ""Hash"", ""File Hash"", ""Other"")"
 						& "#(lf)| extend MatchedEntity = tostring(Entities)"
 						& "#(lf)| project AlertName, IndicatorType, Severity = AlertSeverity, MatchedEntity, AlertTime = StartTime, AlertDate = bin(StartTime, 1d), ClientWorkspace",

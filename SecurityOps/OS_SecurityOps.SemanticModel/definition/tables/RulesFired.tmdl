@@ -60,6 +60,7 @@ table RulesFired
 					KQL = fnBuildUnion("SecurityAlert")
 						& "#(lf)| where TimeGenerated > ago(30d)"
 						& "#(lf)| where AlertType !startswith ""TI map"" and AlertType !startswith ""TI Map"""
+						& "#(lf)| summarize arg_max(TimeGenerated, *) by SystemAlertId, ClientWorkspace"
 						& "#(lf)| summarize FiringCount = count(), LastFired = max(TimeGenerated) by RuleName = AlertName, Severity = AlertSeverity, FiringDate = bin(TimeGenerated, 1d), ClientWorkspace",
 					Source = fnQueryLogAnalytics(KQL),
 					Typed = Table.TransformColumnTypes(Source, {
