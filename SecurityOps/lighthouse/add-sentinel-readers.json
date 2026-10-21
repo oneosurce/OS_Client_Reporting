@@ -1,0 +1,66 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-08-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "description": "Additive Azure Lighthouse delegation: grants the OneSource 'OS-Sentinel-Readers' group Log Analytics Reader on a managed (customer) subscription, so the OS_SecurityOps Power BI service account can query that tenant's Sentinel workspace during refresh. Deploy once per member tenant, in the CUSTOMER tenant, by an identity with Owner on the target subscription. It is additive and does not touch existing delegations."
+  },
+  "parameters": {
+    "mspOfferName": {
+      "type": "string",
+      "defaultValue": "OneSource SOC — Sentinel Readers",
+      "metadata": { "description": "Friendly name shown under Service providers in the customer tenant." }
+    },
+    "mspOfferDescription": {
+      "type": "string",
+      "defaultValue": "Log Analytics Reader for the OS_SecurityOps Power BI refresh service account."
+    },
+    "managedByTenantId": {
+      "type": "string",
+      "defaultValue": "4b5e91ed-2885-49b3-9d58-a87089c51417",
+      "metadata": { "description": "OneSource (managing) tenant id." }
+    },
+    "authorizations": {
+      "type": "array",
+      "defaultValue": [
+        {
+          "principalId": "7a57368d-0b62-4b0c-b9c0-0050af871f41",
+          "principalIdDisplayName": "OS-Sentinel-Readers",
+          "roleDefinitionId": "73c42c96-874c-492b-b04d-ab87d138a893"
+        }
+      ],
+      "metadata": { "description": "principalId = OneSource 'OS-Sentinel-Readers' group; roleDefinitionId = Log Analytics Reader (73c42c96-874c-492b-b04d-ab87d138a893)." }
+    }
+  },
+  "variables": {
+    "mspRegistrationName": "[guid(parameters('mspOfferName'))]",
+    "mspAssignmentName": "[guid(parameters('mspOfferName'), subscription().subscriptionId)]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.ManagedServices/registrationDefinitions",
+      "apiVersion": "2022-10-01",
+      "name": "[variables('mspRegistrationName')]",
+      "properties": {
+        "registrationDefinitionName": "[parameters('mspOfferName')]",
+        "description": "[parameters('mspOfferDescription')]",
+        "managedByTenantId": "[parameters('managedByTenantId')]",
+        "authorizations": "[parameters('authorizations')]"
+      }
+    },
+    {
+      "type": "Microsoft.ManagedServices/registrationAssignments",
+      "apiVersion": "2022-10-01",
+      "name": "[variables('mspAssignmentName')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.ManagedServices/registrationDefinitions', variables('mspRegistrationName'))]"
+      ],
+      "properties": {
+        "registrationDefinitionId": "[resourceId('Microsoft.ManagedServices/registrationDefinitions', variables('mspRegistrationName'))]"
+      }
+    }
+  ],
+  "outputs": {
+    "mspOfferName": { "type": "string", "value": "[concat('Managed by ', parameters('mspOfferName'))]" },
+    "authorizations": { "type": "array", "value": "[parameters('authorizations')]" }
+  }
+}
