@@ -3,7 +3,7 @@
   "name": "IncidentDetail",
   "displayName": "Incident Detail",
   "displayOption": "FitToPage",
-  "height": 720,
+  "height": 760,
   "width": 1280,
   "objects": {
     "background": [
@@ -13,13 +13,19 @@
             "solid": {
               "color": {
                 "expr": {
-                  "Literal": { "Value": "'#F4F6FA'" }
+                  "Literal": {
+                    "Value": "'#F4F6FA'"
+                  }
                 }
               }
             }
           },
           "transparency": {
-            "expr": { "Literal": { "Value": "0" } }
+            "expr": {
+              "Literal": {
+                "Value": "0"
+              }
+            }
           }
         }
       }

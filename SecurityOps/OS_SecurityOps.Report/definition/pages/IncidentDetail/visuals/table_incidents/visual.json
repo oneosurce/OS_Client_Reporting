@@ -11,7 +11,6 @@
             { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "OpenIncidents" } }, "Property": "ClientWorkspace" } }, "queryRef": "OpenIncidents.ClientWorkspace" },
             { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "OpenIncidents" } }, "Property": "Severity" } }, "queryRef": "OpenIncidents.Severity" },
             { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "OpenIncidents" } }, "Property": "Title" } }, "queryRef": "OpenIncidents.Title" },
-            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "OpenIncidents" } }, "Property": "Status" } }, "queryRef": "OpenIncidents.Status" },
             { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "OpenIncidents" } }, "Property": "Owner" } }, "queryRef": "OpenIncidents.Owner" },
             { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "OpenIncidents" } }, "Property": "Tactics" } }, "queryRef": "OpenIncidents.Tactics" },
             { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "OpenIncidents" } }, "Property": "AlertsCount" } }, "queryRef": "OpenIncidents.AlertsCount" },
