@@ -73,6 +73,11 @@ table TenantRegistry
 							ClientName          = "Ocean Marine Services",
 							WorkspaceId         = "9cf7e986-7449-4120-959f-a0bc0c101b61",
 							WorkspaceResourceId = "/subscriptions/befd4e4e-1c39-4d23-877f-3f135a75a278/resourceGroups/Sentinel/providers/Microsoft.OperationalInsights/workspaces/OMS-Sentinel",
+							IsManagingWorkspace = false ],
+						[   WorkspaceName       = "Cobalt-Sentinel",
+							ClientName          = "Cobalt Engineering",
+							WorkspaceId         = "9288c7c8-1411-44e2-952c-95879bfe2381",
+							WorkspaceResourceId = "/subscriptions/8a271820-b2db-48c8-8df3-2b16aa3df93b/resourceGroups/sentinel/providers/Microsoft.OperationalInsights/workspaces/Cobalt-Sentinel",
 							IsManagingWorkspace = false ]
 					},
 					Source = Table.FromRecords(Rows, type table [
