@@ -108,7 +108,7 @@ table ClosedIncidents
 
 	partition ClosedIncidents = calculated
 		mode: import
-		source = CALCULATETABLE(Incidents, Incidents[Status] = "Closed")
+		source = TOPN(15, CALCULATETABLE(Incidents, Incidents[Status] = "Closed"), Incidents[ClosedTime], DESC)
 
 	annotation PBI_ResultType = Table
 
