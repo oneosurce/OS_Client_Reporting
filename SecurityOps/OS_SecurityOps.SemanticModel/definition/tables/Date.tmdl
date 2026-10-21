@@ -13,6 +13,14 @@ table Date
 		isKey
 		annotation SummarizationSetBy = User
 
+	column WeekStart
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 11111111-0008-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: WeekStart
+		annotation SummarizationSetBy = User
+
 	column Year
 		dataType: int64
 		formatString: 0
@@ -86,7 +94,8 @@ table Date
 								"WeekNum",          each Date.WeekOfYear([Date]),    Int64.Type),
 							"DayOfWeek",            each Date.DayOfWeek([Date]),     Int64.Type),
 						"DayName",              each Date.DayOfWeekName([Date]),     type text),
-					AsDateTime = Table.TransformColumnTypes(WithCols, {{"Date", type datetime}})
+					WithWeek   = Table.AddColumn(WithCols, "WeekStart", each Date.StartOfWeek([Date], Day.Monday), type date),
+					AsDateTime = Table.TransformColumnTypes(WithWeek, {{"Date", type datetime}, {"WeekStart", type datetime}})
 				in
 					AsDateTime
 
