@@ -3,7 +3,7 @@
   "name": "chart_identity_events",
   "position": { "x": 32, "y": 486, "z": 30, "width": 600, "height": 210, "tabOrder": 30 },
   "visual": {
-    "visualType": "clusteredBarChart",
+    "visualType": "stackedBarChart",
     "query": {
       "queryState": {
         "Category": {
