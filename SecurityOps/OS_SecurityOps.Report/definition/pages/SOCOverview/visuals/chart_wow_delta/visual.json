@@ -9,14 +9,14 @@
         "Values": {
           "projections": [
             {
-              "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Incidents WoW Δ%" } },
-              "queryRef": "_Measures.Incidents WoW Δ%",
-              "nativeQueryRef": "Incidents WoW Δ%"
+              "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Incidents Δ% (15d)" } },
+              "queryRef": "_Measures.Incidents Δ% (15d)",
+              "nativeQueryRef": "Incidents Δ% (15d)"
             },
             {
-              "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Alerts WoW Δ%" } },
-              "queryRef": "_Measures.Alerts WoW Δ%",
-              "nativeQueryRef": "Alerts WoW Δ%"
+              "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Alerts Δ% (15d)" } },
+              "queryRef": "_Measures.Alerts Δ% (15d)",
+              "nativeQueryRef": "Alerts Δ% (15d)"
             }
           ]
         }
@@ -31,7 +31,7 @@
     "visualContainerObjects": {
       "background": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#FFFFFF'" } } } } }, "transparency": { "expr": { "Literal": { "Value": "0" } } } } }],
       "border": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#E3E8F0'" } } } } }, "radius": { "expr": { "Literal": { "Value": "8" } } } } }],
-      "title": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "text": { "expr": { "Literal": { "Value": "'Week-over-Week Change'" } } }, "fontColor": { "solid": { "color": { "expr": { "Literal": { "Value": "'#1F2A5A'" } } } } }, "bold": { "expr": { "Literal": { "Value": "true" } } }, "fontSize": { "expr": { "Literal": { "Value": "10" } } } } }],
+      "title": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "text": { "expr": { "Literal": { "Value": "'Change vs Prior 15 Days'" } } }, "fontColor": { "solid": { "color": { "expr": { "Literal": { "Value": "'#1F2A5A'" } } } } }, "bold": { "expr": { "Literal": { "Value": "true" } } }, "fontSize": { "expr": { "Literal": { "Value": "10" } } } } }],
       "padding": [{ "properties": { "left": { "expr": { "Literal": { "Value": "10" } } }, "right": { "expr": { "Literal": { "Value": "10" } } }, "top": { "expr": { "Literal": { "Value": "6" } } }, "bottom": { "expr": { "Literal": { "Value": "10" } } } } }],
       "visualHeader": [{ "properties": { "show": { "expr": { "Literal": { "Value": "false" } } } } }]
     }
