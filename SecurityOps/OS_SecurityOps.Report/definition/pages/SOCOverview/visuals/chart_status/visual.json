@@ -1,30 +1,29 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "chart_status",
-  "position": { "x": 338, "y": 486, "z": 31, "width": 310, "height": 210, "tabOrder": 31 },
+  "position": { "x": 338, "y": 486, "z": 31, "width": 150, "height": 210, "tabOrder": 31 },
   "visual": {
-    "visualType": "multiRowCard",
+    "visualType": "card",
     "query": {
       "queryState": {
         "Values": {
           "projections": [
-            { "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "New Incidents" } }, "queryRef": "_Measures.New Incidents", "nativeQueryRef": "New Incidents" },
-            { "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Closed Incidents" } }, "queryRef": "_Measures.Closed Incidents", "nativeQueryRef": "Closed Incidents" }
+            { "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "New Incidents" } }, "queryRef": "_Measures.New Incidents", "nativeQueryRef": "New Incidents" }
           ]
         }
       }
     },
     "objects": {
-      "labels": [{ "properties": { "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#6B7280'" } } } } } } }],
-      "calloutValue": [{ "properties": { "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#1F2A5A'" } } } } }, "bold": { "expr": { "Literal": { "Value": "true" } } } } }],
-      "categoryLabels": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } } } }],
+      "labels": [{ "properties": { "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#1F2A5A'" } } } } }, "bold": { "expr": { "Literal": { "Value": "true" } } } } }],
+      "calloutValue": [{ "properties": { "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#E0912F'" } } } } }, "bold": { "expr": { "Literal": { "Value": "true" } } } } }],
+      "categoryLabels": [{ "properties": { "show": { "expr": { "Literal": { "Value": "false" } } } } }],
       "background": [{ "properties": { "show": { "expr": { "Literal": { "Value": "false" } } } } }]
     },
     "visualContainerObjects": {
       "background": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#FFFFFF'" } } } } }, "transparency": { "expr": { "Literal": { "Value": "0" } } } } }],
       "border": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#E3E8F0'" } } } } }, "radius": { "expr": { "Literal": { "Value": "8" } } } } }],
-      "title": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "text": { "expr": { "Literal": { "Value": "'By Status'" } } }, "fontColor": { "solid": { "color": { "expr": { "Literal": { "Value": "'#1F2A5A'" } } } } }, "bold": { "expr": { "Literal": { "Value": "true" } } }, "fontSize": { "expr": { "Literal": { "Value": "10" } } } } }],
-      "padding": [{ "properties": { "left": { "expr": { "Literal": { "Value": "10" } } }, "right": { "expr": { "Literal": { "Value": "10" } } }, "top": { "expr": { "Literal": { "Value": "6" } } }, "bottom": { "expr": { "Literal": { "Value": "10" } } } } }],
+      "title": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "text": { "expr": { "Literal": { "Value": "'NEW (OPEN)'" } } }, "fontColor": { "solid": { "color": { "expr": { "Literal": { "Value": "'#6B7280'" } } } } }, "bold": { "expr": { "Literal": { "Value": "true" } } }, "fontSize": { "expr": { "Literal": { "Value": "9" } } }, "alignment": { "expr": { "Literal": { "Value": "'left'" } } } } }],
+      "padding": [{ "properties": { "left": { "expr": { "Literal": { "Value": "6" } } }, "right": { "expr": { "Literal": { "Value": "6" } } }, "top": { "expr": { "Literal": { "Value": "2" } } }, "bottom": { "expr": { "Literal": { "Value": "6" } } } } }],
       "visualHeader": [{ "properties": { "show": { "expr": { "Literal": { "Value": "false" } } } } }]
     }
   }
