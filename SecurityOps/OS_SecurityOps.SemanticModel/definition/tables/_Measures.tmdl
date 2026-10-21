@@ -85,6 +85,12 @@ table _Measures
 		displayFolder: Threat Activity
 		lineageTag: 00000000-ffff-0010-0000-000000000001
 
+	measure 'Identity Events' =
+			COALESCE(SUM(IdentityThreats[EventCount]), 0)
+		formatString: 0
+		displayFolder: Threat Activity
+		lineageTag: 00000000-ffff-0018-0000-000000000001
+
 	measure 'Rules Fired (30d)' =
 			SUMX(RulesFired, RulesFired[FiringCount])
 		formatString: 0
