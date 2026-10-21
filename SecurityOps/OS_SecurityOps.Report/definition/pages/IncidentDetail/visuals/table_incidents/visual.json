@@ -8,14 +8,14 @@
       "queryState": {
         "Values": {
           "projections": [
-            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "ClientWorkspace" } }, "queryRef": "Incidents.ClientWorkspace" },
-            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "Severity" } }, "queryRef": "Incidents.Severity" },
-            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "Title" } }, "queryRef": "Incidents.Title" },
-            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "Status" } }, "queryRef": "Incidents.Status" },
-            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "Owner" } }, "queryRef": "Incidents.Owner" },
-            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "Tactics" } }, "queryRef": "Incidents.Tactics" },
-            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "AlertsCount" } }, "queryRef": "Incidents.AlertsCount" },
-            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "CreatedTime" } }, "queryRef": "Incidents.CreatedTime" }
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "OpenIncidents" } }, "Property": "ClientWorkspace" } }, "queryRef": "OpenIncidents.ClientWorkspace" },
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "OpenIncidents" } }, "Property": "Severity" } }, "queryRef": "OpenIncidents.Severity" },
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "OpenIncidents" } }, "Property": "Title" } }, "queryRef": "OpenIncidents.Title" },
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "OpenIncidents" } }, "Property": "Status" } }, "queryRef": "OpenIncidents.Status" },
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "OpenIncidents" } }, "Property": "Owner" } }, "queryRef": "OpenIncidents.Owner" },
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "OpenIncidents" } }, "Property": "Tactics" } }, "queryRef": "OpenIncidents.Tactics" },
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "OpenIncidents" } }, "Property": "AlertsCount" } }, "queryRef": "OpenIncidents.AlertsCount" },
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "OpenIncidents" } }, "Property": "CreatedTime" } }, "queryRef": "OpenIncidents.CreatedTime" }
           ]
         }
       }

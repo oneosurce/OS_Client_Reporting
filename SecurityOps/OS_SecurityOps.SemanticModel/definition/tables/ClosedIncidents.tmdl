@@ -1,0 +1,114 @@
+table ClosedIncidents
+	lineageTag: 44450000-0000-0000-0000-000000000001
+	isHidden
+
+	column IncidentName
+		dataType: string
+		isHidden
+		lineageTag: 44450001-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: IncidentName
+
+		annotation SummarizationSetBy = User
+
+	column Title
+		dataType: string
+		lineageTag: 44450002-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Title
+
+		annotation SummarizationSetBy = User
+
+	column Severity
+		dataType: string
+		lineageTag: 44450003-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Severity
+		sortByColumn: SeveritySort
+
+		annotation SummarizationSetBy = User
+
+	column SeveritySort
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 44450003-0001-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: SeveritySort
+
+		annotation SummarizationSetBy = User
+
+	column Classification
+		dataType: string
+		lineageTag: 44450004-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Classification
+
+		annotation SummarizationSetBy = User
+
+	column Owner
+		dataType: string
+		lineageTag: 44450005-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Owner
+
+		annotation SummarizationSetBy = User
+
+	column AlertsCount
+		dataType: int64
+		formatString: 0
+		lineageTag: 44450006-0000-0000-0000-000000000001
+		summarizeBy: sum
+		sourceColumn: AlertsCount
+
+		annotation SummarizationSetBy = User
+
+	column Tactics
+		dataType: string
+		lineageTag: 44450007-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Tactics
+
+		annotation SummarizationSetBy = User
+
+	column ClientWorkspace
+		dataType: string
+		lineageTag: 44450008-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ClientWorkspace
+
+		annotation SummarizationSetBy = User
+
+	column CreatedTime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 44450009-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: CreatedTime
+
+		annotation SummarizationSetBy = User
+
+	column ClosedTime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 44450010-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ClosedTime
+
+		annotation SummarizationSetBy = User
+
+	column ResolutionHours
+		dataType: double
+		formatString: 0.0
+		lineageTag: 44450011-0000-0000-0000-000000000001
+		summarizeBy: average
+		sourceColumn: ResolutionHours
+
+		annotation SummarizationSetBy = User
+
+	partition ClosedIncidents = calculated
+		mode: import
+		source = CALCULATETABLE(Incidents, Incidents[Status] = "Closed")
+
+	annotation PBI_ResultType = Table
+
