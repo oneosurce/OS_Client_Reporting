@@ -3,27 +3,21 @@ relationship a1000001-0000-0000-0000-000000000001
 	toColumn: Date.Date
 
 relationship a1000002-0000-0000-0000-000000000001
-	isActive: false
 	fromColumn: Alerts.AlertDate
 	toColumn: Date.Date
 
 relationship a1000003-0000-0000-0000-000000000001
-	isActive: false
 	fromColumn: IdentityThreats.EventDate
 	toColumn: Date.Date
 
 relationship a1000004-0000-0000-0000-000000000001
-	isActive: false
 	fromColumn: ThreatIntelMatches.AlertDate
 	toColumn: Date.Date
 
 relationship a1000005-0000-0000-0000-000000000001
-	isActive: false
 	fromColumn: AzureActivityEvents.EventDate
 	toColumn: Date.Date
 
 relationship a1000006-0000-0000-0000-000000000001
-	isActive: false
 	fromColumn: RulesFired.FiringDate
 	toColumn: Date.Date
-
