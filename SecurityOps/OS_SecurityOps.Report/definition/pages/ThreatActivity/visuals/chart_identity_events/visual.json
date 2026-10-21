@@ -15,7 +15,7 @@
           "projections": [
             { "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Identity Events" } }, "queryRef": "_Measures.Identity Events", "nativeQueryRef": "Identity Events" }
           ]
-        },
+        }
       },
       "sortDefinition": {
         "sort": [
