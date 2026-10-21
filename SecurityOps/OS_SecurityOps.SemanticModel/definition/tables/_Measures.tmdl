@@ -3,78 +3,80 @@ table _Measures
 	isHidden
 
 	measure 'Total Incidents' =
-			COUNTROWS(Incidents)
+			COALESCE(COUNTROWS(Incidents), 0)
 		formatString: 0
 		displayFolder: SOC Overview
 		lineageTag: 00000000-ffff-0001-0000-000000000001
 
 	measure 'Open Incidents' =
-			CALCULATE(COUNTROWS(Incidents), Incidents[Status] = "New" || Incidents[Status] = "Active")
+			COALESCE(CALCULATE(COUNTROWS(Incidents), Incidents[Status] = "New" || Incidents[Status] = "Active"), 0)
 		formatString: 0
 		displayFolder: SOC Overview
 		lineageTag: 00000000-ffff-0002-0000-000000000001
 
 	measure 'High Severity Incidents' =
-			CALCULATE(COUNTROWS(Incidents), Incidents[Severity] = "High")
+			COALESCE(CALCULATE(COUNTROWS(Incidents), Incidents[Severity] = "High"), 0)
 		formatString: 0
 		displayFolder: SOC Overview
 		lineageTag: 00000000-ffff-0003-0000-000000000001
 
 	measure 'New Incidents' =
-			CALCULATE(COUNTROWS(Incidents), Incidents[Status] = "New")
+			COALESCE(CALCULATE(COUNTROWS(Incidents), Incidents[Status] = "New"), 0)
 		formatString: 0
 		displayFolder: SOC Overview
 		lineageTag: 00000000-ffff-0016-0000-000000000001
 
 	measure 'Closed Incidents' =
-			CALCULATE(COUNTROWS(Incidents), Incidents[Status] = "Closed")
+			COALESCE(CALCULATE(COUNTROWS(Incidents), Incidents[Status] = "Closed"), 0)
 		formatString: 0
 		displayFolder: SOC Overview
 		lineageTag: 00000000-ffff-0017-0000-000000000001
 
 	measure 'Avg Resolution Hours' =
-			AVERAGEX(FILTER(Incidents, NOT ISBLANK(Incidents[ResolutionHours])), Incidents[ResolutionHours])
+			COALESCE(AVERAGEX(FILTER(Incidents, NOT ISBLANK(Incidents[ResolutionHours])), Incidents[ResolutionHours]), 0)
 		formatString: 0.0
 		displayFolder: SOC Overview
 		lineageTag: 00000000-ffff-0004-0000-000000000001
 
 	measure 'Total Alerts' =
-			COUNTROWS(Alerts)
+			COALESCE(COUNTROWS(Alerts), 0)
 		formatString: 0
 		displayFolder: SOC Overview
 		lineageTag: 00000000-ffff-0005-0000-000000000001
 
 	measure 'Tenants Monitored' =
-			DISTINCTCOUNT(Incidents[ClientWorkspace])
+			COALESCE(DISTINCTCOUNT(Incidents[ClientWorkspace]), 0)
 		formatString: 0
 		displayFolder: SOC Overview
 		lineageTag: 00000000-ffff-0006-0000-000000000001
 
 	measure 'Failed Sign-ins' =
-			CALCULATE(
-				SUMX(IdentityThreats, IdentityThreats[EventCount]),
-				IdentityThreats[EventType] <> "Brute Force" &&
-				IdentityThreats[EventType] <> "MFA Disabled" &&
-				IdentityThreats[EventType] <> "MFA Method Removed" &&
-				IdentityThreats[EventType] <> "MFA Rejected"
-			)
+			COALESCE(
+				CALCULATE(
+					SUMX(IdentityThreats, IdentityThreats[EventCount]),
+					IdentityThreats[EventType] <> "Brute Force" &&
+					IdentityThreats[EventType] <> "MFA Disabled" &&
+					IdentityThreats[EventType] <> "MFA Method Removed" &&
+					IdentityThreats[EventType] <> "MFA Rejected"
+				), 0)
 		formatString: 0
 		displayFolder: Threat Activity
 		lineageTag: 00000000-ffff-0007-0000-000000000001
 
 	measure 'Brute Force Events' =
-			CALCULATE(COUNTROWS(IdentityThreats), IdentityThreats[EventType] = "Brute Force")
+			COALESCE(CALCULATE(COUNTROWS(IdentityThreats), IdentityThreats[EventType] = "Brute Force"), 0)
 		formatString: 0
 		displayFolder: Threat Activity
 		lineageTag: 00000000-ffff-0008-0000-000000000001
 
 	measure 'MFA Changes' =
-			CALCULATE(
-				SUMX(IdentityThreats, IdentityThreats[EventCount]),
-				IdentityThreats[EventType] = "MFA Disabled" ||
-				IdentityThreats[EventType] = "MFA Method Removed" ||
-				IdentityThreats[EventType] = "MFA Rejected"
-			)
+			COALESCE(
+				CALCULATE(
+					SUMX(IdentityThreats, IdentityThreats[EventCount]),
+					IdentityThreats[EventType] = "MFA Disabled" ||
+					IdentityThreats[EventType] = "MFA Method Removed" ||
+					IdentityThreats[EventType] = "MFA Rejected"
+				), 0)
 		formatString: 0
 		displayFolder: Threat Activity
 		lineageTag: 00000000-ffff-0009-0000-000000000001
@@ -92,37 +94,39 @@ table _Measures
 		lineageTag: 00000000-ffff-0018-0000-000000000001
 
 	measure 'Unique Targeted Users' =
-			CALCULATE(
-				DISTINCTCOUNT(IdentityThreats[UserPrincipalName]),
-				IdentityThreats[UserPrincipalName] <> ""
-			)
+			COALESCE(
+				CALCULATE(
+					DISTINCTCOUNT(IdentityThreats[UserPrincipalName]),
+					IdentityThreats[UserPrincipalName] <> ""
+				), 0)
 		formatString: 0
 		displayFolder: Threat Activity
 		lineageTag: 00000000-ffff-0019-0000-000000000001
 
 	measure 'Source Countries' =
-			CALCULATE(
-				DISTINCTCOUNT(IdentityThreats[Country]),
-				IdentityThreats[Country] <> ""
-			)
+			COALESCE(
+				CALCULATE(
+					DISTINCTCOUNT(IdentityThreats[Country]),
+					IdentityThreats[Country] <> ""
+				), 0)
 		formatString: 0
 		displayFolder: Threat Activity
 		lineageTag: 00000000-ffff-0020-0000-000000000001
 
 	measure 'Rules Fired (30d)' =
-			SUMX(RulesFired, RulesFired[FiringCount])
+			COALESCE(SUMX(RulesFired, RulesFired[FiringCount]), 0)
 		formatString: 0
 		displayFolder: Security Posture
 		lineageTag: 00000000-ffff-0011-0000-000000000001
 
 	measure 'Distinct Rules Active' =
-			DISTINCTCOUNT(RulesFired[RuleName])
+			COALESCE(DISTINCTCOUNT(RulesFired[RuleName]), 0)
 		formatString: 0
 		displayFolder: Security Posture
 		lineageTag: 00000000-ffff-0012-0000-000000000001
 
 	measure 'Azure Activity Events' =
-			COUNTROWS(AzureActivityEvents)
+			COALESCE(COUNTROWS(AzureActivityEvents), 0)
 		formatString: 0
 		displayFolder: Security Posture
 		lineageTag: 00000000-ffff-0013-0000-000000000001
