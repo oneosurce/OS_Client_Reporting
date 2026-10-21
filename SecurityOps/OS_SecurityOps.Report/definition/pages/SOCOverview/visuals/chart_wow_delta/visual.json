@@ -3,35 +3,31 @@
   "name": "chart_wow_delta",
   "position": { "x": 664, "y": 486, "z": 32, "width": 584, "height": 210, "tabOrder": 32 },
   "visual": {
-    "visualType": "multiRowCard",
+    "visualType": "lineChart",
     "query": {
       "queryState": {
-        "Values": {
+        "Category": {
           "projections": [
-            {
-              "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Incidents Δ% (15d)" } },
-              "queryRef": "_Measures.Incidents Δ% (15d)",
-              "nativeQueryRef": "Incidents Δ% (15d)"
-            },
-            {
-              "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Alerts Δ% (15d)" } },
-              "queryRef": "_Measures.Alerts Δ% (15d)",
-              "nativeQueryRef": "Alerts Δ% (15d)"
-            }
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Date" } }, "Property": "Date" } }, "queryRef": "Date.Date" }
+          ]
+        },
+        "Y": {
+          "projections": [
+            { "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Total Incidents" } }, "queryRef": "_Measures.Total Incidents", "nativeQueryRef": "Total Incidents" },
+            { "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Total Alerts" } }, "queryRef": "_Measures.Total Alerts", "nativeQueryRef": "Total Alerts" }
           ]
         }
       }
     },
     "objects": {
-      "labels": [{ "properties": { "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#6B7280'" } } } } } } }],
-      "calloutValue": [{ "properties": { "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#1F2A5A'" } } } } }, "bold": { "expr": { "Literal": { "Value": "true" } } } } }],
-      "categoryLabels": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } } } }],
-      "background": [{ "properties": { "show": { "expr": { "Literal": { "Value": "false" } } } } }]
+      "valueAxis": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } } } }],
+      "categoryAxis": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } } } }],
+      "legend": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "position": { "expr": { "Literal": { "Value": "'Top'" } } } } }]
     },
     "visualContainerObjects": {
       "background": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#FFFFFF'" } } } } }, "transparency": { "expr": { "Literal": { "Value": "0" } } } } }],
       "border": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#E3E8F0'" } } } } }, "radius": { "expr": { "Literal": { "Value": "8" } } } } }],
-      "title": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "text": { "expr": { "Literal": { "Value": "'Change vs Prior 15 Days'" } } }, "fontColor": { "solid": { "color": { "expr": { "Literal": { "Value": "'#1F2A5A'" } } } } }, "bold": { "expr": { "Literal": { "Value": "true" } } }, "fontSize": { "expr": { "Literal": { "Value": "10" } } } } }],
+      "title": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "text": { "expr": { "Literal": { "Value": "'Incidents & Alerts — 30-Day Trend'" } } }, "fontColor": { "solid": { "color": { "expr": { "Literal": { "Value": "'#1F2A5A'" } } } } }, "bold": { "expr": { "Literal": { "Value": "true" } } }, "fontSize": { "expr": { "Literal": { "Value": "10" } } } } }],
       "padding": [{ "properties": { "left": { "expr": { "Literal": { "Value": "10" } } }, "right": { "expr": { "Literal": { "Value": "10" } } }, "top": { "expr": { "Literal": { "Value": "6" } } }, "bottom": { "expr": { "Literal": { "Value": "10" } } } } }],
       "visualHeader": [{ "properties": { "show": { "expr": { "Literal": { "Value": "false" } } } } }]
     }
