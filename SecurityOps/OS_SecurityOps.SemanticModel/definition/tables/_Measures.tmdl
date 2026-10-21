@@ -20,6 +20,18 @@ table _Measures
 		displayFolder: SOC Overview
 		lineageTag: 00000000-ffff-0003-0000-000000000001
 
+	measure 'New Incidents' =
+			CALCULATE(COUNTROWS(Incidents), Incidents[Status] = "New")
+		formatString: 0
+		displayFolder: SOC Overview
+		lineageTag: 00000000-ffff-0016-0000-000000000001
+
+	measure 'Closed Incidents' =
+			CALCULATE(COUNTROWS(Incidents), Incidents[Status] = "Closed")
+		formatString: 0
+		displayFolder: SOC Overview
+		lineageTag: 00000000-ffff-0017-0000-000000000001
+
 	measure 'Avg Resolution Hours' =
 			AVERAGEX(FILTER(Incidents, NOT ISBLANK(Incidents[ResolutionHours])), Incidents[ResolutionHours])
 		formatString: 0.0
