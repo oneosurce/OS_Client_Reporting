@@ -13,7 +13,7 @@
         },
         "Y": {
           "projections": [
-            { "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Failed Sign-ins" } }, "queryRef": "_Measures.Failed Sign-ins", "nativeQueryRef": "Events" }
+            { "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Identity Events" } }, "queryRef": "_Measures.Identity Events", "nativeQueryRef": "Identity Events" }
           ]
         },
         "Series": {
@@ -21,7 +21,19 @@
             { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "IdentityThreats" } }, "Property": "ClientWorkspace" } }, "queryRef": "IdentityThreats.ClientWorkspace" }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          { "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Identity Events" } }, "direction": "Descending" }
+        ],
+        "isDefaultSort": false
       }
+    },
+    "objects": {
+      "valueAxis": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "showAxisTitle": { "expr": { "Literal": { "Value": "false" } } } } }],
+      "categoryAxis": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "showAxisTitle": { "expr": { "Literal": { "Value": "false" } } } } }],
+      "legend": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "position": { "expr": { "Literal": { "Value": "'Top'" } } } } }],
+      "labels": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } } } }]
     },
     "visualContainerObjects": {
       "background": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#FFFFFF'" } } } } }, "transparency": { "expr": { "Literal": { "Value": "0" } } } } }],
