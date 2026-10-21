@@ -20,8 +20,8 @@
       }
     },
     "objects": {
-      "valueAxis": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } } } }],
-      "categoryAxis": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } } } }],
+      "valueAxis": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "showAxisTitle": { "expr": { "Literal": { "Value": "false" } } } } }],
+      "categoryAxis": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "showAxisTitle": { "expr": { "Literal": { "Value": "false" } } } } }],
       "legend": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "position": { "expr": { "Literal": { "Value": "'Top'" } } } } }]
     },
     "visualContainerObjects": {
