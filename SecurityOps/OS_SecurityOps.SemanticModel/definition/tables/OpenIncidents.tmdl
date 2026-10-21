@@ -79,6 +79,14 @@ table OpenIncidents
 
 		annotation SummarizationSetBy = User
 
+	column Tactics
+		dataType: string
+		lineageTag: 44440010-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Tactics
+
+		annotation SummarizationSetBy = User
+
 	column CreatedTime
 		dataType: dateTime
 		formatString: General Date
