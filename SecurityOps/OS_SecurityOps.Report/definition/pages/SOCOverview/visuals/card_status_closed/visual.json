@@ -14,7 +14,7 @@
       }
     },
     "objects": {
-      "labels": [{ "properties": { "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#1F2A5A'" } } } } }, "bold": { "expr": { "Literal": { "Value": "true" } } } } }],
+      "labels": [{ "properties": { "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#2E9E5B'" } } } } }, "bold": { "expr": { "Literal": { "Value": "true" } } } } }],
       "calloutValue": [{ "properties": { "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#2E9E5B'" } } } } }, "bold": { "expr": { "Literal": { "Value": "true" } } } } }],
       "categoryLabels": [{ "properties": { "show": { "expr": { "Literal": { "Value": "false" } } } } }],
       "background": [{ "properties": { "show": { "expr": { "Literal": { "Value": "false" } } } } }]
