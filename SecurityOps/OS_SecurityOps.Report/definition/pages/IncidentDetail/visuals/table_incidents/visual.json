@@ -18,6 +18,15 @@
             { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "OpenIncidents" } }, "Property": "CreatedTime" } }, "queryRef": "OpenIncidents.CreatedTime" }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": { "Column": { "Expression": { "SourceRef": { "Entity": "OpenIncidents" } }, "Property": "CreatedTime" } },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": false
       }
     },
     "objects": {
