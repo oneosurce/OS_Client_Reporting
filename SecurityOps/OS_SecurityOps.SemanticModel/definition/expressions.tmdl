@@ -8,9 +8,9 @@ expression fnBuildUnion =
 				let
 						Central      = Table.SelectRows(TenantRegistry, each [IsManagingWorkspace] = true){0},
 						Members      = Table.SelectRows(TenantRegistry, each [IsManagingWorkspace] = false),
-						CentralPart  = "    (" & tableName & " | extend ClientWorkspace = """ & Central[WorkspaceName] & """)",
+						CentralPart  = "    (" & tableName & " | extend ClientWorkspace = """ & Central[ClientName] & """)",
 						MemberParts  = List.Transform(
-								Table.ToRows(Table.SelectColumns(Members, {"WorkspaceResourceId", "WorkspaceName"})),
+								Table.ToRows(Table.SelectColumns(Members, {"WorkspaceResourceId", "ClientName"})),
 								each "    (workspace(""" & _{0} & """)." & tableName & " | extend ClientWorkspace = """ & _{1} & """)"
 						),
 						AllParts     = List.Combine({{CentralPart}, MemberParts}),
