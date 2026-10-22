@@ -113,6 +113,12 @@ table _Measures
 		displayFolder: Threat Activity
 		lineageTag: 00000000-ffff-0020-0000-000000000001
 
+	measure 'Tactic Count' =
+			COALESCE(COUNTROWS(IncidentTactics), 0)
+		formatString: 0
+		displayFolder: SOC Overview
+		lineageTag: 00000000-ffff-0021-0000-000000000001
+
 	measure 'Rules Fired (30d)' =
 			COALESCE(SUMX(RulesFired, RulesFired[FiringCount]), 0)
 		formatString: 0

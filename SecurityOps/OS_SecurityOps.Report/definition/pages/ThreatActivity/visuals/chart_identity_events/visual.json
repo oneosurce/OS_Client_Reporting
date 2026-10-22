@@ -8,18 +8,18 @@
       "queryState": {
         "Category": {
           "projections": [
-            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "Incidents" } }, "Property": "Tactics" } }, "queryRef": "Incidents.Tactics" }
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "IncidentTactics" } }, "Property": "Tactic" } }, "queryRef": "IncidentTactics.Tactic" }
           ]
         },
         "Y": {
           "projections": [
-            { "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Total Incidents" } }, "queryRef": "_Measures.Total Incidents", "nativeQueryRef": "Total Incidents" }
+            { "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Tactic Count" } }, "queryRef": "_Measures.Tactic Count", "nativeQueryRef": "Tactic Count" }
           ]
         }
       },
       "sortDefinition": {
         "sort": [
-          { "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Total Incidents" } }, "direction": "Descending" }
+          { "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Tactic Count" } }, "direction": "Descending" }
         ],
         "isDefaultSort": false
       }

@@ -1,0 +1,43 @@
+table IncidentTactics
+	lineageTag: 55550000-0000-0000-0000-000000000001
+	isHidden
+
+	column Tactic
+		dataType: string
+		lineageTag: 55550001-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Tactic
+
+		annotation SummarizationSetBy = User
+
+	column Severity
+		dataType: string
+		lineageTag: 55550002-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Severity
+
+		annotation SummarizationSetBy = User
+
+	column ClientWorkspace
+		dataType: string
+		lineageTag: 55550003-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ClientWorkspace
+
+		annotation SummarizationSetBy = User
+
+	partition IncidentTactics = m
+		mode: import
+		source =
+				let
+					KQL = fnBuildUnion("SecurityIncident")
+						& "#(lf)| summarize arg_max(TimeGenerated, *) by IncidentNumber, ClientWorkspace"
+						& "#(lf)| mv-expand Tactic = AdditionalData.tactics to typeof(string)"
+						& "#(lf)| where isnotempty(Tactic)"
+						& "#(lf)| project Tactic, Severity, ClientWorkspace",
+					Source = fnQueryLogAnalytics(KQL)
+				in
+					Source
+
+	annotation PBI_ResultType = Table
+
