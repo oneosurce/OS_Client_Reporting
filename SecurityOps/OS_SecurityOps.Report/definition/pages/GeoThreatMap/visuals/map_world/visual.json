@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "name": "map_world",
+  "position": { "x": 32, "y": 100, "z": 10, "width": 800, "height": 590, "tabOrder": 10 },
+  "visual": {
+    "visualType": "filledMap",
+    "query": {
+      "queryState": {
+        "Location": {
+          "projections": [
+            { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "IdentityThreats" } }, "Property": "Country" } }, "queryRef": "IdentityThreats.Country" }
+          ]
+        },
+        "ColorSaturation": {
+          "projections": [
+            { "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Identity Events" } }, "queryRef": "_Measures.Identity Events", "nativeQueryRef": "Identity Events" }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            { "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Failed Sign-ins" } }, "queryRef": "_Measures.Failed Sign-ins", "nativeQueryRef": "Failed Sign-ins" },
+            { "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Brute Force Events" } }, "queryRef": "_Measures.Brute Force Events", "nativeQueryRef": "Brute Force Events" },
+            { "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "MFA Changes" } }, "queryRef": "_Measures.MFA Changes", "nativeQueryRef": "MFA Changes" }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "dataColors": [{ "properties": { "minColor": { "solid": { "color": { "expr": { "Literal": { "Value": "'#D6E4F7'" } } } } }, "maxColor": { "solid": { "color": { "expr": { "Literal": { "Value": "'#1F2A5A'" } } } } } } }],
+      "labels": [{ "properties": { "show": { "expr": { "Literal": { "Value": "false" } } } } }]
+    },
+    "visualContainerObjects": {
+      "background": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#FFFFFF'" } } } } }, "transparency": { "expr": { "Literal": { "Value": "0" } } } } }],
+      "border": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#E3E8F0'" } } } } }, "radius": { "expr": { "Literal": { "Value": "8" } } } } }],
+      "title": [{ "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "text": { "expr": { "Literal": { "Value": "'Identity Events by Country (Last 90d)'" } } }, "fontColor": { "solid": { "color": { "expr": { "Literal": { "Value": "'#1F2A5A'" } } } } }, "bold": { "expr": { "Literal": { "Value": "true" } } }, "fontSize": { "expr": { "Literal": { "Value": "10" } } } } }],
+      "padding": [{ "properties": { "left": { "expr": { "Literal": { "Value": "10" } } }, "right": { "expr": { "Literal": { "Value": "10" } } }, "top": { "expr": { "Literal": { "Value": "6" } } }, "bottom": { "expr": { "Literal": { "Value": "10" } } } } }],
+      "visualHeader": [{ "properties": { "show": { "expr": { "Literal": { "Value": "false" } } } } }]
+    }
+  }
+}
