@@ -22,13 +22,6 @@
           { "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Identity Events" } }, "direction": "Descending" }
         ],
         "isDefaultSort": false
-      },
-      "topN": {
-        "operator": "Top",
-        "itemCount": 15,
-        "orderBy": [
-          { "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "_Measures" } }, "Property": "Identity Events" } }, "direction": "Descending" }
-        ]
       }
     },
     "objects": {
