@@ -4,8 +4,7 @@
     "SOCOverview",
     "ThreatActivity",
     "SecurityPosture",
-    "IncidentDetail",
-    "GeoThreatMap"
+    "IncidentDetail"
   ],
   "activePageName": "SOCOverview"
 }
