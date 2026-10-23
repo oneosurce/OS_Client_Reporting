@@ -3,6 +3,7 @@
   "pageOrder": [
     "SOCOverview",
     "ThreatActivity",
+    "UEBA",
     "SecurityPosture",
     "IncidentDetail"
   ],

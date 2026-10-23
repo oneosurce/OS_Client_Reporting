@@ -1,0 +1,121 @@
+table UEBABehavior
+	lineageTag: b0000000-0000-0000-0000-000000000001
+
+	column EventTime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: b0000001-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: EventTime
+
+		annotation SummarizationSetBy = User
+
+	column EventDate
+		isHidden
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: b0000002-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: EventDate
+
+		annotation SummarizationSetBy = User
+
+	column UserPrincipalName
+		dataType: string
+		lineageTag: b0000003-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: UserPrincipalName
+
+		annotation SummarizationSetBy = User
+
+	column ActivityType
+		dataType: string
+		lineageTag: b0000004-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ActivityType
+
+		annotation SummarizationSetBy = User
+
+	column ActionType
+		dataType: string
+		lineageTag: b0000005-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ActionType
+
+		annotation SummarizationSetBy = User
+
+	column EventSource
+		dataType: string
+		lineageTag: b0000006-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: EventSource
+
+		annotation SummarizationSetBy = User
+
+	column SourceIPAddress
+		dataType: string
+		lineageTag: b0000007-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: SourceIPAddress
+
+		annotation SummarizationSetBy = User
+
+	column SourceLocation
+		dataType: string
+		lineageTag: b0000008-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: SourceLocation
+
+		annotation SummarizationSetBy = User
+
+	column App
+		dataType: string
+		lineageTag: b0000009-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: App
+
+		annotation SummarizationSetBy = User
+
+	column Resource
+		dataType: string
+		lineageTag: b0000010-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Resource
+
+		annotation SummarizationSetBy = User
+
+	column InvestigationPriority
+		dataType: int64
+		formatString: 0
+		lineageTag: b0000011-0000-0000-0000-000000000001
+		summarizeBy: sum
+		sourceColumn: InvestigationPriority
+
+		annotation SummarizationSetBy = User
+
+	column ClientWorkspace
+		dataType: string
+		lineageTag: b0000012-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ClientWorkspace
+
+		annotation SummarizationSetBy = User
+
+	partition UEBABehavior = m
+		mode: import
+		source =
+				let
+					KQL = "union isfuzzy=true" & Text.Middle(fnBuildUnion("BehaviorAnalytics"), 5)
+						& "#(lf)| where TimeGenerated > ago(90d) and InvestigationPriority > 0"
+						& "#(lf)| extend App = tostring(ActivityInsights.App), Resource = tostring(ActivityInsights.Resource)"
+						& "#(lf)| project EventTime = TimeGenerated, EventDate = bin(TimeGenerated, 1d), UserPrincipalName, ActivityType, ActionType, EventSource, SourceIPAddress, SourceLocation = tostring(SourceIPLocation), App, Resource, InvestigationPriority, ClientWorkspace",
+					Source = fnQueryLogAnalytics(KQL),
+					Typed = Table.TransformColumnTypes(Source, {
+						{"EventTime",             type datetime},
+						{"EventDate",             type datetime},
+						{"InvestigationPriority", Int64.Type}
+					})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table

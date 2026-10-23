@@ -6,7 +6,7 @@ model Model
 		legacyRedirects
 		returnErrorValuesAsNull
 
-annotation PBI_QueryOrder = ["TenantRegistry","Incidents","IncidentTactics","Alerts","IdentityThreats","ThreatIntelMatches","AzureActivityEvents","RulesFired","Date","_Measures"]
+annotation PBI_QueryOrder = ["TenantRegistry","Incidents","IncidentTactics","Alerts","IdentityThreats","ThreatIntelMatches","AzureActivityEvents","RulesFired","UEBABehavior","UEBAInsights","Date","_Measures"]
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
@@ -20,6 +20,8 @@ ref table IdentityThreats
 ref table ThreatIntelMatches
 ref table AzureActivityEvents
 ref table RulesFired
+ref table UEBABehavior
+ref table UEBAInsights
 ref table Date
 ref table _Measures
 

@@ -21,3 +21,11 @@ relationship a1000005-0000-0000-0000-000000000001
 relationship a1000006-0000-0000-0000-000000000001
 	fromColumn: RulesFired.FiringDate
 	toColumn: Date.Date
+
+relationship a1000007-0000-0000-0000-000000000001
+	fromColumn: UEBABehavior.EventDate
+	toColumn: Date.Date
+
+relationship a1000008-0000-0000-0000-000000000001
+	fromColumn: UEBAInsights.EventDate
+	toColumn: Date.Date
