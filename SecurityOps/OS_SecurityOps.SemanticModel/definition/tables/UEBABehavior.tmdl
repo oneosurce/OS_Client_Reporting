@@ -105,12 +105,21 @@ table UEBABehavior
 		mode: import
 		source =
 				let
-					KQL = "union isfuzzy=true" & Text.Middle(fnBuildUnion("BehaviorAnalytics"), 5)
-						& "#(lf)| where TimeGenerated > ago(90d) and InvestigationPriority > 0"
-						& "#(lf)| extend App = tostring(ActivityInsights.App), Resource = tostring(ActivityInsights.Resource)"
-						& "#(lf)| project EventTime = TimeGenerated, EventDate = bin(TimeGenerated, 1d), UserPrincipalName, ActivityType, ActionType, EventSource, SourceIPAddress, SourceLocation = tostring(SourceIPLocation), App, Resource, InvestigationPriority, ClientWorkspace",
-					Source = fnQueryLogAnalytics(KQL),
-					Typed = Table.TransformColumnTypes(Source, {
+					QueryOne = (wsRid as text, isCentral as logical, clientName as text) as any =>
+						let
+							Tbl = if isCentral then "BehaviorAnalytics" else "workspace(""" & wsRid & """).BehaviorAnalytics",
+							KQL = Tbl
+								& "#(lf)| where TimeGenerated > ago(90d) and InvestigationPriority > 0"
+								& "#(lf)| extend App = tostring(ActivityInsights.App), Resource = tostring(ActivityInsights.Resource)"
+								& "#(lf)| extend ClientWorkspace = """ & clientName & """"
+								& "#(lf)| project EventTime = TimeGenerated, EventDate = bin(TimeGenerated, 1d), UserPrincipalName, ActivityType, ActionType, EventSource, SourceIPAddress, SourceLocation = tostring(SourceIPLocation), App, Resource, InvestigationPriority, ClientWorkspace"
+							Result = try Table.Buffer(fnQueryLogAnalytics(KQL)) otherwise null
+						in
+							Result,
+					WithQ = Table.AddColumn(TenantRegistry, "Q", each QueryOne([WorkspaceResourceId], [IsManagingWorkspace], [ClientName])),
+					NonNull = Table.SelectRows(WithQ, each [Q] <> null),
+					Combined = Table.Combine(NonNull[Q]),
+					Typed = Table.TransformColumnTypes(Combined, {
 						{"EventTime",             type datetime},
 						{"EventDate",             type datetime},
 						{"InvestigationPriority", Int64.Type}
