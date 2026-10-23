@@ -53,18 +53,14 @@
         "sort": [
           {
             "field": {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "UEBA Risk Score"
-                }
-              },
-              "queryRef": "_Measures.UEBA Risk Score",
-              "nativeQueryRef": "UEBA Risk Score"
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "_Measures"
+                  }
+                },
+                "Property": "UEBA Risk Score"
+              }
             },
             "direction": "Descending"
           }

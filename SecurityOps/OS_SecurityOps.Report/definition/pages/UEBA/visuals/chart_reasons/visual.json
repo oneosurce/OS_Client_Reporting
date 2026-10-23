@@ -53,18 +53,14 @@
         "sort": [
           {
             "field": {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "UEBA Anomaly Flags"
-                }
-              },
-              "queryRef": "_Measures.UEBA Anomaly Flags",
-              "nativeQueryRef": "UEBA Anomaly Flags"
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "_Measures"
+                  }
+                },
+                "Property": "UEBA Anomaly Flags"
+              }
             },
             "direction": "Descending"
           }
