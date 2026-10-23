@@ -3,6 +3,17 @@
 Use this playbook every time a new client is onboarded to the SOC dashboard.  
 Estimated time: 30–60 min (plus 1–2 h for first data ingestion).
 
+### What's in the SOC dashboard now
+
+The `OS_SecurityOps` report (Fabric workspace "OneSource Reporting") has **6 pages**:
+`SOC Overview` · `Threat Activity` · `UEBA` (User Behavior Analytics) · `Tenant Risk` · `Security Posture` · `Incident Detail`.
+
+Semantic model: **10 tables / 20 measures**, all sourced from Microsoft Sentinel / Log Analytics via a cross-tenant Lighthouse `union` driven by the `TenantRegistry` table.
+
+Separately, the **Live Geo Threat Map** is a standalone Azure-hosted web page (not a Power BI page) — see the [Live Geo Threat Map](#live-geo-threat-map) section below.
+
+Current tenants: **OneSource** (central/managing), **FW Walton**, **Ocean Marine Services**, **Cobalt Engineering**.
+
 ---
 
 ## Prerequisites
@@ -94,17 +105,39 @@ Confirm the workspace ID shown belongs to *this* customer, not another tenant.
 The semantic model's `fnBuildUnion` function reads `TenantRegistry` to build the cross-workspace KQL `union`. Add one row per new tenant.
 
 1. Open `SecurityOps/OS_SecurityOps.SemanticModel/definition/tables/TenantRegistry.tmdl`.
-2. Find the M partition source and add a row:
+2. Find the `Rows = { ... }` list in the M partition source and add one record (M record syntax, **not** JSON):
 
    ```
-   { "ClientWorkspace" = "<LABEL>", "WorkspaceId" = "<WORKSPACE_GUID>", "SubscriptionId" = "<SUB_ID>", "ResourceGroup" = "<RG>" }
+   [   WorkspaceName       = "<SHORT>-Sentinel-0",
+       ClientName          = "<Client Display Name>",
+       WorkspaceId         = "<WORKSPACE_GUID>",
+       WorkspaceResourceId = "/subscriptions/<SUB_ID>/resourceGroups/<RG>/providers/Microsoft.OperationalInsights/workspaces/<WS_NAME>",
+       IsManagingWorkspace = false ]
    ```
 
-   `<LABEL>` is the `ClientWorkspace` value that will appear in every chart (e.g. `FWW-Sentinel-0`). Keep the format `<SHORT_NAME>-Sentinel-0`.
+   - **`ClientName` is the label shown in every chart legend/table** (e.g. `FW Walton`, `Cobalt Engineering`) — use the friendly client name, not the workspace name.
+   - `IsManagingWorkspace = false` for every customer; only the central `OS-Sentinel-0` row is `true`.
+   - `WorkspaceResourceId` must be the full ARM ID (casing of the RG matters — copy it exactly from the portal).
 
 3. Save and commit. The deploy script will push the updated definition to Fabric on the next sync.
 
-> **isfuzzy warning:** The KQL union has **no `isfuzzy`**. If the new workspace is unreachable at refresh time (Lighthouse not yet active, workspace deleted, etc.) the **entire refresh will fail**. Do not add a row to TenantRegistry until Step 1 is confirmed working.
+> **isfuzzy warning (core tables):** `fnBuildUnion` (used by Incidents, Alerts, IdentityThreats, ThreatIntelMatches, RulesFired, AzureActivityEvents) has **no `isfuzzy`**. If the new workspace is unreachable at refresh time (Lighthouse not yet active, workspace deleted) the **entire refresh fails**. Do not add a TenantRegistry row until Step 1 is confirmed working.
+>
+> **UEBA tables are tolerant:** `UEBABehavior` / `UEBAInsights` query each workspace independently wrapped in `try … otherwise null`, so a tenant **without UEBA enabled** (no `BehaviorAnalytics` table) is skipped silently — it will simply not appear on the UEBA / Tenant Risk pages. `isfuzzy` does **not** help here (it does not suppress a missing table referenced via `workspace("…")`), which is why the per-workspace `try` pattern is used.
+
+---
+
+## Step 3b — Enable UEBA (optional, for the UEBA / Tenant Risk pages)
+
+UEBA metrics (scored events, risk score, anomaly reasons, per-tenant risk) only appear for a tenant that has **Entity Behavior Analytics enabled** in its own Sentinel workspace. Without it there is no `BehaviorAnalytics` table and the tenant is silently skipped (Step 3 note). This is optional — the core pages work without it.
+
+To enable:
+1. In the customer's **Microsoft Sentinel → Settings → Entity behavior analytics → Enable**, and select the identity data sources (SignIn/Audit logs — the same ones from Step 2).
+2. Full value wants **Entra ID P2** licensing on the customer tenant.
+3. UEBA needs **a few days** to build behavioral baselines before meaningful anomalies/scores appear.
+4. Once `BehaviorAnalytics` starts populating, the tenant appears on the UEBA and Tenant Risk pages **automatically** on the next refresh — no model or report change needed.
+
+> Requires settings-write access in the customer tenant. Lighthouse "Log Analytics Reader" (Step 1) is **not** enough to toggle this — it needs a higher role or the customer's own admin.
 
 ---
 
@@ -137,6 +170,7 @@ After the refresh completes (check **Data updated** timestamp in the Fabric work
 2. **Incidents by Tenant** bar chart shows the new `ClientWorkspace` label.
 3. **Incident Trend** and **Failed Sign-in Trend** charts show the new tenant in the legend.
 4. **Top Targeted Accounts** table shows users from the new tenant's domain.
+5. **UEBA / Tenant Risk pages** show the new tenant **only if UEBA was enabled** (Step 3b) and `BehaviorAnalytics` has started populating (allow a few days). If UEBA is off for this tenant, its absence here is expected, not a bug.
 
 If any of those are missing, check:
 - Lighthouse delegation is active (Step 1)
@@ -161,6 +195,41 @@ az rest --method GET \
 
 Every entry must point to the customer's **own** Sentinel workspace. Delete any setting that points elsewhere.
 
+> **Leak history (Oct 2026):** OneSource's Entra had a diagnostic setting streaming OneSource identity logs into FWW-Sentinel-0. It was deleted and the contaminated data purged. A residual of UEBA `BehaviorAnalytics` (which the first purge missed) was purged Oct 23. Note: OneSource MSP admins (`@onesource.tech`) signing **into** a client's own tenant is **legitimate** client activity and correctly appears in that client's workspace — distinguish it from directory contamination by `AADTenantId` / `ResourceTenantId` (contamination = both equal OneSource's `4b5e91ed`; legit guest access = both equal the client tenant).
+
+---
+
+## Live Geo Threat Map
+
+The animated Norse-style attack map is a **standalone web page**, not a Power BI page. (It was briefly embedded in a "Geo Threat Map" report page, but Power BI reports can't reliably iframe external web content — and the "HTML Content" custom visual can't either, due to its nested sandbox — so that page was removed.)
+
+| | |
+|---|---|
+| **Live URL** | `https://ossocmape62cb7.z21.web.core.windows.net/` |
+| **Header-less variant** | append `#embed` → hides the internal title bar (for kiosk / iframe / signage) |
+| **Source of truth** | `webassets/attack-map.html` (self-contained D3.js + inline world TopoJSON; no external calls) |
+| **Hosting** | Azure Blob **static website** — storage account `ossocmape62cb7`, RG `OS-WebAssets`, sub **OS-DIRECT_AR_2026** (`42a6ebff-536a-4d2a-ba20-43225526bef8`) |
+
+> Hosted in **OS-DIRECT_AR_2026**, not the "OneSource Azure" sub, because that sub has a deny-all Azure Policy blocking new storage accounts.
+
+### Update the hosted map
+
+```bash
+az account set --subscription 42a6ebff-536a-4d2a-ba20-43225526bef8
+KEY=$(az storage account keys list -g OS-WebAssets -n ossocmape62cb7 --query "[0].value" -o tsv)
+az storage blob upload --account-name ossocmape62cb7 --account-key "$KEY" \
+  --container-name '$web' --name index.html \
+  --file ~/Developer/OS_Client_Reporting/webassets/attack-map.html \
+  --content-type "text/html; charset=utf-8" --overwrite
+```
+
+> Use `--account-key` (not `--auth-mode login`) — `ar@onesource.tech` has no Storage Blob Data RBAC role on the account.
+
+### Add a new client to the map
+
+The map's client markers are **hardcoded** in `webassets/attack-map.html` (real static IPs / geocoded offices — this map is a curated visual, not driven by Sentinel data). To show a new client, edit the data objects near the top of the `<script>`:
+`WORLD_MARKERS` (region) · `METRO_MARKERS` (city clusters) · `OFFICES` (per-office coords + static public IP + label) · and the `CLIENT_REGION` / `CLIENT_METROS` / `METRO_OFFICES` maps. Then re-upload with the command above. (The attack arcs in `ATTACKS[]` are illustrative sample data.)
+
 ---
 
 ## Quick-Reference Checklist
@@ -171,11 +240,13 @@ Every entry must point to the customer's **own** Sentinel workspace. Delete any 
 [ ] Lighthouse delegation visible under Azure Lighthouse → Service providers
 [ ] Entra diagnostic setting created: Sentinel-EntraID-<CLIENT>
 [ ] Diagnostic setting confirmed pointing at customer's own workspace
-[ ] TenantRegistry row added, committed, pushed
+[ ] TenantRegistry row added (correct M record schema), committed, pushed
 [ ] scripts/deploy.sh SecurityOps ran — sync: Succeeded
 [ ] Dataset refreshed (manual or waited for next hourly)
 [ ] Tenants Monitored KPI incremented
 [ ] No cross-tenant diagnostic settings found
+[ ] (optional) UEBA enabled in client workspace → appears on UEBA / Tenant Risk pages after baselines build
+[ ] (optional) Client added to the Live Geo Threat Map (webassets/attack-map.html) and re-uploaded
 ```
 
 ---
@@ -193,3 +264,6 @@ Every entry must point to the customer's **own** Sentinel workspace. Delete any 
 | Service account (svc-pbi-sentinel) | `477d753e-9eb6-4c18-b525-c80e9e62a3c8` |
 | SA password (Key Vault) | `os-claude-keys` → secret `svc-pbi-sentinel-password` |
 | Lighthouse template | `SecurityOps/lighthouse/add-sentinel-readers.json` |
+| Live Geo Threat Map URL | `https://ossocmape62cb7.z21.web.core.windows.net/` (append `#embed` for header-less) |
+| Map hosting (storage / RG / sub) | `ossocmape62cb7` / `OS-WebAssets` / OS-DIRECT_AR_2026 (`42a6ebff-536a-4d2a-ba20-43225526bef8`) |
+| Map source file | `webassets/attack-map.html` |
