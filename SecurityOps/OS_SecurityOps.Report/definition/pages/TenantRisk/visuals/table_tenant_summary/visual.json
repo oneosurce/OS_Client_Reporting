@@ -1,37 +1,75 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
-  "name": "chart_trend",
+  "name": "table_tenant_summary",
   "position": {
-    "x": 32,
-    "y": 472,
-    "z": 22,
+    "x": 648,
+    "y": 448,
+    "z": 12,
     "width": 600,
-    "height": 224,
-    "tabOrder": 22
+    "height": 248,
+    "tabOrder": 12
   },
   "visual": {
-    "visualType": "clusteredColumnChart",
+    "visualType": "tableEx",
     "query": {
       "queryState": {
-        "Category": {
+        "Values": {
           "projections": [
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Date"
+                      "Entity": "UEBABehavior"
                     }
                   },
-                  "Property": "WeekStart"
+                  "Property": "ClientWorkspace"
                 }
               },
-              "queryRef": "Date.WeekStart"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
+              "queryRef": "UEBABehavior.ClientWorkspace"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "UEBA Scored Events"
+                }
+              },
+              "queryRef": "_Measures.UEBA Scored Events",
+              "nativeQueryRef": "UEBA Scored Events"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "UEBA Flagged Users"
+                }
+              },
+              "queryRef": "_Measures.UEBA Flagged Users",
+              "nativeQueryRef": "UEBA Flagged Users"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "UEBA High Priority"
+                }
+              },
+              "queryRef": "_Measures.UEBA High Priority",
+              "nativeQueryRef": "UEBA High Priority"
+            },
             {
               "field": {
                 "Measure": {
@@ -47,81 +85,70 @@
               "nativeQueryRef": "UEBA Risk Score"
             }
           ]
-        },
-        "Series": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "UEBABehavior"
-                    }
-                  },
-                  "Property": "ClientWorkspace"
-                }
-              },
-              "queryRef": "UEBABehavior.ClientWorkspace"
-            }
-          ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "_Measures"
+                  }
+                },
+                "Property": "UEBA Risk Score"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": false
       }
     },
     "objects": {
-      "valueAxis": [
+      "grid": [
         {
           "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "showAxisTitle": {
+            "gridVertical": {
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#1F2A5A'"
+                    }
+                  }
                 }
               }
             }
           }
         }
       ],
-      "categoryAxis": [
+      "columnHeaders": [
         {
           "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#6B7280'"
+                    }
+                  }
                 }
               }
             },
-            "showAxisTitle": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "legend": [
-        {
-          "properties": {
-            "show": {
+            "bold": {
               "expr": {
                 "Literal": {
                   "Value": "true"
-                }
-              }
-            },
-            "position": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Top'"
                 }
               }
             }
@@ -205,7 +232,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Risk Score \u2014 Weekly by Tenant'"
+                  "Value": "'Per-Tenant UEBA Summary'"
                 }
               }
             },

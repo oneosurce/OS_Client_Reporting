@@ -4,6 +4,7 @@
     "SOCOverview",
     "ThreatActivity",
     "UEBA",
+    "TenantRisk",
     "SecurityPosture",
     "IncidentDetail"
   ],
