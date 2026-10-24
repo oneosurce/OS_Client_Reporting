@@ -5,7 +5,7 @@
     "x": 32,
     "y": 100,
     "z": 10,
-    "width": 189,
+    "width": 292,
     "height": 100,
     "tabOrder": 10
   },
@@ -185,7 +185,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'LEGACY AUTH SIGN-INS'"
+                  "Value": "'LEGACY AUTH'"
                 }
               }
             },

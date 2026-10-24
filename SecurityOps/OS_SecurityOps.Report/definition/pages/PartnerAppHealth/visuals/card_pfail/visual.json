@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
-  "name": "card_partner",
+  "name": "card_pfail",
   "position": {
-    "x": 442,
+    "x": 340,
     "y": 100,
-    "z": 12,
-    "width": 189,
+    "z": 11,
+    "width": 292,
     "height": 100,
-    "tabOrder": 12
+    "tabOrder": 11
   },
   "visual": {
     "visualType": "card",
@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Partner Sessions"
+                  "Property": "Partner Failures"
                 }
               },
-              "queryRef": "_Measures.Partner Sessions",
-              "nativeQueryRef": "Partner Sessions"
+              "queryRef": "_Measures.Partner Failures",
+              "nativeQueryRef": "Partner Failures"
             }
           ]
         }
@@ -185,7 +185,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'PARTNER SESSIONS'"
+                  "Value": "'PARTNER FAILURES'"
                 }
               }
             },

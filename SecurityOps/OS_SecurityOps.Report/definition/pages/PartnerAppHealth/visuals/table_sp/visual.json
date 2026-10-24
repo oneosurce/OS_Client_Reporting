@@ -1,20 +1,72 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
-  "name": "card_failapps",
+  "name": "table_sp",
   "position": {
-    "x": 852,
-    "y": 100,
-    "z": 14,
-    "width": 189,
-    "height": 100,
-    "tabOrder": 14
+    "x": 32,
+    "y": 460,
+    "z": 22,
+    "width": 1216,
+    "height": 236,
+    "tabOrder": 22
   },
   "visual": {
-    "visualType": "card",
+    "visualType": "tableEx",
     "query": {
       "queryState": {
         "Values": {
           "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "IdentitySPHealth"
+                    }
+                  },
+                  "Property": "AppName"
+                }
+              },
+              "queryRef": "IdentitySPHealth.AppName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "IdentitySPHealth"
+                    }
+                  },
+                  "Property": "ClientWorkspace"
+                }
+              },
+              "queryRef": "IdentitySPHealth.ClientWorkspace"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "IdentitySPHealth"
+                    }
+                  },
+                  "Property": "Resource"
+                }
+              },
+              "queryRef": "IdentitySPHealth.Resource"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "IdentitySPHealth"
+                    }
+                  },
+                  "Property": "ErrorMeaning"
+                }
+              },
+              "queryRef": "IdentitySPHealth.ErrorMeaning"
+            },
             {
               "field": {
                 "Measure": {
@@ -23,21 +75,46 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Failing Apps"
+                  "Property": "SP Failed"
                 }
               },
-              "queryRef": "_Measures.Failing Apps",
-              "nativeQueryRef": "Failing Apps"
+              "queryRef": "_Measures.SP Failed",
+              "nativeQueryRef": "SP Failed"
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "_Measures"
+                  }
+                },
+                "Property": "SP Failed"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": false
       }
     },
     "objects": {
-      "labels": [
+      "grid": [
         {
           "properties": {
-            "color": {
+            "gridVertical": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "fontColor": {
               "solid": {
                 "color": {
                   "expr": {
@@ -47,26 +124,19 @@
                   }
                 }
               }
-            },
-            "bold": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
             }
           }
         }
       ],
-      "calloutValue": [
+      "columnHeaders": [
         {
           "properties": {
-            "color": {
+            "fontColor": {
               "solid": {
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#1F2A5A'"
+                      "Value": "'#6B7280'"
                     }
                   }
                 }
@@ -76,32 +146,6 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "categoryLabels": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "background": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
                 }
               }
             }
@@ -185,7 +229,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'FAILING APPS'"
+                  "Value": "'Failing Service Principals'"
                 }
               }
             },
@@ -194,7 +238,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#6B7280'"
+                      "Value": "'#1F2A5A'"
                     }
                   }
                 }
@@ -210,14 +254,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "9"
-                }
-              }
-            },
-            "alignment": {
-              "expr": {
-                "Literal": {
-                  "Value": "'left'"
+                  "Value": "10"
                 }
               }
             }
@@ -230,28 +267,28 @@
             "left": {
               "expr": {
                 "Literal": {
-                  "Value": "6"
+                  "Value": "10"
                 }
               }
             },
             "right": {
               "expr": {
                 "Literal": {
-                  "Value": "6"
+                  "Value": "10"
                 }
               }
             },
             "top": {
               "expr": {
                 "Literal": {
-                  "Value": "2"
+                  "Value": "6"
                 }
               }
             },
             "bottom": {
               "expr": {
                 "Literal": {
-                  "Value": "6"
+                  "Value": "10"
                 }
               }
             }

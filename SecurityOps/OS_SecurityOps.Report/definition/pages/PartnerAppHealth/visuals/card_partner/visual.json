@@ -1,59 +1,20 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
-  "name": "table_sp",
+  "name": "card_partner",
   "position": {
     "x": 32,
-    "y": 460,
-    "z": 23,
-    "width": 394,
-    "height": 236,
-    "tabOrder": 23
+    "y": 100,
+    "z": 10,
+    "width": 292,
+    "height": 100,
+    "tabOrder": 10
   },
   "visual": {
-    "visualType": "tableEx",
+    "visualType": "card",
     "query": {
       "queryState": {
         "Values": {
           "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "IdentitySPHealth"
-                    }
-                  },
-                  "Property": "AppName"
-                }
-              },
-              "queryRef": "IdentitySPHealth.AppName"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "IdentitySPHealth"
-                    }
-                  },
-                  "Property": "ClientWorkspace"
-                }
-              },
-              "queryRef": "IdentitySPHealth.ClientWorkspace"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "IdentitySPHealth"
-                    }
-                  },
-                  "Property": "ErrorMeaning"
-                }
-              },
-              "queryRef": "IdentitySPHealth.ErrorMeaning"
-            },
             {
               "field": {
                 "Measure": {
@@ -62,46 +23,21 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "SP Failed"
+                  "Property": "Partner Sessions"
                 }
               },
-              "queryRef": "_Measures.SP Failed",
-              "nativeQueryRef": "SP Failed"
+              "queryRef": "_Measures.Partner Sessions",
+              "nativeQueryRef": "Partner Sessions"
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Measure": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "_Measures"
-                  }
-                },
-                "Property": "SP Failed"
-              }
-            },
-            "direction": "Descending"
-          }
-        ],
-        "isDefaultSort": false
       }
     },
     "objects": {
-      "grid": [
+      "labels": [
         {
           "properties": {
-            "gridVertical": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
-            "fontColor": {
+            "color": {
               "solid": {
                 "color": {
                   "expr": {
@@ -111,19 +47,26 @@
                   }
                 }
               }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
             }
           }
         }
       ],
-      "columnHeaders": [
+      "calloutValue": [
         {
           "properties": {
-            "fontColor": {
+            "color": {
               "solid": {
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#6B7280'"
+                      "Value": "'#1F2A5A'"
                     }
                   }
                 }
@@ -133,6 +76,32 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
@@ -216,7 +185,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Failing Service Principals'"
+                  "Value": "'PARTNER SESSIONS'"
                 }
               }
             },
@@ -225,7 +194,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#1F2A5A'"
+                      "Value": "'#6B7280'"
                     }
                   }
                 }
@@ -241,7 +210,14 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "10"
+                  "Value": "9"
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'left'"
                 }
               }
             }
@@ -254,28 +230,28 @@
             "left": {
               "expr": {
                 "Literal": {
-                  "Value": "10"
+                  "Value": "6"
                 }
               }
             },
             "right": {
               "expr": {
                 "Literal": {
-                  "Value": "10"
+                  "Value": "6"
                 }
               }
             },
             "top": {
               "expr": {
                 "Literal": {
-                  "Value": "6"
+                  "Value": "2"
                 }
               }
             },
             "bottom": {
               "expr": {
                 "Literal": {
-                  "Value": "10"
+                  "Value": "6"
                 }
               }
             }

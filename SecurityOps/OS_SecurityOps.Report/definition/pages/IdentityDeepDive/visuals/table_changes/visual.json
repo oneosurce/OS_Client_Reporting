@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "table_changes",
   "position": {
-    "x": 442,
-    "y": 460,
+    "x": 648,
+    "y": 424,
     "z": 24,
-    "width": 394,
-    "height": 236,
+    "width": 600,
+    "height": 272,
     "tabOrder": 24
   },
   "visual": {
@@ -27,6 +27,19 @@
                 }
               },
               "queryRef": "IdentityChanges.EventTime"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "IdentityChanges"
+                    }
+                  },
+                  "Property": "ClientWorkspace"
+                }
+              },
+              "queryRef": "IdentityChanges.ClientWorkspace"
             },
             {
               "field": {
@@ -66,19 +79,6 @@
                 }
               },
               "queryRef": "IdentityChanges.Target"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "IdentityChanges"
-                    }
-                  },
-                  "Property": "ClientWorkspace"
-                }
-              },
-              "queryRef": "IdentityChanges.ClientWorkspace"
             }
           ]
         }

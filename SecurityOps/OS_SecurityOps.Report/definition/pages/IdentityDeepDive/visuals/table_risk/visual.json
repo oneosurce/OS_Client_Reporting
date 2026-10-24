@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "table_risk",
   "position": {
-    "x": 852,
-    "y": 460,
-    "z": 25,
-    "width": 396,
-    "height": 236,
-    "tabOrder": 25
+    "x": 32,
+    "y": 424,
+    "z": 23,
+    "width": 600,
+    "height": 272,
+    "tabOrder": 23
   },
   "visual": {
     "visualType": "tableEx",
@@ -75,10 +75,10 @@
                       "Entity": "IdentityRisk"
                     }
                   },
-                  "Property": "Country"
+                  "Property": "RiskState"
                 }
               },
-              "queryRef": "IdentityRisk.Country"
+              "queryRef": "IdentityRisk.RiskState"
             }
           ]
         }

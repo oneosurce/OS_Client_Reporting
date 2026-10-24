@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
   "name": "card_risky",
   "position": {
-    "x": 647,
+    "x": 648,
     "y": 100,
-    "z": 13,
-    "width": 189,
+    "z": 12,
+    "width": 292,
     "height": 100,
-    "tabOrder": 13
+    "tabOrder": 12
   },
   "visual": {
     "visualType": "card",

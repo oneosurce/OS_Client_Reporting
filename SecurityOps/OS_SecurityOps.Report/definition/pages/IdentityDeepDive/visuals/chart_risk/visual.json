@@ -1,73 +1,67 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
-  "name": "table_partner",
+  "name": "chart_risk",
   "position": {
-    "x": 852,
+    "x": 864,
     "y": 212,
     "z": 22,
-    "width": 396,
-    "height": 236,
+    "width": 384,
+    "height": 200,
     "tabOrder": 22
   },
   "visual": {
-    "visualType": "tableEx",
+    "visualType": "barChart",
     "query": {
       "queryState": {
-        "Values": {
+        "Category": {
           "projections": [
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "IdentityPartnerAccess"
+                      "Entity": "IdentityRisk"
                     }
                   },
-                  "Property": "PartnerName"
+                  "Property": "RiskLevel"
                 }
               },
-              "queryRef": "IdentityPartnerAccess.PartnerName"
-            },
+              "queryRef": "IdentityRisk.RiskLevel"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Risky Sign-ins"
+                }
+              },
+              "queryRef": "_Measures.Risky Sign-ins",
+              "nativeQueryRef": "Risky Sign-ins"
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "IdentityPartnerAccess"
+                      "Entity": "IdentityRisk"
                     }
                   },
                   "Property": "ClientWorkspace"
                 }
               },
-              "queryRef": "IdentityPartnerAccess.ClientWorkspace"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Partner Sessions"
-                }
-              },
-              "queryRef": "_Measures.Partner Sessions",
-              "nativeQueryRef": "Partner Sessions"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Partner Failures"
-                }
-              },
-              "queryRef": "_Measures.Partner Failures",
-              "nativeQueryRef": "Partner Failures"
+              "queryRef": "IdentityRisk.ClientWorkspace"
             }
           ]
         }
@@ -82,7 +76,7 @@
                     "Entity": "_Measures"
                   }
                 },
-                "Property": "Partner Sessions"
+                "Property": "Risky Sign-ins"
               }
             },
             "direction": "Descending"
@@ -92,45 +86,70 @@
       }
     },
     "objects": {
-      "grid": [
+      "valueAxis": [
         {
           "properties": {
-            "gridVertical": {
+            "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
                 }
               }
             },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#1F2A5A'"
-                    }
-                  }
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
           }
         }
       ],
-      "columnHeaders": [
+      "categoryAxis": [
         {
           "properties": {
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#6B7280'"
-                    }
-                  }
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             },
-            "bold": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "legend": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "position": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Top'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "labels": [
+        {
+          "properties": {
+            "show": {
               "expr": {
                 "Literal": {
                   "Value": "true"
@@ -217,7 +236,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Partner (GDAP) Access'"
+                  "Value": "'Risky Sign-ins by Level'"
                 }
               }
             },
