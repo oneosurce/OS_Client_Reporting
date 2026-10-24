@@ -1,0 +1,88 @@
+table IdentitySPHealth
+	lineageTag: c4000000-0000-0000-0000-000000000001
+
+	column AppName
+		dataType: string
+		lineageTag: c40000001-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: AppName
+
+		annotation SummarizationSetBy = User
+
+	column Resource
+		dataType: string
+		lineageTag: c40000002-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Resource
+
+		annotation SummarizationSetBy = User
+
+	column ResultCode
+		dataType: string
+		lineageTag: c40000003-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ResultCode
+
+		annotation SummarizationSetBy = User
+
+	column ErrorMeaning
+		dataType: string
+		lineageTag: c40000004-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ErrorMeaning
+
+		annotation SummarizationSetBy = User
+
+	column Events
+		dataType: int64
+		formatString: 0
+		lineageTag: c40000005-0000-0000-0000-000000000001
+		summarizeBy: sum
+		sourceColumn: Events
+
+		annotation SummarizationSetBy = User
+
+	column Failures
+		dataType: int64
+		formatString: 0
+		lineageTag: c40000006-0000-0000-0000-000000000001
+		summarizeBy: sum
+		sourceColumn: Failures
+
+		annotation SummarizationSetBy = User
+
+	column EventDate
+		isHidden
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: c40000007-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: EventDate
+
+		annotation SummarizationSetBy = User
+
+	column ClientWorkspace
+		dataType: string
+		lineageTag: c40000008-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ClientWorkspace
+
+		annotation SummarizationSetBy = User
+
+	partition IdentitySPHealth = m
+		mode: import
+		source =
+				let
+					Tail = "#(lf)| where TimeGenerated > ago(90d)" &
+							"#(lf)| extend ErrorMeaning = case(ResultType == ""0"", ""Success"", ResultType == ""7000222"", ""Client secret expired"", ResultType == ""7000215"", ""Invalid client secret"", ResultType == ""7000112"", ""Application disabled"", ResultType == ""700016"", ""App not found in tenant"", ResultType == ""700027"", ""Client assertion invalid"", ResultType == ""53003"", ""Blocked by Conditional Access"", strcat(""Error "", ResultType))" &
+							"#(lf)| summarize Events=count(), Failures=countif(ResultType != ""0"") by AppName=ServicePrincipalName, Resource=ResourceDisplayName, ResultCode=tostring(ResultType), ErrorMeaning, EventDate=bin(TimeGenerated, 1d)",
+					Source = fnQueryEach("AADServicePrincipalSignInLogs", Tail),
+					Typed = Table.TransformColumnTypes(Source, {
+						{"Events", Int64.Type},
+						{"Failures", Int64.Type},
+						{"EventDate", type datetime}
+					})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table

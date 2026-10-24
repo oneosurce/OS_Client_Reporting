@@ -1,0 +1,108 @@
+table IdentityPartnerAccess
+	lineageTag: c3000000-0000-0000-0000-000000000001
+
+	column PartnerName
+		dataType: string
+		lineageTag: c30000001-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: PartnerName
+
+		annotation SummarizationSetBy = User
+
+	column PartnerTenantId
+		dataType: string
+		lineageTag: c30000002-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: PartnerTenantId
+
+		annotation SummarizationSetBy = User
+
+	column PartnerUser
+		dataType: string
+		lineageTag: c30000003-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: PartnerUser
+
+		annotation SummarizationSetBy = User
+
+	column Country
+		dataType: string
+		lineageTag: c30000004-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = User
+
+	column AuthRequirement
+		dataType: string
+		lineageTag: c30000005-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: AuthRequirement
+
+		annotation SummarizationSetBy = User
+
+	column ResultCode
+		dataType: string
+		lineageTag: c30000006-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ResultCode
+
+		annotation SummarizationSetBy = User
+
+	column Events
+		dataType: int64
+		formatString: 0
+		lineageTag: c30000007-0000-0000-0000-000000000001
+		summarizeBy: sum
+		sourceColumn: Events
+
+		annotation SummarizationSetBy = User
+
+	column Successes
+		dataType: int64
+		formatString: 0
+		lineageTag: c30000008-0000-0000-0000-000000000001
+		summarizeBy: sum
+		sourceColumn: Successes
+
+		annotation SummarizationSetBy = User
+
+	column EventDate
+		isHidden
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: c30000009-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: EventDate
+
+		annotation SummarizationSetBy = User
+
+	column ClientWorkspace
+		dataType: string
+		lineageTag: c30000010-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ClientWorkspace
+
+		annotation SummarizationSetBy = User
+
+	partition IdentityPartnerAccess = m
+		mode: import
+		source =
+				let
+					Tail = "#(lf)| where TimeGenerated > ago(90d)" &
+							"#(lf)| where CrossTenantAccessType == ""serviceProvider"" and HomeTenantId != AADTenantId" &
+							"#(lf)| summarize Events=count(), Successes=countif(ResultType == ""0"") by PartnerTenantId=HomeTenantId, PartnerUser=UserPrincipalName, Country=Location, AuthRequirement=AuthenticationRequirement, ResultCode=tostring(ResultType), EventDate=bin(TimeGenerated, 1d)",
+					NonInt = fnQueryEach("AADNonInteractiveUserSignInLogs", Tail),
+					Int = fnQueryEach("SigninLogs", Tail),
+					Combined = Table.Combine({NonInt, Int}),
+					Names = [#"3de67d67-88e8-42c0-88ea-13bfc2fc2f55" = "Pax8", #"d3cf3dfe-05a1-4069-aa10-6b6d4fc51b12" = "YourHelpDeskHQ", #"4b5e91ed-2885-49b3-9d58-a87089c51417" = "OneSource (MSP)"],
+					Named = Table.AddColumn(Combined, "PartnerName", each Record.FieldOrDefault(Names, [PartnerTenantId], "Unknown partner (" & Text.Start([PartnerTenantId], 8) & ")"), type text),
+					Typed = Table.TransformColumnTypes(Named, {
+						{"Events", Int64.Type},
+						{"Successes", Int64.Type},
+						{"EventDate", type datetime}
+					})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table

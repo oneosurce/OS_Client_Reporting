@@ -1,0 +1,102 @@
+table IdentityRisk
+	lineageTag: c6000000-0000-0000-0000-000000000001
+
+	column EventTime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: c60000001-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: EventTime
+
+		annotation SummarizationSetBy = User
+
+	column EventDate
+		isHidden
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: c60000002-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: EventDate
+
+		annotation SummarizationSetBy = User
+
+	column UserPrincipalName
+		dataType: string
+		lineageTag: c60000003-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: UserPrincipalName
+
+		annotation SummarizationSetBy = User
+
+	column RiskLevel
+		dataType: string
+		lineageTag: c60000004-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: RiskLevel
+
+		annotation SummarizationSetBy = User
+
+	column RiskDetail
+		dataType: string
+		lineageTag: c60000005-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: RiskDetail
+
+		annotation SummarizationSetBy = User
+
+	column RiskState
+		dataType: string
+		lineageTag: c60000006-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: RiskState
+
+		annotation SummarizationSetBy = User
+
+	column Country
+		dataType: string
+		lineageTag: c60000007-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = User
+
+	column IPAddress
+		dataType: string
+		lineageTag: c60000008-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: IPAddress
+
+		annotation SummarizationSetBy = User
+
+	column AppDisplayName
+		dataType: string
+		lineageTag: c60000009-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: AppDisplayName
+
+		annotation SummarizationSetBy = User
+
+	column ClientWorkspace
+		dataType: string
+		lineageTag: c60000010-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ClientWorkspace
+
+		annotation SummarizationSetBy = User
+
+	partition IdentityRisk = m
+		mode: import
+		source =
+				let
+					Tail = "#(lf)| where TimeGenerated > ago(90d)" &
+							"#(lf)| where isnotempty(RiskLevelDuringSignIn) and RiskLevelDuringSignIn !in (""none"", ""hidden"")" &
+							"#(lf)| project EventTime=TimeGenerated, EventDate=bin(TimeGenerated, 1d), UserPrincipalName, RiskLevel=RiskLevelDuringSignIn, RiskDetail=tostring(RiskDetail), RiskState=tostring(RiskState), Country=Location, IPAddress, AppDisplayName",
+					Source = fnQueryEach("SigninLogs", Tail),
+					Typed = Table.TransformColumnTypes(Source, {
+						{"EventTime", type datetime},
+						{"EventDate", type datetime}
+					})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table

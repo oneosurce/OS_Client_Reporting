@@ -1,0 +1,63 @@
+table IdentityCA
+	lineageTag: c2000000-0000-0000-0000-000000000001
+
+	column CAStatus
+		dataType: string
+		lineageTag: c20000001-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: CAStatus
+
+		annotation SummarizationSetBy = User
+
+	column Events
+		dataType: int64
+		formatString: 0
+		lineageTag: c20000002-0000-0000-0000-000000000001
+		summarizeBy: sum
+		sourceColumn: Events
+
+		annotation SummarizationSetBy = User
+
+	column Successes
+		dataType: int64
+		formatString: 0
+		lineageTag: c20000003-0000-0000-0000-000000000001
+		summarizeBy: sum
+		sourceColumn: Successes
+
+		annotation SummarizationSetBy = User
+
+	column EventDate
+		isHidden
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: c20000004-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: EventDate
+
+		annotation SummarizationSetBy = User
+
+	column ClientWorkspace
+		dataType: string
+		lineageTag: c20000005-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ClientWorkspace
+
+		annotation SummarizationSetBy = User
+
+	partition IdentityCA = m
+		mode: import
+		source =
+				let
+					Tail = "#(lf)| where TimeGenerated > ago(90d)" &
+							"#(lf)| summarize Events=count(), Successes=countif(ResultType == ""0"") by CAStatus=ConditionalAccessStatus, EventDate=bin(TimeGenerated, 1d)",
+					Source = fnQueryEach("SigninLogs", Tail),
+					Typed = Table.TransformColumnTypes(Source, {
+						{"Events", Int64.Type},
+						{"Successes", Int64.Type},
+						{"EventDate", type datetime}
+					})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table

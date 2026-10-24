@@ -183,6 +183,111 @@ table _Measures
 		displayFolder: UEBA
 		lineageTag: 00000000-ffff-0034-0000-000000000001
 
+	measure 'Legacy Auth Sign-ins' =
+			COALESCE(SUM(IdentityLegacyAuth[Events]), 0)
+		formatString: 0
+		displayFolder: Identity
+		lineageTag: 00000000-ffff-0100-0000-000000000001
+
+	measure 'Legacy Auth Successes' =
+			COALESCE(SUM(IdentityLegacyAuth[Successes]), 0)
+		formatString: 0
+		displayFolder: Identity
+		lineageTag: 00000000-ffff-0101-0000-000000000001
+
+	measure 'Legacy Auth Users' =
+			COALESCE(DISTINCTCOUNT(IdentityLegacyAuth[UserPrincipalName]), 0)
+		formatString: 0
+		displayFolder: Identity
+		lineageTag: 00000000-ffff-0102-0000-000000000001
+
+	measure 'CA Sign-ins' =
+			COALESCE(SUM(IdentityCA[Events]), 0)
+		formatString: 0
+		displayFolder: Identity
+		lineageTag: 00000000-ffff-0103-0000-000000000001
+
+	measure 'CA Not Applied' =
+			COALESCE(CALCULATE(SUM(IdentityCA[Events]), IdentityCA[CAStatus] = "notApplied"), 0)
+		formatString: 0
+		displayFolder: Identity
+		lineageTag: 00000000-ffff-0104-0000-000000000001
+
+	measure 'CA Blocked' =
+			COALESCE(CALCULATE(SUM(IdentityCA[Events]), IdentityCA[CAStatus] = "failure"), 0)
+		formatString: 0
+		displayFolder: Identity
+		lineageTag: 00000000-ffff-0105-0000-000000000001
+
+	measure 'CA Coverage %' =
+			VAR Total = SUM(IdentityCA[Events])
+			VAR NotApplied = CALCULATE(SUM(IdentityCA[Events]), IdentityCA[CAStatus] = "notApplied")
+			RETURN IF(Total = 0, 0, DIVIDE(Total - NotApplied, Total))
+		formatString: 0%
+		displayFolder: Identity
+		lineageTag: 00000000-ffff-0106-0000-000000000001
+
+	measure 'Partner Sessions' =
+			COALESCE(SUM(IdentityPartnerAccess[Events]), 0)
+		formatString: 0
+		displayFolder: Identity
+		lineageTag: 00000000-ffff-0107-0000-000000000001
+
+	measure 'Partner Successes' =
+			COALESCE(SUM(IdentityPartnerAccess[Successes]), 0)
+		formatString: 0
+		displayFolder: Identity
+		lineageTag: 00000000-ffff-0108-0000-000000000001
+
+	measure 'Partner Failures' =
+			[Partner Sessions] - [Partner Successes]
+		formatString: 0
+		displayFolder: Identity
+		lineageTag: 00000000-ffff-0109-0000-000000000001
+
+	measure 'SP Sign-ins' =
+			COALESCE(SUM(IdentitySPHealth[Events]), 0)
+		formatString: 0
+		displayFolder: Identity
+		lineageTag: 00000000-ffff-0110-0000-000000000001
+
+	measure 'SP Failures' =
+			COALESCE(SUM(IdentitySPHealth[Failures]), 0)
+		formatString: 0
+		displayFolder: Identity
+		lineageTag: 00000000-ffff-0111-0000-000000000001
+
+	measure 'SP Failure Rate' =
+			DIVIDE([SP Failures], [SP Sign-ins], 0)
+		formatString: 0%
+		displayFolder: Identity
+		lineageTag: 00000000-ffff-0112-0000-000000000001
+
+	measure 'Failing Apps' =
+			COALESCE(SUMX(VALUES(IdentitySPHealth[AppName]), IF([SP Sign-ins] >= 10 && DIVIDE([SP Failures], [SP Sign-ins]) >= 0.5, 1, 0)), 0)
+		formatString: 0
+		displayFolder: Identity
+		lineageTag: 00000000-ffff-0113-0000-000000000001
+
+	measure 'Directory Changes' =
+			COALESCE(COUNTROWS(IdentityChanges), 0)
+		formatString: 0
+		displayFolder: Identity
+		lineageTag: 00000000-ffff-0114-0000-000000000001
+
+	measure 'Risky Sign-ins' =
+			COALESCE(COUNTROWS(IdentityRisk), 0)
+		formatString: 0
+		displayFolder: Identity
+		lineageTag: 00000000-ffff-0115-0000-000000000001
+
+	measure 'SP Failed' =
+			VAR f = SUM(IdentitySPHealth[Failures])
+			RETURN IF(f = 0, BLANK(), f)
+		formatString: 0
+		displayFolder: Identity
+		lineageTag: 00000000-ffff-0116-0000-000000000001
+
 	column Column
 		dataType: string
 		isHidden

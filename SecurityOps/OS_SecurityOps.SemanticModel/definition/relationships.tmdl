@@ -29,3 +29,27 @@ relationship a1000007-0000-0000-0000-000000000001
 relationship a1000008-0000-0000-0000-000000000001
 	fromColumn: UEBAInsights.EventDate
 	toColumn: Date.Date
+
+relationship a1000010-0000-0000-0000-000000000001
+	fromColumn: IdentityLegacyAuth.EventDate
+	toColumn: Date.Date
+
+relationship a1000011-0000-0000-0000-000000000001
+	fromColumn: IdentityCA.EventDate
+	toColumn: Date.Date
+
+relationship a1000012-0000-0000-0000-000000000001
+	fromColumn: IdentityPartnerAccess.EventDate
+	toColumn: Date.Date
+
+relationship a1000013-0000-0000-0000-000000000001
+	fromColumn: IdentitySPHealth.EventDate
+	toColumn: Date.Date
+
+relationship a1000014-0000-0000-0000-000000000001
+	fromColumn: IdentityChanges.EventDate
+	toColumn: Date.Date
+
+relationship a1000015-0000-0000-0000-000000000001
+	fromColumn: IdentityRisk.EventDate
+	toColumn: Date.Date

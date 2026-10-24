@@ -36,3 +36,22 @@ expression fnQueryLogAnalytics =
 
 	annotation PBI_ResultType = Function
 
+expression fnQueryEach =
+		(tableName as text, kqlTail as text) as table =>
+				let
+					QueryOne = (wsRid as text, isCentral as logical, clientName as text) as any =>
+						let
+							Tbl = if isCentral then tableName else "workspace(""" & wsRid & """)." & tableName,
+							KQL = Tbl & kqlTail & "#(lf)| extend ClientWorkspace = """ & clientName & """",
+							Result = try Table.Buffer(fnQueryLogAnalytics(KQL)) otherwise null
+						in
+							Result,
+					WithQ = Table.AddColumn(TenantRegistry, "Q", each QueryOne([WorkspaceResourceId], [IsManagingWorkspace], [ClientName])),
+					NonNull = Table.SelectRows(WithQ, each [Q] <> null),
+					Combined = Table.Combine(NonNull[Q])
+				in
+					Combined
+	lineageTag: 11111111-0000-0000-0000-000000000004
+
+	annotation PBI_ResultType = Function
+

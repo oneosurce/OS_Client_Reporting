@@ -3,6 +3,7 @@
   "pageOrder": [
     "SOCOverview",
     "ThreatActivity",
+    "IdentityDeepDive",
     "UEBA",
     "TenantRisk",
     "SecurityPosture",

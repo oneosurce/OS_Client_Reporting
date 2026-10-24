@@ -1,0 +1,96 @@
+table IdentityChanges
+	lineageTag: c5000000-0000-0000-0000-000000000001
+
+	column EventTime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: c50000001-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: EventTime
+
+		annotation SummarizationSetBy = User
+
+	column EventDate
+		isHidden
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: c50000002-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: EventDate
+
+		annotation SummarizationSetBy = User
+
+	column ChangeType
+		dataType: string
+		lineageTag: c50000003-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ChangeType
+
+		annotation SummarizationSetBy = User
+
+	column OperationName
+		dataType: string
+		lineageTag: c50000004-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: OperationName
+
+		annotation SummarizationSetBy = User
+
+	column Result
+		dataType: string
+		lineageTag: c50000005-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Result
+
+		annotation SummarizationSetBy = User
+
+	column Initiator
+		dataType: string
+		lineageTag: c50000006-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Initiator
+
+		annotation SummarizationSetBy = User
+
+	column Target
+		dataType: string
+		lineageTag: c50000007-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Target
+
+		annotation SummarizationSetBy = User
+
+	column Category
+		dataType: string
+		lineageTag: c50000008-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = User
+
+	column ClientWorkspace
+		dataType: string
+		lineageTag: c50000009-0000-0000-0000-000000000001
+		summarizeBy: none
+		sourceColumn: ClientWorkspace
+
+		annotation SummarizationSetBy = User
+
+	partition IdentityChanges = m
+		mode: import
+		source =
+				let
+					Tail = "#(lf)| where TimeGenerated > ago(90d)" &
+							"#(lf)| where OperationName has_any (""Add member to role"", ""Add eligible member"", ""Remove member from role"", ""Add scoped member to role"", ""Consent to application"", ""Add app role assignment"", ""Add delegated permission grant"", ""Certificates and secrets"", ""Add service principal credentials"", ""Add owner"", ""Invite external user"", ""Add user"", ""Delete user"", ""Reset password"", ""Disable Strong Authentication"", ""User registered security info"", ""User deleted security info"")" &
+							"#(lf)| extend Initiator = coalesce(tostring(InitiatedBy.user.userPrincipalName), tostring(InitiatedBy.app.displayName)), Target = tostring(TargetResources[0].displayName)" &
+							"#(lf)| extend ChangeType = case(OperationName has ""Consent"", ""App consent"", OperationName has_any (""credential"", ""Certificates and secrets""), ""App credential"", OperationName has_any (""Add member to role"", ""Add eligible member"", ""Remove member from role"", ""Add scoped member to role""), ""Privileged role"", OperationName has ""app role assignment"" or OperationName has ""delegated permission"", ""App permission"", OperationName has ""Invite external"", ""External user"", OperationName has_any (""security info"", ""Strong Authentication""), ""MFA / auth method"", OperationName has_any (""Add user"", ""Delete user"", ""Reset password""), ""User lifecycle"", ""Other"")" &
+							"#(lf)| project EventTime=TimeGenerated, EventDate=bin(TimeGenerated, 1d), ChangeType, OperationName=trim(@""\s+"", OperationName), Result, Initiator, Target, Category",
+					Source = fnQueryEach("AuditLogs", Tail),
+					Typed = Table.TransformColumnTypes(Source, {
+						{"EventTime", type datetime},
+						{"EventDate", type datetime}
+					})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table
