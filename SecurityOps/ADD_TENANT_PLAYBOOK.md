@@ -5,10 +5,12 @@ Estimated time: 30–60 min (plus 1–2 h for first data ingestion).
 
 ### What's in the SOC dashboard now
 
-The `OS_SecurityOps` report (Fabric workspace "OneSource Reporting") has **6 pages**:
-`SOC Overview` · `Threat Activity` · `UEBA` (User Behavior Analytics) · `Tenant Risk` · `Security Posture` · `Incident Detail`.
+The `OS_SecurityOps` report (Fabric workspace "OneSource Reporting") has **8 pages**:
+`SOC Overview` · `Threat Activity` · `Identity Deep-Dive` · `Partner & App Health` · `UEBA` (User Behavior Analytics) · `Tenant Risk` · `Security Posture` · `Incident Detail`.
 
-Semantic model: **10 tables / 20 measures**, all sourced from Microsoft Sentinel / Log Analytics via a cross-tenant Lighthouse `union` driven by the `TenantRegistry` table.
+Semantic model: 16 tables, all sourced from Microsoft Sentinel / Log Analytics via a cross-tenant Lighthouse `union` driven by the `TenantRegistry` table.
+
+> **New tenant & the Identity pages:** the Identity Deep-Dive / Partner & App Health tables use `fnQueryEach` (per-workspace `try … otherwise null`), so a new tenant is picked up automatically once it is in `TenantRegistry`. Partner tenant GUIDs are mapped to friendly names in the `IdentityPartnerAccess` table's M (`Names` record) — add a row there when a new partner (e.g. a new CSP/distributor) appears; unknown partners show as `Unknown partner (<first 8 of GUID>)`.
 
 Separately, the **Live Geo Threat Map** is a standalone Azure-hosted web page (not a Power BI page) — see the [Live Geo Threat Map](#live-geo-threat-map) section below.
 
