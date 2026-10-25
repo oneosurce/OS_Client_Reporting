@@ -232,6 +232,24 @@ az storage blob upload --account-name ossocmape62cb7 --account-key "$KEY" \
 The map's client markers are **hardcoded** in `webassets/attack-map.html` (real static IPs / geocoded offices — this map is a curated visual, not driven by Sentinel data). To show a new client, edit the data objects near the top of the `<script>`:
 `WORLD_MARKERS` (region) · `METRO_MARKERS` (city clusters) · `OFFICES` (per-office coords + static public IP + label) · and the `CLIENT_REGION` / `CLIENT_METROS` / `METRO_OFFICES` maps. Then re-upload with the command above. (The attack arcs in `ATTACKS[]` are illustrative sample data.)
 
+## New-Incident Email Alert (OneSource workspace)
+
+An emailed alert fires the moment a **Medium or High** incident is created in `OS-Sentinel-0`.
+
+| | |
+|---|---|
+| **Automation rule** | "Email ar@onesource.tech on new Medium+ incident" (trigger: incident *created*, severity Medium/High) in OS-Sentinel-0 |
+| **Playbook** | Logic App `OS-Sentinel-NewIncident-Email` in RG `OS-SOC-Automation` (sub OS-DIRECT_AR_2026), Consumption plan, ~pennies/month |
+| **Template** | `SecurityOps/automation/new-incident-email.json` |
+| **Auth** | Sentinel connection = Logic App managed identity (**Microsoft Sentinel Responder** on OS-Sentinel-0). The Sentinel service principal "Azure Security Insights" has **Microsoft Sentinel Automation Contributor** on the RG so automation rules can run it. |
+| **Mailbox** | `office365-os` API connection, authorized by a human sign-in (one time). If MFA/password policy changes or the account is disabled, the connection goes "Error" — re-authorize it (Portal → RG → `office365-os` → Edit API connection → Authorize → Save). |
+
+**Notes**
+- Fires on *creation* only — a later severity escalation does not email again.
+- Informational/Low incidents are intentionally skipped. To include them, add them to `propertyValues` on the automation rule (or delete the condition).
+- **Client tenants are not covered.** Each client workspace needs its own automation rule + playbook (or a cross-workspace design), and that requires a Sentinel Contributor-level role delegated to us via Lighthouse — the reader-only delegation in Step 1 is not enough.
+- Check delivery: Azure Portal → Logic App → *Runs history*.
+
 ---
 
 ## Quick-Reference Checklist
