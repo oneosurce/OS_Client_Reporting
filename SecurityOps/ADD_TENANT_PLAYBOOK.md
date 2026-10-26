@@ -250,6 +250,16 @@ An emailed alert fires the moment a **Medium or High** incident is created in `O
 - **Client tenants are not covered.** Each client workspace needs its own automation rule + playbook (or a cross-workspace design), and that requires a Sentinel Contributor-level role delegated to us via Lighthouse — the reader-only delegation in Step 1 is not enough.
 - Check delivery: Azure Portal → Logic App → *Runs history*.
 
+## Tuned Detection: "Authentication Attempt from New Country"
+
+The built-in rule (template `ef895ada-e8e8-4cf0-9313-b1ab67fab69f`) in `OS-Sentinel-0` was tuned on 2026-10-26 so it no longer alerts on **failed** sign-ins from **known partner (GDAP / `serviceProvider`) tenants**. Pax8 staff sign in from many countries and their attempts fail (`500133`) on the Pax8 side, which generated daily Medium incidents.
+
+- **Source of truth:** `SecurityOps/automation/new-country-rule.kql` (the rule's full query; it is detached from the Microsoft template, so template updates will not apply automatically).
+- **What still alerts:** a *successful* partner sign-in from a new country; any sign-in from a partner tenant **not** on the allowlist; any OneSource user from a new country.
+- **Allowlist:** the `KnownPartnerTenants` list at the top of the query. Currently Pax8 (`3de67d67-88e8-42c0-88ea-13bfc2fc2f55`) and YourHelpDeskHQ (`d3cf3dfe-05a1-4069-aa10-6b6d4fc51b12`). When a new partner is onboarded, add its home tenant ID there (and in the `Names` map of the `IdentityPartnerAccess` table so the dashboard shows its name). Re-apply with `az rest PUT .../alertRules/de705966-e64b-4ed9-a988-7b9f2144ddcb` (GET the rule, replace `properties.query`, drop `lastModifiedUtc`, PUT with the etag).
+- **Known remaining gap:** the rule still excludes result codes `50126/50053/50074/70044`, so Entra-blocked attempts (e.g. a known-malicious IP, `50053`) never alert. Not changed.
+- **Scope:** only OS-Sentinel-0. Client workspaces keep their own copy of this rule.
+
 ---
 
 ## Quick-Reference Checklist
